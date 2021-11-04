@@ -1,5 +1,7 @@
 import React, { useEffect } from "react";
 import { Tooltip, Toast, Popover } from 'bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCoffee } from '@fortawesome/free-solid-svg-icons'
 import "./Popup.scss";
 
 export default function Popup() {
@@ -11,7 +13,7 @@ export default function Popup() {
   return (
     <div className="popupContainer">
       Hello, world!
-      <button className="btn btn-primary">bar</button>
+      <button className="btn btn-primary"><FontAwesomeIcon icon={faCoffee} />bar</button>
     </div>
   );
 }
