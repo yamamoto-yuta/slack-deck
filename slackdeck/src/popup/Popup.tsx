@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { Tooltip, Toast, Popover } from 'bootstrap';
 import "./Popup.scss";
 
 export default function Popup() {
@@ -7,5 +8,10 @@ export default function Popup() {
     chrome.runtime.sendMessage({ popupMounted: true });
   }, []);
 
-  return <div className="popupContainer">Hello, world!</div>;
+  return (
+    <div className="popupContainer">
+      Hello, world!
+      <button className="btn btn-primary">bar</button>
+    </div>
+  );
 }
