@@ -65,6 +65,7 @@ deck.classList.add('bg-dark');
 
 const body = document.body;
 body.id = 'mainBody';
+body.classList.add('text-light');
 
 const wrapper = document.createElement('div');
 wrapper.id = 'wrapper';
