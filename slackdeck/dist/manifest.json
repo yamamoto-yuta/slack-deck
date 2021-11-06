@@ -1,8 +1,8 @@
 {
     "manifest_version": 2,
-    "name": "Chrome Extension (built with TypeScript + React)",
-    "description": "A boilerplate project to quickly build a Chrome extension using TypeScript and React (built using webpack).",
-    "version": "1.0.0",
+    "name": "SlackDeck",
+    "description": "A Chrome extension to use Slack like TweetDeck",
+    "version": "0.1.0",
     "browser_action": {
         "default_icon": "icon16.png",
         "default_popup": "popup.html"
@@ -30,5 +30,6 @@
     },
     "permissions": [
         "storage"
-    ]
+    ],
+    "homepage_url": "https://github.com/yamamoto-yuta/slack-deck"
 }
