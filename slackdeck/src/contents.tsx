@@ -34,7 +34,23 @@ const Main = () => {
   }
 
   const addNewColumn = (columnIndex: number) => {
+    // Column
+    let column = document.createElement('div');
+    column.id = columnElementId`${columnIndex}`;
+    column.className = "column bg-dark";
+    column.style.minWidth = newColDefaultConfig.width;
+    column.style.width = newColDefaultConfig.width;
+
+    // Slack
+    let iframe = document.createElement('iframe');
+    iframe.id = columnIframeId`${columnIndex}`;
+    iframe.className = "col-iframe";
+    iframe.src = newColDefaultConfig.url;
+
     // Column Header
+    let colHeader = document.createElement('div');
+    colHeader.className = 'col-header';
+
     // -- Column Name
     let colName = document.createElement('input');
     colName.type = 'text';
@@ -44,29 +60,27 @@ const Main = () => {
     // -- Column Delete Button
     let colDelBtn = document.createElement('button');
     colDelBtn.id = columnDeleteButtonId`${columnIndex}`;
-    colDelBtn.className = 'btn btn-danger';
+    colDelBtn.className = 'btn btn-danger col-del-btn';
     colDelBtn.innerText = 'X';
+    colDelBtn.onclick = () => {
+      // Remove
+      var delcolIdx = parseInt(column.id.split('-').slice(-1)[0]);
+      columnList.splice(delcolIdx, 1);
+      column.remove();
 
-    // -- Column Header
-    let colHeader = document.createElement('div');
-    colHeader.className = 'col-header';
+      // Update other elements
+      for (var i = 0; i < columnList.length; i++) {
+        document.getElementsByClassName('column')[i].id = columnElementId`${i}`;
+        document.getElementsByClassName('col-iframe')[i].id = columnIframeId`${i}`;
+        document.getElementsByClassName('col-del-btn')[i].id = columnDeleteButtonId`${i}`;
+      }
+    };
+
+    // Append elements
     colHeader.appendChild(colName);
     colHeader.appendChild(colDelBtn);
-
-    // Slack
-    let iframe = document.createElement('iframe');
-    iframe.id = columnIframeId`${columnIndex}`;
-    iframe.src = newColDefaultConfig.url;
-
-    // Column
-    let column = document.createElement('div');
-    column.className = "column bg-dark";
-    column.id = columnElementId`${columnIndex}`;
-    column.style.minWidth = newColDefaultConfig.width;
-    column.style.width = newColDefaultConfig.width;
     column.appendChild(colHeader);
     column.appendChild(iframe);
-
     wrapper.appendChild(column);
 
     columnList.push(newColDefaultConfig);
