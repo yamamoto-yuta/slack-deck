@@ -1,3 +1,19 @@
-body {
-  color: red;
+@import "~bootstrap/scss/bootstrap";
+
+$main-col-width: "1000px";
+$sidebar-width: "50px";
+
+#newBody {
+  display: flex;
+  overflow-x: scroll;
+}
+
+#sidebar {
+  width: $sidebar-width;
+  height: 100vh;
+}
+
+.sidebar-icon-large {
+  color: white;
+  font-size: xx-large;
 }

@@ -1,13 +1,29 @@
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
 import './contents.scss';
 
-const Main = () => {
-    return <div>App</div>;
-};
+const Sidebar = () => {
+    return (
+        <div className="container-fluid my-3 text-center text-white">
+            <button className="btn btn-primary rounded-circle"><FontAwesomeIcon icon={faPlus} className="sidebar-icon-large" /></button>
+        </div>
+    )
+}
 
-const app = document.createElement('div');
-app.id = 'my-extension-root';
-document.body.appendChild(app);
-ReactDOM.render(<Main />, app);
+const sidebar = document.createElement('div');
+sidebar.id = 'sidebar';
+sidebar.classList.add('bg-dark');
+
+const body = document.body;
+body.id = 'mainBody';
+
+const newBody = document.createElement('body');
+newBody.id = 'newBody';
+newBody.appendChild(sidebar);
+newBody.appendChild(body);
+document.documentElement.appendChild(newBody);
+
+ReactDOM.render(<Sidebar />, sidebar);
