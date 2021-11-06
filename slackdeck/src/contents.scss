@@ -10,6 +10,9 @@ $deck-width: 70px;
 
 #mainBody {
   min-width: $main-col-width;
+}
+
+#mainBody .p-client {
   width: 100%;
 }
 
