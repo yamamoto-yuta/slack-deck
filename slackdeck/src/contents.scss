@@ -1,11 +1,20 @@
 @import "~bootstrap/scss/bootstrap";
 
-$main-col-width: "1000px";
-$sidebar-width: "50px";
+$main-col-width: 1000px;
+$sidebar-width: 70px;
 
 #newBody {
   display: flex;
   overflow-x: scroll;
+}
+
+#mainBody {
+  min-width: $main-col-width;
+  width: 100%;
+}
+
+#wrapper {
+  display: flex;
 }
 
 #sidebar {
@@ -15,5 +24,15 @@ $sidebar-width: "50px";
 
 .sidebar-icon-large {
   color: white;
-  font-size: xx-large;
+  font-size: medium;
+}
+
+.column {
+  height: 100%;
+  border-left: 1px solid greenyellow;
+}
+
+.column iframe {
+  height: 100%;
+  width: 100%;
 }
