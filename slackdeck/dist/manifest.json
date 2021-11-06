@@ -13,6 +13,16 @@
         ],
         "persistent": false
     },
+    "content_scripts": [
+        {
+            "matches": [
+                "https://app.slack.com/client/*"
+            ],
+            "js": [
+                "js/contents.js"
+            ]
+        }
+    ],
     "icons": {
         "16": "icon16.png",
         "48": "icon48.png",
