@@ -9,7 +9,7 @@ import './contents.scss';
 const columnIframeId = (_: TemplateStringsArray, columnIndex: number) => `col-iframe-${columnIndex}`;
 const columnElementId = (_: TemplateStringsArray, columnIndex: number) => `col-el-${columnIndex}`;
 
-const Sidebar = () => {
+const Deck = () => {
   const [newColDefaultConfig, setNewColDefaultConfig] = React.useState<ColumnConfig>();
   const columnList: ColumnConfig[] = [];
 
@@ -54,14 +54,14 @@ const Sidebar = () => {
       <button
         className="btn btn-primary rounded-circle"
         onClick={() => addNewColumn(columnList.length)}
-      ><FontAwesomeIcon icon={faPlus} className="sidebar-icon-large" /></button>
+      ><FontAwesomeIcon icon={faPlus} className="deck-icon-large" /></button>
     </div>
   )
 }
 
-const sidebar = document.createElement('div');
-sidebar.id = 'sidebar';
-sidebar.classList.add('bg-dark');
+const deck = document.createElement('div');
+deck.id = 'deck';
+deck.classList.add('bg-dark');
 
 const body = document.body;
 body.id = 'mainBody';
@@ -71,9 +71,9 @@ wrapper.id = 'wrapper';
 
 const newBody = document.createElement('body');
 newBody.id = 'newBody';
-newBody.appendChild(sidebar);
+newBody.appendChild(deck);
 newBody.appendChild(body);
 newBody.appendChild(wrapper);
 document.documentElement.appendChild(newBody);
 
-ReactDOM.render(<Sidebar />, sidebar);
+ReactDOM.render(<Deck />, deck);
