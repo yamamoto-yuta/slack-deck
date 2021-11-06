@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Tooltip, Toast, Popover } from 'bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCoffee } from '@fortawesome/free-solid-svg-icons'
-import { ColumnConfig } from "./Contract";
+import { ColumnConfig } from "../Contract";
 import "./Popup.scss";
 
 const WIDTH_OPTION_LIST = [

@@ -1,19 +1,46 @@
 @import "~bootstrap/scss/bootstrap";
 
-$main-col-width: "1000px";
-$sidebar-width: "50px";
+$main-col-width: 1000px;
+$deck-width: 70px;
 
 #newBody {
   display: flex;
   overflow-x: scroll;
 }
 
-#sidebar {
-  width: $sidebar-width;
+#mainBody {
+  min-width: $main-col-width;
+}
+
+#mainBody .p-client {
+  width: 100%;
+}
+
+#wrapper {
+  display: flex;
+}
+
+#deck {
+  width: $deck-width;
   height: 100vh;
 }
 
-.sidebar-icon-large {
+.deck-icon-large {
   color: white;
-  font-size: xx-large;
+  font-size: medium;
+}
+
+.column {
+  height: 100%;
+  border-left: 1px solid $primary;
+}
+
+.column iframe {
+  height: 100%;
+  width: 100%;
+}
+
+.col-header {
+  display: flex;
+  justify-content: space-between;
 }
