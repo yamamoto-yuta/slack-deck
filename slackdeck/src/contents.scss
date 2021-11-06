@@ -32,7 +32,7 @@ $deck-width: 70px;
 
 .column {
   height: 100%;
-  border-left: 1px solid greenyellow;
+  border-left: 1px solid $primary;
 }
 
 .column iframe {
