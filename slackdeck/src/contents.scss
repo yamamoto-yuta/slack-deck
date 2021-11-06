@@ -39,3 +39,8 @@ $deck-width: 70px;
   height: 100%;
   width: 100%;
 }
+
+.col-header {
+  display: flex;
+  justify-content: space-between;
+}
