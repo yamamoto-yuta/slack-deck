@@ -50,7 +50,7 @@ const Deck = () => {
   }
 
   return (
-    <div className="mx-1 my-3 text-center text-white">
+    <div className="mx-2 my-3 text-center text-white">
       <button
         className="btn btn-primary rounded-circle"
         onClick={() => addNewColumn(columnList.length)}
