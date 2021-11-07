@@ -38,7 +38,7 @@ jobs:
         run: |
           cd slackdeck/dist/
           zip release.zip *.*
-          ls slackdeck/dist/
+          pwd
           echo 'Zip complete!'
 
       # # Runs a single command using the runners shell
