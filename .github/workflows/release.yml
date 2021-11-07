@@ -4,9 +4,9 @@ name: release
 
 on:
   push:
-    branches: [issue-**]
-  # pull_request:
-  #   branches: [main]
+    branches: [main]
+  pull_request:
+    branches: [main]
   workflow_dispatch:
 
 jobs:
@@ -46,10 +46,6 @@ jobs:
         with:
           tag_name: test_v${{ steps.create_tag.outputs.new_tag }}
           release_name: Release ${{ steps.create_tag.outputs.new_tag }}
-          body: |
-            Changes in this Release
-            - First Change
-            - Second Change
           draft: false
           prerelease: false
 
