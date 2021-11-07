@@ -27,7 +27,7 @@ jobs:
       - name: Zip
         run: |
           cd slackdeck/dist/
-          zip release *.*
+          zip release.zip *.*
           pwd
           echo 'Zip complete!'
 
