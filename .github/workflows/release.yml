@@ -27,28 +27,36 @@ jobs:
       # - uses: actions/setup-node@v2-beta
       #   with:
       #     node-version: "14"
-      # - name: build
+      # - name: Build
       #   run: |
       #     cd slackdeck/
       #     npm i
       #     npm run dev
       #     npm run build
       #     echo 'Build complete!'
-      # - name: zip
+      # - name: Zip
       #   run: |
       #     cd slackdeck/dist/
       #     zip release.zip *.*
       #     pwd
       #     echo 'Zip complete!'
 
-      - name: create release
+      - name: Create new tag
+        id: create_tag
+        run: |
+          apt-get install jq
+          cat slackdeck/dist/manifest.json | jq -r '.version'
+          VERSION=$(cat slackdeck/dist/manifest.json | jq -r '.version')
+          echo "::set-output name=new_tag::$VERSION"
+
+      - name: Create release
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          tag_name: test_v${{ steps.create_tag.outputs.new_tag }}
+          release_name: Release ${{ steps.create_tag.outputs.new_tag }}
           body: |
             Changes in this Release
             - First Change
