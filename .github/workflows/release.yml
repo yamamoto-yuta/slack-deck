@@ -33,7 +33,13 @@ jobs:
           npm i
           npm run dev
           npm run build
-          echo > Build complete!
+          echo 'Build complete!'
+      - name: zip
+        run: |
+          cd slackdeck/dist/
+          zip release.zip *.*
+          ls slackdeck/dist/
+          echo 'Zip complete!'
 
       # # Runs a single command using the runners shell
       # - name: Run a one-line script
