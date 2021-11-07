@@ -34,58 +34,63 @@ const Main = () => {
   }
 
   const addNewColumn = (columnIndex: number) => {
-    // Column
-    let column = document.createElement('div');
-    column.id = columnElementId`${columnIndex}`;
-    column.className = "column bg-dark";
-    column.style.minWidth = newColDefaultConfig.width;
-    column.style.width = newColDefaultConfig.width;
+    if (newColDefaultConfig !== undefined) {
 
-    // Slack
-    let iframe = document.createElement('iframe');
-    iframe.id = columnIframeId`${columnIndex}`;
-    iframe.className = "col-iframe";
-    iframe.src = newColDefaultConfig.url;
+      // Column
+      let column = document.createElement('div');
+      column.id = columnElementId`${columnIndex}`;
+      column.className = "column bg-dark";
+      column.style.minWidth = newColDefaultConfig.width;
+      column.style.width = newColDefaultConfig.width;
 
-    // Column Header
-    let colHeader = document.createElement('div');
-    colHeader.className = 'col-header';
+      // Slack
+      let iframe = document.createElement('iframe');
+      iframe.id = columnIframeId`${columnIndex}`;
+      iframe.className = "col-iframe";
+      iframe.src = newColDefaultConfig.url;
 
-    // -- Column Name
-    let colName = document.createElement('input');
-    colName.type = 'text';
-    colName.value = columnNameDefaultValue`${columnIndex}`;
-    colName.className = 'form-control';
+      // Column Header
+      let colHeader = document.createElement('div');
+      colHeader.className = 'col-header';
 
-    // -- Column Delete Button
-    let colDelBtn = document.createElement('button');
-    colDelBtn.id = columnDeleteButtonId`${columnIndex}`;
-    colDelBtn.className = 'btn btn-danger col-del-btn';
-    colDelBtn.innerText = 'X';
-    colDelBtn.onclick = () => {
-      // Remove
-      var delcolIdx = parseInt(column.id.split('-').slice(-1)[0]);
-      columnList.splice(delcolIdx, 1);
-      column.remove();
+      // -- Column Name
+      let colName = document.createElement('input');
+      colName.type = 'text';
+      colName.value = columnNameDefaultValue`${columnIndex}`;
+      colName.className = 'form-control';
 
-      // Update other elements
-      for (var i = 0; i < columnList.length; i++) {
-        document.getElementsByClassName('column')[i].id = columnElementId`${i}`;
-        document.getElementsByClassName('col-iframe')[i].id = columnIframeId`${i}`;
-        document.getElementsByClassName('col-del-btn')[i].id = columnDeleteButtonId`${i}`;
-      }
-    };
+      // -- Column Delete Button
+      let colDelBtn = document.createElement('button');
+      colDelBtn.id = columnDeleteButtonId`${columnIndex}`;
+      colDelBtn.className = 'btn btn-danger col-del-btn';
+      colDelBtn.innerText = 'X';
+      colDelBtn.onclick = () => {
+        // Remove
+        var delcolIdx = parseInt(column.id.split('-').slice(-1)[0]);
+        columnList.splice(delcolIdx, 1);
+        column.remove();
 
-    // Append elements
-    colHeader.appendChild(colName);
-    colHeader.appendChild(colDelBtn);
-    column.appendChild(colHeader);
-    column.appendChild(iframe);
-    wrapper.appendChild(column);
+        // Update other elements
+        for (var i = 0; i < columnList.length; i++) {
+          document.getElementsByClassName('column')[i].id = columnElementId`${i}`;
+          document.getElementsByClassName('col-iframe')[i].id = columnIframeId`${i}`;
+          document.getElementsByClassName('col-del-btn')[i].id = columnDeleteButtonId`${i}`;
+        }
+      };
 
-    columnList.push(newColDefaultConfig);
+      // Append elements
+      colHeader.appendChild(colName);
+      colHeader.appendChild(colDelBtn);
+      column.appendChild(colHeader);
+      column.appendChild(iframe);
+      wrapper.appendChild(column);
 
-    fixSlackDom();
+      columnList.push(newColDefaultConfig);
+
+      fixSlackDom();
+    } else {
+      alert('Please set default column config first.\nYou will need to reload to reflect the settings.');
+    }
   }
 
   return (
