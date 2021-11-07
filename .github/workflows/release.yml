@@ -44,7 +44,6 @@ jobs:
       - name: Create new tag
         id: create_tag
         run: |
-          apt-get install jq
           cat slackdeck/dist/manifest.json | jq -r '.version'
           VERSION=$(cat slackdeck/dist/manifest.json | jq -r '.version')
           echo "::set-output name=new_tag::$VERSION"
