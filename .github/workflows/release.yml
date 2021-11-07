@@ -44,12 +44,12 @@ jobs:
       - uses: octokit/request-action@v2.x
         id: get_latest_release
         with:
-          route: GET /repos/{owner}/{repo}/releases/latest
+          route: GET /repos/{owner}/{repo}/git/matching-refs/tags
           owner: yamamoto-yuta
           repo: slack-deck
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - run: "echo latest release: ${{ steps.get_latest_release.outputs.data }}"
+      - run: "echo latest release: ${{ steps.get_tags.outputs.data }}"
 
       # # Runs a single command using the runners shell
       # - name: Run a one-line script
