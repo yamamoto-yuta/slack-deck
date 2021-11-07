@@ -24,22 +24,32 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2-beta
+      # - uses: actions/setup-node@v2-beta
+      #   with:
+      #     node-version: "14"
+      # - name: build
+      #   run: |
+      #     cd slackdeck/
+      #     npm i
+      #     npm run dev
+      #     npm run build
+      #     echo 'Build complete!'
+      # - name: zip
+      #   run: |
+      #     cd slackdeck/dist/
+      #     zip release.zip *.*
+      #     pwd
+      #     echo 'Zip complete!'
+
+      - uses: octokit/request-action@v2.x
+        id: get_latest_release
         with:
-          node-version: "14"
-      - name: build
-        run: |
-          cd slackdeck/
-          npm i
-          npm run dev
-          npm run build
-          echo 'Build complete!'
-      - name: zip
-        run: |
-          cd slackdeck/dist/
-          zip release.zip *.*
-          pwd
-          echo 'Zip complete!'
+          route: GET /repos/{owner}/{repo}/releases/latest
+          owner: yamamoto-yuta
+          repo: slack-deck
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: "echo latest release: ${{ steps.get_latest_release.outputs.data }}"
 
       # # Runs a single command using the runners shell
       # - name: Run a one-line script
