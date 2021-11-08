@@ -1,6 +1,7 @@
+import { Button, Modal } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import React, { useEffect } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 import { ColumnConfig } from './Contract';
 
@@ -16,8 +17,12 @@ const Main = () => {
   const [newColDefaultConfig, setNewColDefaultConfig] = React.useState<ColumnConfig>();
   let columnList: ColumnConfig[] = [];
 
+  const [show, setShow] = React.useState(false);
 
-  useEffect(() => {
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  React.useEffect(() => {
     chrome.storage.sync.get(
       ['newColDefaultConfig', 'columnList'],
       function (value) {
@@ -26,7 +31,6 @@ const Main = () => {
         }
         if (value.columnList) {
           columnList = value.columnList;
-          console.log(columnList);
           for (var i = 0; i < columnList.length; i++) {
             wrapper.appendChild(addColumn(i, columnList[i]));
           }
@@ -115,6 +119,25 @@ const Main = () => {
         className="btn btn-primary rounded-circle"
         onClick={() => onClickAddNewColumnButton(columnList.length)}
       ><FontAwesomeIcon icon={faPlus} className="deck-icon-large" /></button>
+
+      <Button variant="primary" onClick={handleShow}>
+        Launch demo modal
+      </Button>
+
+      <Modal show={show} onHide={handleClose} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Modal heading</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={handleClose}>
+            Save Changes
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   )
 }
