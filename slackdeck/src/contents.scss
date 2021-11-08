@@ -23,6 +23,15 @@ $deck-width: 60px;
 #deck {
   width: $deck-width;
   height: 100vh;
+  z-index: 999;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+#deckSpacer {
+  min-width: $deck-width;
+  width: $deck-width;
 }
 
 .deck-icon-large {
