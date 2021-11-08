@@ -42,6 +42,8 @@ $deck-width: 60px;
 .column {
   height: 100%;
   border-left: 1px solid $primary;
+  display: flex;
+  flex-flow: column;
 }
 
 .column iframe {
