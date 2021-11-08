@@ -1,4 +1,4 @@
-import { Button, Form, Modal, Container, Row, Col } from 'react-bootstrap';
+import { Button, Form, Modal } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import React from 'react';
