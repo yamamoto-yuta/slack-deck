@@ -1,7 +1,7 @@
 @import "~bootstrap/scss/bootstrap";
 
 $main-col-width: 1000px;
-$deck-width: 70px;
+$deck-width: 60px;
 
 #newBody {
   display: flex;
@@ -23,6 +23,15 @@ $deck-width: 70px;
 #deck {
   width: $deck-width;
   height: 100vh;
+  z-index: 999;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+#deckSpacer {
+  min-width: $deck-width;
+  width: $deck-width;
 }
 
 .deck-icon-large {

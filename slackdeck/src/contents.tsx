@@ -107,6 +107,9 @@ const deck = document.createElement('div');
 deck.id = 'deck';
 deck.classList.add('bg-dark');
 
+const deckSpacer = document.createElement('div');
+deckSpacer.id = 'deckSpacer';
+
 const body = document.body;
 body.id = 'mainBody';
 body.classList.add('text-light');
@@ -117,6 +120,7 @@ wrapper.id = 'wrapper';
 const newBody = document.createElement('body');
 newBody.id = 'newBody';
 newBody.appendChild(deck);
+newBody.appendChild(deckSpacer);
 newBody.appendChild(body);
 newBody.appendChild(wrapper);
 document.documentElement.appendChild(newBody);
