@@ -1,4 +1,4 @@
-import { Button, Modal } from 'react-bootstrap';
+import { Button, Form, Modal, Container, Row, Col } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import React from 'react';
@@ -14,7 +14,15 @@ const columnElementId = (_: TemplateStringsArray, columnIndex: number) => `col-e
 
 
 const Main = () => {
-  const [newColDefaultConfig, setNewColDefaultConfig] = React.useState<ColumnConfig>();
+  const WIDTH_OPTION_LIST = [
+    { text: "Narrow", value: "300px" },
+    { text: "Medium", value: "500px" },
+    { text: "Wide", value: "700px" },
+  ];
+  const DEFAULT_WIDTH_OPTION_INDEX = 1;
+
+  const [newColWidth, setNewColWidth] = React.useState<string>(WIDTH_OPTION_LIST[DEFAULT_WIDTH_OPTION_INDEX].value);
+  const [newColUrl, setNewColUrl] = React.useState<string>();
   let columnList: ColumnConfig[] = [];
 
   const [show, setShow] = React.useState(false);
@@ -24,11 +32,8 @@ const Main = () => {
 
   React.useEffect(() => {
     chrome.storage.sync.get(
-      ['newColDefaultConfig', 'columnList'],
+      ['columnList'],
       function (value) {
-        if (value.newColDefaultConfig) {
-          setNewColDefaultConfig(value.newColDefaultConfig);
-        }
         if (value.columnList) {
           columnList = value.columnList;
           for (var i = 0; i < columnList.length; i++) {
@@ -39,7 +44,7 @@ const Main = () => {
     );
   }, []);
 
-  const addColumn = (columnIndex: number, columnCofig: ColumnConfig = newColDefaultConfig) => {
+  const addColumn = (columnIndex: number, columnCofig: ColumnConfig) => {
     // Column
     let column = document.createElement('div');
     column.id = columnElementId`${columnIndex}`;
@@ -96,45 +101,61 @@ const Main = () => {
     pClient.style.width = '100%';
   }
 
-  const onClickAddNewColumnButton = (columnIndex: number) => {
-    if (newColDefaultConfig !== undefined) {
-      // Add column
-      wrapper.appendChild(addColumn(columnIndex));
-      fixSlackDom();
-
-      // Push to columnList
-      columnList.push(newColDefaultConfig);
-
-      // Save current column state
-      chrome.storage.sync.set({ 'columnList': columnList });
-
-    } else {
-      alert('Please set default column config first.\nYou will need to reload to reflect the settings.');
-    }
+  const onClickAddNewColumnButton = (columnIndex: number, columnCofig: ColumnConfig) => {
+    // Add column
+    console.log(columnCofig);
+    wrapper.appendChild(addColumn(columnIndex, columnCofig));
+    fixSlackDom();
+    // Push to columnList
+    columnList.push(columnCofig);
+    // Save current column state
+    chrome.storage.sync.set({ 'columnList': columnList });
+    // Close Mordal
+    handleClose();
   }
 
   return (
     <div className="mx-2 my-3 text-center text-white">
       <button
         className="btn btn-primary rounded-circle"
-        onClick={() => onClickAddNewColumnButton(columnList.length)}
+        onClick={handleShow}
       ><FontAwesomeIcon icon={faPlus} className="deck-icon-large" /></button>
-
-      <Button variant="primary" onClick={handleShow}>
-        Launch demo modal
-      </Button>
 
       <Modal show={show} onHide={handleClose} centered>
         <Modal.Header closeButton>
-          <Modal.Title>Modal heading</Modal.Title>
+          <Modal.Title>Add new column</Modal.Title>
         </Modal.Header>
-        <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
+        <Modal.Body>
+          <p>Enter the column width and URL of the column you want to add.</p>
+          <Form className="d-flex">
+            <Form.Select
+              className="w-auto mx-1"
+              onChange={(e) => setNewColWidth(e.target.value)}
+            >
+              {WIDTH_OPTION_LIST.map((option) => (
+                <option
+                  value={option.value}
+                  selected={newColWidth === option.value}
+                >{option.text}</option>
+              ))}
+            </Form.Select>
+            <Form.Control
+              type="text"
+              className="mx-1"
+              placeholder="https://app.slack.com/client/*"
+              onChange={(e) => setNewColUrl(e.target.value)}
+            />
+          </Form>
+        </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={handleClose}>
-            Save Changes
+          <Button variant="primary" onClick={() => {
+            let newColConfig: ColumnConfig = {
+              width: newColWidth,
+              url: newColUrl,
+            };
+            onClickAddNewColumnButton(columnList.length, newColConfig);
+          }}>
+            Add
           </Button>
         </Modal.Footer>
       </Modal>
