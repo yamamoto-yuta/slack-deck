@@ -21,8 +21,9 @@ const Main = () => {
     { text: "Wide", value: "700px" },
   ];
   const DEFAULT_WIDTH_OPTION_INDEX = 1;
+  const DEFAULT_WIDTH_OPTION = WIDTH_OPTION_LIST[DEFAULT_WIDTH_OPTION_INDEX];
 
-  const [newColWidth, setNewColWidth] = React.useState<string>(WIDTH_OPTION_LIST[DEFAULT_WIDTH_OPTION_INDEX].value);
+  const [newColWidth, setNewColWidth] = React.useState<string>();
   const [newColUrl, setNewColUrl] = React.useState<string>();
 
 
@@ -136,7 +137,7 @@ const Main = () => {
               {WIDTH_OPTION_LIST.map((option) => (
                 <option
                   value={option.value}
-                  selected={newColWidth === option.value}
+                  selected={DEFAULT_WIDTH_OPTION.value === option.value}
                 >{option.text}</option>
               ))}
             </Form.Select>
