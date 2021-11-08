@@ -12,6 +12,7 @@ const columnDeleteButtonId = (_: TemplateStringsArray, columnIndex: number) => `
 const columnIframeId = (_: TemplateStringsArray, columnIndex: number) => `col-iframe-${columnIndex}`;
 const columnElementId = (_: TemplateStringsArray, columnIndex: number) => `col-el-${columnIndex}`;
 
+let columnList: Array<ColumnConfig> = [];
 
 const Main = () => {
   const WIDTH_OPTION_LIST = [
@@ -23,7 +24,7 @@ const Main = () => {
 
   const [newColWidth, setNewColWidth] = React.useState<string>(WIDTH_OPTION_LIST[DEFAULT_WIDTH_OPTION_INDEX].value);
   const [newColUrl, setNewColUrl] = React.useState<string>();
-  let columnList: ColumnConfig[] = [];
+
 
   const [show, setShow] = React.useState(false);
 
@@ -76,7 +77,8 @@ const Main = () => {
     colDelBtn.onclick = () => {
       // Remove
       var delcolIdx = parseInt(column.id.split('-').slice(-1)[0]);
-      columnList.splice(delcolIdx, 1);
+      columnList.splice(delcolIdx, 1);;
+      chrome.storage.sync.set({ 'columnList': columnList });
       column.remove();
 
       // Update other elements
@@ -103,7 +105,6 @@ const Main = () => {
 
   const onClickAddNewColumnButton = (columnIndex: number, columnCofig: ColumnConfig) => {
     // Add column
-    console.log(columnCofig);
     wrapper.appendChild(addColumn(columnIndex, columnCofig));
     fixSlackDom();
     // Push to columnList
