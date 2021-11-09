@@ -46,6 +46,13 @@ const Main = () => {
     );
   }, []);
 
+  const saveColumns = () => {
+    for (var i = 0; i < columnList.length; i++) {
+      columnList[i].name = document.getElementsByClassName('column')[i].getElementsByClassName('col-header')[0].getElementsByTagName('input')[0].value;
+    }
+    chrome.storage.sync.set({ 'columnList': columnList });
+  }
+
   const addColumn = (columnIndex: number, columnCofig: ColumnConfig) => {
     // Column
     let column = document.createElement('div');
@@ -79,7 +86,7 @@ const Main = () => {
       // Remove
       var delcolIdx = parseInt(column.id.split('-').slice(-1)[0]);
       columnList.splice(delcolIdx, 1);;
-      chrome.storage.sync.set({ 'columnList': columnList });
+      saveColumns();
       column.remove();
 
       // Update other elements
@@ -111,9 +118,13 @@ const Main = () => {
     // Push to columnList
     columnList.push(columnCofig);
     // Save current column state
-    chrome.storage.sync.set({ 'columnList': columnList });
+    saveColumns();
     // Close Mordal
     handleClose();
+  }
+
+  const onClickSaveButton = () => {
+    saveColumns();
   }
 
   return (
@@ -124,7 +135,7 @@ const Main = () => {
       ><FontAwesomeIcon icon={faPlus} className="deck-icon-large" /></button>
       <button
         className="btn btn-outline-primary rounded-circle my-1 btn-outline-primary-icon-color"
-      // onClick={ }
+        onClick={onClickSaveButton}
       ><FontAwesomeIcon icon={faSave} className="deck-icon-large" /></button>
 
       <Modal show={show} onHide={handleClose} centered>
