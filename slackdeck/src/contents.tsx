@@ -23,7 +23,7 @@ const Main = () => {
   const DEFAULT_WIDTH_OPTION_INDEX = 1;
   const DEFAULT_WIDTH_OPTION = WIDTH_OPTION_LIST[DEFAULT_WIDTH_OPTION_INDEX];
 
-  const [newColWidth, setNewColWidth] = React.useState<string>();
+  const [newColWidth, setNewColWidth] = React.useState<string>(DEFAULT_WIDTH_OPTION.value);
   const [newColUrl, setNewColUrl] = React.useState<string>();
 
 
