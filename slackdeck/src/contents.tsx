@@ -1,6 +1,6 @@
 import { Button, Form, Modal } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlus, faSave } from '@fortawesome/free-solid-svg-icons';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { ColumnConfig } from './Contract';
@@ -23,7 +23,7 @@ const Main = () => {
   const DEFAULT_WIDTH_OPTION_INDEX = 1;
   const DEFAULT_WIDTH_OPTION = WIDTH_OPTION_LIST[DEFAULT_WIDTH_OPTION_INDEX];
 
-  const [newColWidth, setNewColWidth] = React.useState<string>(DEFAULT_WIDTH_OPTION.value);
+  const [newColWidth, setNewColWidth] = React.useState<string>();
   const [newColUrl, setNewColUrl] = React.useState<string>();
 
 
@@ -46,23 +46,13 @@ const Main = () => {
     );
   }, []);
 
-  const saveColumns = () => {
-    for (var i = 0; i < columnList.length; i++) {
-      columnList[i].name = document.getElementsByClassName('column')[i].getElementsByClassName('col-header')[0].getElementsByTagName('input')[0].value;
-    }
-    chrome.storage.sync.set({ 'columnList': columnList });
-  }
-
   const addColumn = (columnIndex: number, columnCofig: ColumnConfig) => {
     // Column
     let column = document.createElement('div');
     column.id = columnElementId`${columnIndex}`;
     column.className = "column bg-dark";
-    const setColumnWidth = (width: string) => {
-      column.style.minWidth = columnCofig.width;
-      column.style.width = columnCofig.width;
-    }
-    setColumnWidth(columnCofig.width);
+    column.style.minWidth = columnCofig.width;
+    column.style.width = columnCofig.width;
 
     // Slack
     let iframe = document.createElement('iframe');
@@ -77,23 +67,8 @@ const Main = () => {
     // -- Column Name
     let colName = document.createElement('input');
     colName.type = 'text';
-    colName.value = columnCofig.name;
+    colName.value = columnNameDefaultValue`${columnIndex}`;
     colName.className = 'form-control';
-
-    // -- Column Width Select
-    let colWidthSelect = document.createElement('select');
-    colWidthSelect.className = 'form-select w-auto';
-    for (var widthOption of WIDTH_OPTION_LIST) {
-      let option = document.createElement('option');
-      option.value = widthOption.value;
-      option.text = widthOption.text;
-      colWidthSelect.appendChild(option);
-    }
-    colWidthSelect.selectedIndex = WIDTH_OPTION_LIST.findIndex(option => option.value === columnCofig.width);
-    colWidthSelect.onchange = () => {
-      columnCofig.width = colWidthSelect.value;
-      setColumnWidth(columnCofig.width);
-    }
 
     // -- Column Delete Button
     let colDelBtn = document.createElement('button');
@@ -104,7 +79,7 @@ const Main = () => {
       // Remove
       var delcolIdx = parseInt(column.id.split('-').slice(-1)[0]);
       columnList.splice(delcolIdx, 1);;
-      saveColumns();
+      chrome.storage.sync.set({ 'columnList': columnList });
       column.remove();
 
       // Update other elements
@@ -117,7 +92,6 @@ const Main = () => {
 
     // Append elements
     colHeader.appendChild(colName);
-    colHeader.appendChild(colWidthSelect);
     colHeader.appendChild(colDelBtn);
     column.appendChild(colHeader);
     column.appendChild(iframe);
@@ -137,25 +111,17 @@ const Main = () => {
     // Push to columnList
     columnList.push(columnCofig);
     // Save current column state
-    saveColumns();
+    chrome.storage.sync.set({ 'columnList': columnList });
     // Close Mordal
     handleClose();
   }
 
-  const onClickSaveButton = () => {
-    saveColumns();
-  }
-
   return (
-    <div className="mx-2 my-2 text-center text-white">
+    <div className="mx-2 my-3 text-center text-white">
       <button
-        className="btn btn-primary rounded-circle my-1"
+        className="btn btn-primary rounded-circle"
         onClick={handleShow}
       ><FontAwesomeIcon icon={faPlus} className="deck-icon-large" /></button>
-      <button
-        className="btn btn-outline-primary rounded-circle my-1 btn-outline-primary-icon-color"
-        onClick={onClickSaveButton}
-      ><FontAwesomeIcon icon={faSave} className="deck-icon-large" /></button>
 
       <Modal show={show} onHide={handleClose} centered>
         <Modal.Header closeButton>
@@ -188,7 +154,6 @@ const Main = () => {
             let newColConfig: ColumnConfig = {
               width: newColWidth,
               url: newColUrl,
-              name: columnNameDefaultValue`${columnList.length}`,
             };
             onClickAddNewColumnButton(columnList.length, newColConfig);
           }}>
