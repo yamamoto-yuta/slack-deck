@@ -58,8 +58,11 @@ const Main = () => {
     let column = document.createElement('div');
     column.id = columnElementId`${columnIndex}`;
     column.className = "column bg-dark";
-    column.style.minWidth = columnCofig.width;
-    column.style.width = columnCofig.width;
+    const setColumnWidth = (width: string) => {
+      column.style.minWidth = columnCofig.width;
+      column.style.width = columnCofig.width;
+    }
+    setColumnWidth(columnCofig.width);
 
     // Slack
     let iframe = document.createElement('iframe');
@@ -76,6 +79,21 @@ const Main = () => {
     colName.type = 'text';
     colName.value = columnCofig.name;
     colName.className = 'form-control';
+
+    // -- Column Width Select
+    let colWidthSelect = document.createElement('select');
+    colWidthSelect.className = 'form-select w-auto';
+    for (var widthOption of WIDTH_OPTION_LIST) {
+      let option = document.createElement('option');
+      option.value = widthOption.value;
+      option.text = widthOption.text;
+      colWidthSelect.appendChild(option);
+    }
+    colWidthSelect.selectedIndex = WIDTH_OPTION_LIST.findIndex(option => option.value === columnCofig.width);
+    colWidthSelect.onchange = () => {
+      columnCofig.width = colWidthSelect.value;
+      setColumnWidth(columnCofig.width);
+    }
 
     // -- Column Delete Button
     let colDelBtn = document.createElement('button');
@@ -99,6 +117,7 @@ const Main = () => {
 
     // Append elements
     colHeader.appendChild(colName);
+    colHeader.appendChild(colWidthSelect);
     colHeader.appendChild(colDelBtn);
     column.appendChild(colHeader);
     column.appendChild(iframe);
@@ -128,7 +147,7 @@ const Main = () => {
   }
 
   return (
-    <div className="mx-2 my-3 text-center text-white">
+    <div className="mx-2 my-2 text-center text-white">
       <button
         className="btn btn-primary rounded-circle my-1"
         onClick={handleShow}
