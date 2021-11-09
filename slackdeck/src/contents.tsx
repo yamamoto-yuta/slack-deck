@@ -23,7 +23,7 @@ const Main = () => {
   const DEFAULT_WIDTH_OPTION_INDEX = 1;
   const DEFAULT_WIDTH_OPTION = WIDTH_OPTION_LIST[DEFAULT_WIDTH_OPTION_INDEX];
 
-  const [newColWidth, setNewColWidth] = React.useState<string>();
+  const [newColWidth, setNewColWidth] = React.useState<string>(DEFAULT_WIDTH_OPTION.value);
   const [newColUrl, setNewColUrl] = React.useState<string>();
 
 
@@ -67,7 +67,7 @@ const Main = () => {
     // -- Column Name
     let colName = document.createElement('input');
     colName.type = 'text';
-    colName.value = columnNameDefaultValue`${columnIndex}`;
+    colName.value = columnCofig.name;
     colName.className = 'form-control';
 
     // -- Column Delete Button
@@ -154,6 +154,7 @@ const Main = () => {
             let newColConfig: ColumnConfig = {
               width: newColWidth,
               url: newColUrl,
+              name: columnNameDefaultValue`${columnList.length}`,
             };
             onClickAddNewColumnButton(columnList.length, newColConfig);
           }}>
