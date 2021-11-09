@@ -147,7 +147,7 @@ const Main = () => {
   }
 
   return (
-    <div className="mx-2 my-3 text-center text-white">
+    <div className="mx-2 my-2 text-center text-white">
       <button
         className="btn btn-primary rounded-circle my-1"
         onClick={handleShow}
