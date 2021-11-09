@@ -39,14 +39,6 @@ $deck-width: 60px;
   font-size: medium;
 }
 
-.btn-outline-primary-icon-color .deck-icon-large {
-  color: $primary;
-}
-
-.btn-outline-primary-icon-color:hover .deck-icon-large {
-  color: $light;
-}
-
 .column {
   height: 100%;
   border-left: 1px solid $primary;
