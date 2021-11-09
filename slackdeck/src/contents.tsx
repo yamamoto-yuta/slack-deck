@@ -1,6 +1,6 @@
 import { Button, Form, Modal } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faSave } from '@fortawesome/free-solid-svg-icons';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { ColumnConfig } from './Contract';
@@ -119,9 +119,13 @@ const Main = () => {
   return (
     <div className="mx-2 my-3 text-center text-white">
       <button
-        className="btn btn-primary rounded-circle"
+        className="btn btn-primary rounded-circle my-1"
         onClick={handleShow}
       ><FontAwesomeIcon icon={faPlus} className="deck-icon-large" /></button>
+      <button
+        className="btn btn-outline-primary rounded-circle my-1 btn-outline-primary-icon-color"
+      // onClick={ }
+      ><FontAwesomeIcon icon={faSave} className="deck-icon-large" /></button>
 
       <Modal show={show} onHide={handleClose} centered>
         <Modal.Header closeButton>
