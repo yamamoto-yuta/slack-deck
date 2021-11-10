@@ -49,6 +49,8 @@ const Main = () => {
   const saveColumns = () => {
     for (var i = 0; i < columnList.length; i++) {
       columnList[i].name = document.getElementsByClassName('column')[i].getElementsByClassName('col-header')[0].getElementsByTagName('input')[0].value;
+      var _iframe = document.getElementsByClassName('col-iframe')[i] as HTMLIFrameElement;
+      columnList[i].url = _iframe.contentWindow.location.href;
     }
     chrome.storage.sync.set({ 'columnList': columnList });
   }
