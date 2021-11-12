@@ -53,6 +53,14 @@ $deck-width: 60px;
   color: $light;
 }
 
+#savedAtText {
+  font-size: x-small;
+}
+
+#savedAtTime {
+  font-size: x-small;
+}
+
 .column {
   height: 100%;
   border-left: 1px solid $primary;
