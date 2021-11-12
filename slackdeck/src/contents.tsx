@@ -277,7 +277,7 @@ const Main = () => {
 
 const deck = document.createElement('div');
 deck.id = 'deck';
-deck.className = 'bg-dark px-2 py-2 text-center';
+deck.className = 'bg-dark px-2 py-2 text-center text-light';
 
 const deckSpacer = document.createElement('div');
 deckSpacer.id = 'deckSpacer';
