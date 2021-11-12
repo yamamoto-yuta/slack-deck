@@ -3,3 +3,7 @@ export type ColumnConfig = {
     url: string,
     name: string,
 }
+
+export type GeneralConfig = {
+    useDarkTheme: boolean
+}
