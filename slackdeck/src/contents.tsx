@@ -1,9 +1,9 @@
 import { Button, Form, Modal } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlus, faSave } from '@fortawesome/free-solid-svg-icons';
+import { faCog, faPlus, faSave } from '@fortawesome/free-solid-svg-icons';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { ColumnConfig } from './Contract';
+import { ColumnConfig, GeneralConfig } from './Contract';
 
 import './contents.scss';
 
@@ -11,6 +11,9 @@ const columnNameDefaultValue = (_: TemplateStringsArray, columnIndex: number) =>
 const columnDeleteButtonId = (_: TemplateStringsArray, columnIndex: number) => `col-del-btn-${columnIndex}`;
 const columnIframeId = (_: TemplateStringsArray, columnIndex: number) => `col-iframe-${columnIndex}`;
 const columnElementId = (_: TemplateStringsArray, columnIndex: number) => `col-el-${columnIndex}`;
+
+const pad0 = (num: number) => ('00' + num).slice(-2);
+const savedTimeTemplate = (_: TemplateStringsArray, currentDate: Date) => `${pad0(currentDate.getHours())}:${pad0(currentDate.getMinutes())}:${pad0(currentDate.getSeconds())}`;
 
 let columnList: Array<ColumnConfig> = [];
 
@@ -22,19 +25,26 @@ const Main = () => {
   ];
   const DEFAULT_WIDTH_OPTION_INDEX = 1;
   const DEFAULT_WIDTH_OPTION = WIDTH_OPTION_LIST[DEFAULT_WIDTH_OPTION_INDEX];
-
   const [newColWidth, setNewColWidth] = React.useState<string>(DEFAULT_WIDTH_OPTION.value);
   const [newColUrl, setNewColUrl] = React.useState<string>();
 
+  const DEFAULT_GENERAL_CONFIG: GeneralConfig = {
+    useDarkTheme: false
+  };
+  const [generalConfigUseDarkTheme, setGeneralConfigUseDarkTheme] = React.useState<boolean>(DEFAULT_GENERAL_CONFIG.useDarkTheme);
 
-  const [show, setShow] = React.useState(false);
+  const [savedTime, setSavedTime] = React.useState<Date>(new Date());
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const [showAddColumnModal, setShowAddColumnModal] = React.useState<boolean>(false);
+  const handleAddColumnModalClose = () => setShowAddColumnModal(false);
+  const handleAddColumnModalOpen = () => setShowAddColumnModal(true);
+  const [showConfigModal, setShowConfigModal] = React.useState<boolean>(false);
+  const handleConfigModalClose = () => setShowConfigModal(false);
+  const handleConfigModalOpen = () => setShowConfigModal(true);
 
   React.useEffect(() => {
     chrome.storage.sync.get(
-      ['columnList'],
+      ['columnList', 'generalConfig'],
       function (value) {
         if (value.columnList) {
           columnList = value.columnList;
@@ -42,17 +52,28 @@ const Main = () => {
             wrapper.appendChild(addColumn(i, columnList[i]));
           }
         }
+        if (value.generalConfig) {
+          setGeneralConfigUseDarkTheme(value.generalConfig.useDarkTheme);
+          if (value.generalConfig.useDarkTheme) {
+            body.classList.add('text-light');
+            newBody.classList.add('text-light');
+          }
+        }
       }
     );
+    setSavedTime(new Date());
   }, []);
 
   const saveColumns = () => {
     for (var i = 0; i < columnList.length; i++) {
       columnList[i].name = document.getElementsByClassName('column')[i].getElementsByClassName('col-header')[0].getElementsByTagName('input')[0].value;
       var _iframe = document.getElementsByClassName('col-iframe')[i] as HTMLIFrameElement;
-      columnList[i].url = _iframe.contentWindow.location.href;
+      if (_iframe.contentWindow.location.href !== "about:blank") {
+        columnList[i].url = _iframe.contentWindow.location.href;
+      }
     }
     chrome.storage.sync.set({ 'columnList': columnList });
+    setSavedTime(new Date());
   }
 
   const addColumn = (columnIndex: number, columnCofig: ColumnConfig) => {
@@ -141,25 +162,45 @@ const Main = () => {
     // Save current column state
     saveColumns();
     // Close Mordal
-    handleClose();
+    handleAddColumnModalClose();
   }
 
   const onClickSaveButton = () => {
     saveColumns();
   }
 
+  const onClickConfigButton = () => {
+    // Save
+    let generalConfig: GeneralConfig = {
+      useDarkTheme: generalConfigUseDarkTheme
+    }
+    chrome.storage.sync.set({ 'generalConfig': generalConfig });
+    // Close
+    console.log('onClickConfigButton', generalConfigUseDarkTheme);
+    handleConfigModalClose();
+  }
+
   return (
-    <div className="mx-2 my-2 text-center text-white">
+    <div className="d-flex flex-column h-100">
       <button
         className="btn btn-primary rounded-circle my-1"
-        onClick={handleShow}
-      ><FontAwesomeIcon icon={faPlus} className="deck-icon-large" /></button>
+        onClick={handleAddColumnModalOpen}
+      ><FontAwesomeIcon icon={faPlus} className="deck-btn-icon-circle" /></button>
       <button
         className="btn btn-outline-primary rounded-circle my-1 btn-outline-primary-icon-color"
         onClick={onClickSaveButton}
-      ><FontAwesomeIcon icon={faSave} className="deck-icon-large" /></button>
+      ><FontAwesomeIcon icon={faSave} className="deck-btn-icon-circle" /></button>
+      <div className="text-sm">
+        <div id="savedAtText">Saved at</div>
+        <div id="savedAtTime">{savedTimeTemplate`${savedTime}`}</div>
+      </div>
 
-      <Modal show={show} onHide={handleClose} centered>
+      <button
+        className="mt-auto btn my-1 p-0"
+        onClick={handleConfigModalOpen}
+      ><FontAwesomeIcon icon={faCog} className="deck-btn-icon-natural" /></button>
+
+      <Modal show={showAddColumnModal} onHide={handleAddColumnModalClose} centered className="text-dark">
         <Modal.Header closeButton>
           <Modal.Title>Add new column</Modal.Title>
         </Modal.Header>
@@ -198,20 +239,51 @@ const Main = () => {
           </Button>
         </Modal.Footer>
       </Modal>
+
+      <Modal show={showConfigModal} onHide={handleConfigModalClose} centered className="text-dark">
+        <Modal.Header closeButton>
+          <Modal.Title>Config</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group>
+              <h5>Dark Theme</h5>
+              <div className="mb-3">
+                <Form.Check
+                  type={"checkbox"}
+                  checked={generalConfigUseDarkTheme}
+                  label={"Use dark theme"}
+                  onChange={(e) => {
+                    setGeneralConfigUseDarkTheme(e.target.checked);
+                    body.classList.toggle('text-light');
+                    newBody.classList.toggle('text-light');
+                  }}
+                /></div>
+              <Form.Text className="text-muted">
+                Check this box if you want to use the dark theme in Slack.
+              </Form.Text>
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="primary" onClick={() => onClickConfigButton()}>
+            Save
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   )
 }
 
 const deck = document.createElement('div');
 deck.id = 'deck';
-deck.classList.add('bg-dark');
+deck.className = 'bg-dark px-2 py-2 text-center';
 
 const deckSpacer = document.createElement('div');
 deckSpacer.id = 'deckSpacer';
 
 const body = document.body;
 body.id = 'mainBody';
-body.classList.add('text-light');
 
 const wrapper = document.createElement('div');
 wrapper.id = 'wrapper';
