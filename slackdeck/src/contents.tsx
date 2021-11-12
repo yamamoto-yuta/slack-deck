@@ -12,6 +12,9 @@ const columnDeleteButtonId = (_: TemplateStringsArray, columnIndex: number) => `
 const columnIframeId = (_: TemplateStringsArray, columnIndex: number) => `col-iframe-${columnIndex}`;
 const columnElementId = (_: TemplateStringsArray, columnIndex: number) => `col-el-${columnIndex}`;
 
+const pad0 = (num: number) => ('00' + num).slice(-2);
+const savedTimeTemplate = (_: TemplateStringsArray, currentDate: Date) => `${pad0(currentDate.getHours())}:${pad0(currentDate.getMinutes())}:${pad0(currentDate.getSeconds())}`;
+
 let columnList: Array<ColumnConfig> = [];
 
 const Main = () => {
@@ -29,6 +32,8 @@ const Main = () => {
     useDarkTheme: false
   };
   const [generalConfigUseDarkTheme, setGeneralConfigUseDarkTheme] = React.useState<boolean>(DEFAULT_GENERAL_CONFIG.useDarkTheme);
+
+  const [savedTime, setSavedTime] = React.useState<Date>(new Date());
 
   const [showAddColumnModal, setShowAddColumnModal] = React.useState<boolean>(false);
   const handleAddColumnModalClose = () => setShowAddColumnModal(false);
@@ -56,6 +61,7 @@ const Main = () => {
         }
       }
     );
+    setSavedTime(new Date());
   }, []);
 
   const saveColumns = () => {
@@ -65,6 +71,7 @@ const Main = () => {
       columnList[i].url = _iframe.contentWindow.location.href;
     }
     chrome.storage.sync.set({ 'columnList': columnList });
+    setSavedTime(new Date());
   }
 
   const addColumn = (columnIndex: number, columnCofig: ColumnConfig) => {
@@ -181,6 +188,10 @@ const Main = () => {
         className="btn btn-outline-primary rounded-circle my-1 btn-outline-primary-icon-color"
         onClick={onClickSaveButton}
       ><FontAwesomeIcon icon={faSave} className="deck-btn-icon-circle" /></button>
+      <div className="text-sm">
+        <div id="savedAtText">Saved at</div>
+        <div id="savedAtTime">{savedTimeTemplate`${savedTime}`}</div>
+      </div>
 
       <button
         className="mt-auto btn my-1 p-0"
