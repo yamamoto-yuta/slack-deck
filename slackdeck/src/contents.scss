@@ -21,8 +21,9 @@ $deck-width: 60px;
 }
 
 #deck {
+  text-align: center;
   width: $deck-width;
-  height: 100vh;
+  height: 100%;
   z-index: 999;
   position: fixed;
   top: 0;
@@ -34,16 +35,21 @@ $deck-width: 60px;
   width: $deck-width;
 }
 
-.deck-icon-large {
+.deck-btn-icon-circle {
   color: white;
-  font-size: medium;
+  font-size: large;
 }
 
-.btn-outline-primary-icon-color .deck-icon-large {
+.deck-btn-icon-natural {
+  color: white;
+  font-size: x-large;
+}
+
+.btn-outline-primary-icon-color .deck-btn-icon-circle {
   color: $primary;
 }
 
-.btn-outline-primary-icon-color:hover .deck-icon-large {
+.btn-outline-primary-icon-color:hover .deck-btn-icon-circle {
   color: $light;
 }
 
