@@ -127,6 +127,7 @@ const Main = () => {
         newColElIdx += columnList.length;
       }
 
+      // Update column list
       let tmp_2 = columnList[colElIdx];
       columnList[colElIdx] = columnList[newColElIdx];
       columnList[newColElIdx] = tmp_2;
@@ -153,6 +154,7 @@ const Main = () => {
         newColElIdx -= columnList.length;
       }
 
+      // Update column list
       let tmp_2 = columnList[colElIdx];
       columnList[colElIdx] = columnList[newColElIdx];
       columnList[newColElIdx] = tmp_2;
