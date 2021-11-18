@@ -134,6 +134,8 @@ const Main = () => {
 
       // Update element id
       updateElementID();
+      // Save column
+      saveColumns();
     };
 
     // -- Move column to right buttion
@@ -161,6 +163,9 @@ const Main = () => {
 
       // Update element id
       updateElementID();
+
+      // Save column
+      saveColumns();
     };
 
     // -- Column Name
