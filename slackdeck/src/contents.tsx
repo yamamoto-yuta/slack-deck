@@ -308,24 +308,23 @@ const Main = () => {
           <Modal.Title>Config</Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          <h5>Dark Theme</h5>
+          <p>
+            Check this box if you want to use the dark theme in Slack.
+          </p>
           <Form>
-            <Form.Group>
-              <h5>Dark Theme</h5>
-              <div className="mb-3">
-                <Form.Check
-                  type={"checkbox"}
-                  checked={generalConfigUseDarkTheme}
-                  label={"Use dark theme"}
-                  onChange={(e) => {
-                    setGeneralConfigUseDarkTheme(e.target.checked);
-                    body.classList.toggle('text-light');
-                    newBody.classList.toggle('text-light');
-                  }}
-                /></div>
-              <Form.Text className="text-muted">
-                Check this box if you want to use the dark theme in Slack.
-              </Form.Text>
-            </Form.Group>
+            <div className="mb-3">
+              <Form.Check
+                type={"checkbox"}
+                checked={generalConfigUseDarkTheme}
+                label={"Use dark theme"}
+                onChange={(e) => {
+                  setGeneralConfigUseDarkTheme(e.target.checked);
+                  body.classList.toggle('text-light');
+                  newBody.classList.toggle('text-light');
+                }}
+              />
+            </div>
           </Form>
         </Modal.Body>
         <Modal.Footer>
