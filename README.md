@@ -24,12 +24,17 @@ A Chrome extension to use Slack like TweetDeck.
 
 1. Click on the "➕" button to add a column.
 1. Enter the column width and URL of the column you want to add.
-1. To delete a column, click the "x" button at the top of the column you want to delete.
+1. To delete a column, click the "❌" button at the top of the column you want to delete.
 
 ### 💾 Save column
 
 1. Click "💾" button to save the added column.
 1. Restore the previously added columns when the page loads.
+
+### ↔️ Move column
+
+1. Click on the "<"/">" button to move the column to the left/right.
+1. When the column crosses the end, it loops to the opposite end.
 
 ## Development
 
