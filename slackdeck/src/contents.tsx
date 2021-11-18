@@ -8,9 +8,12 @@ import { ColumnConfig, GeneralConfig } from './Contract';
 import './contents.scss';
 
 const columnNameDefaultValue = (_: TemplateStringsArray, columnIndex: number) => `Column ${columnIndex}`;
+const columnMoveLeftButtonId = (_: TemplateStringsArray, columnIndex: number) => `col-move-left-btn-${columnIndex}`;
+const columnMoveRightButtonId = (_: TemplateStringsArray, columnIndex: number) => `col-move-right-btn-${columnIndex}`;
 const columnDeleteButtonId = (_: TemplateStringsArray, columnIndex: number) => `col-del-btn-${columnIndex}`;
 const columnIframeId = (_: TemplateStringsArray, columnIndex: number) => `col-iframe-${columnIndex}`;
 const columnElementId = (_: TemplateStringsArray, columnIndex: number) => `col-el-${columnIndex}`;
+const extractColumnElementIdx = (colElId: string) => parseInt(colElId.split('-').slice(-1)[0]);
 
 const pad0 = (num: number) => ('00' + num).slice(-2);
 const savedTimeTemplate = (_: TemplateStringsArray, currentDate: Date) => `${pad0(currentDate.getHours())}:${pad0(currentDate.getMinutes())}:${pad0(currentDate.getSeconds())}`;
@@ -77,15 +80,24 @@ const Main = () => {
   }
 
   const addColumn = (columnIndex: number, columnCofig: ColumnConfig) => {
+    const updateElementID = () => {
+      // Update other elements
+      for (var i = 0; i < columnList.length; i++) {
+        document.getElementsByClassName('column')[i].id = columnElementId`${i}`;
+        document.getElementsByClassName('col-iframe')[i].id = columnIframeId`${i}`;
+        document.getElementsByClassName('col-del-btn')[i].id = columnDeleteButtonId`${i}`;
+      }
+    };
+
     // Column
     let column = document.createElement('div');
     column.id = columnElementId`${columnIndex}`;
     column.className = "column bg-dark";
-    const setColumnWidth = (width: string) => {
+    const setColumnWidth = () => {
       column.style.minWidth = columnCofig.width;
       column.style.width = columnCofig.width;
     }
-    setColumnWidth(columnCofig.width);
+    setColumnWidth();
 
     // Slack
     let iframe = document.createElement('iframe');
@@ -96,6 +108,65 @@ const Main = () => {
     // Column Header
     let colHeader = document.createElement('div');
     colHeader.className = 'col-header';
+
+    // -- Move column to left buttion
+    let colMoveLeftBtn = document.createElement('button');
+    colMoveLeftBtn.id = columnMoveLeftButtonId`${columnIndex}`;
+    colMoveLeftBtn.className = 'btn btn-primary col-del-btn';
+    colMoveLeftBtn.innerText = '<';
+    colMoveLeftBtn.onclick = () => {
+      // Calculate new column index
+      let colElIdx = extractColumnElementIdx(column.id);
+      let newColElIdx = colElIdx - 1;
+
+      // Switch column
+      if (newColElIdx >= 0) {
+        wrapper.insertBefore(document.getElementById(columnElementId`${colElIdx}`), document.getElementById(columnElementId`${newColElIdx}`));
+      } else {
+        wrapper.appendChild(document.getElementById(columnElementId`${colElIdx}`));
+        newColElIdx += columnList.length;
+      }
+
+      // Update column list
+      let tmp = columnList[colElIdx];
+      columnList[colElIdx] = columnList[newColElIdx];
+      columnList[newColElIdx] = tmp;
+
+      // Update element id
+      updateElementID();
+      // Save column
+      saveColumns();
+    };
+
+    // -- Move column to right buttion
+    let colMoveRightBtn = document.createElement('button');
+    colMoveRightBtn.id = columnMoveRightButtonId`${columnIndex}`;
+    colMoveRightBtn.className = 'btn btn-primary col-del-btn';
+    colMoveRightBtn.innerText = '>';
+    colMoveRightBtn.onclick = () => {
+      // Calculate new column index
+      let colElIdx = extractColumnElementIdx(column.id);
+      let newColElIdx = colElIdx + 1;
+
+      // Switch column
+      if (newColElIdx < columnList.length) {
+        wrapper.insertBefore(document.getElementById(columnElementId`${newColElIdx}`), document.getElementById(columnElementId`${colElIdx}`));
+      } else {
+        wrapper.insertBefore(document.getElementById(columnElementId`${colElIdx}`), document.getElementById(columnElementId`${0}`));
+        newColElIdx -= columnList.length;
+      }
+
+      // Update column list
+      let tmp_2 = columnList[colElIdx];
+      columnList[colElIdx] = columnList[newColElIdx];
+      columnList[newColElIdx] = tmp_2;
+
+      // Update element id
+      updateElementID();
+
+      // Save column
+      saveColumns();
+    };
 
     // -- Column Name
     let colName = document.createElement('input');
@@ -115,7 +186,7 @@ const Main = () => {
     colWidthSelect.selectedIndex = WIDTH_OPTION_LIST.findIndex(option => option.value === columnCofig.width);
     colWidthSelect.onchange = () => {
       columnCofig.width = colWidthSelect.value;
-      setColumnWidth(columnCofig.width);
+      setColumnWidth();
     }
 
     // -- Column Delete Button
@@ -131,14 +202,12 @@ const Main = () => {
       column.remove();
 
       // Update other elements
-      for (var i = 0; i < columnList.length; i++) {
-        document.getElementsByClassName('column')[i].id = columnElementId`${i}`;
-        document.getElementsByClassName('col-iframe')[i].id = columnIframeId`${i}`;
-        document.getElementsByClassName('col-del-btn')[i].id = columnDeleteButtonId`${i}`;
-      }
+      updateElementID();
     };
 
     // Append elements
+    colHeader.appendChild(colMoveLeftBtn);
+    colHeader.appendChild(colMoveRightBtn);
     colHeader.appendChild(colName);
     colHeader.appendChild(colWidthSelect);
     colHeader.appendChild(colDelBtn);
@@ -176,7 +245,6 @@ const Main = () => {
     }
     chrome.storage.sync.set({ 'generalConfig': generalConfig });
     // Close
-    console.log('onClickConfigButton', generalConfigUseDarkTheme);
     handleConfigModalClose();
   }
 
