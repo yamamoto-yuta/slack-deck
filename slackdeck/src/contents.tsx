@@ -128,9 +128,9 @@ const Main = () => {
       }
 
       // Update column list
-      let tmp_2 = columnList[colElIdx];
+      let tmp = columnList[colElIdx];
       columnList[colElIdx] = columnList[newColElIdx];
-      columnList[newColElIdx] = tmp_2;
+      columnList[newColElIdx] = tmp;
 
       // Update element id
       updateElementID();
