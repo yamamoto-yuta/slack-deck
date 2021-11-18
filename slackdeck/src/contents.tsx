@@ -83,7 +83,6 @@ const Main = () => {
     const updateElementID = () => {
       // Update other elements
       for (var i = 0; i < columnList.length; i++) {
-        console.log(document.getElementsByClassName('column')[i]);
         document.getElementsByClassName('column')[i].id = columnElementId`${i}`;
         document.getElementsByClassName('col-iframe')[i].id = columnIframeId`${i}`;
         document.getElementsByClassName('col-del-btn')[i].id = columnDeleteButtonId`${i}`;
@@ -239,7 +238,6 @@ const Main = () => {
     }
     chrome.storage.sync.set({ 'generalConfig': generalConfig });
     // Close
-    console.log('onClickConfigButton', generalConfigUseDarkTheme);
     handleConfigModalClose();
   }
 
