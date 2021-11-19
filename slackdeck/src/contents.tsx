@@ -61,10 +61,6 @@ const Main: React.FC = () => {
     setSavedTime(new Date());
   }, []);
 
-
-
-
-
   const onClickSaveButton = () => {
     saveColumns(columnList, setSavedTime);
   }
