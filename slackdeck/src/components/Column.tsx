@@ -6,6 +6,7 @@ import { saveColumns } from "../functions/column";
 const columnDeleteButtonId = (_: TemplateStringsArray, columnIndex: number) => `col-del-btn-${columnIndex}`;
 const columnIframeId = (_: TemplateStringsArray, columnIndex: number) => `col-iframe-${columnIndex}`;
 const columnElementId = (_: TemplateStringsArray, columnIndex: number) => `col-el-${columnIndex}`;
+const extractColumnIdxFromColumnDeleteButtonId = (colDelBtnId: string) => parseInt(colDelBtnId.split('-').slice(-1)[0]);
 
 export const Column: React.FC<{
   columnList: Array<ColumnConfig>,
@@ -25,16 +26,18 @@ export const Column: React.FC<{
 
   const onChangeWidthOption = (e) => {
     props.columnCofig.width = e.target.value;
-    let _col = document.getElementsByClassName('column')[props.columnIndex] as HTMLElement;
+    let colElIdx = extractColumnIdxFromColumnDeleteButtonId(e.target.id);
+    let _col = document.getElementsByClassName('column')[colElIdx] as HTMLElement;
     _col.style.minWidth = e.target.value;
     _col.style.width = e.target.value;
   }
 
-  const onClickDeleteButton = () => {
+  const onClickDeleteButton = (e) => {
     // Remove
-    props.columnList.splice(props.columnIndex, 1);;
+    let colElIdx = extractColumnIdxFromColumnDeleteButtonId(e.target.id);
+    props.columnList.splice(colElIdx, 1);;
     saveColumns(props.columnList, props.setSavedTime);
-    document.getElementsByClassName('column')[props.columnIndex].remove();
+    document.getElementsByClassName('column')[colElIdx].remove();
     // Update other elements
     updateElementID();
   }
