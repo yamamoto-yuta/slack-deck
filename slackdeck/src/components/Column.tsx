@@ -3,8 +3,6 @@ import { Button, Form } from "react-bootstrap";
 import { ColumnConfig, WIDTH_OPTION_LIST } from "../Contract";
 import { saveColumns } from "../functions/column";
 
-const columnMoveLeftButtonId = (_: TemplateStringsArray, columnIndex: number) => `col-mv-l-btn-${columnIndex}`;
-const columnMoveRightButtonId = (_: TemplateStringsArray, columnIndex: number) => `col-mv-r-btn-${columnIndex}`;
 const columnDeleteButtonId = (_: TemplateStringsArray, columnIndex: number) => `col-del-btn-${columnIndex}`;
 const columnIframeId = (_: TemplateStringsArray, columnIndex: number) => `col-iframe-${columnIndex}`;
 const columnElementId = (_: TemplateStringsArray, columnIndex: number) => `col-el-${columnIndex}`;
@@ -24,50 +22,6 @@ export const Column: React.FC<{
       document.getElementsByClassName('col-del-btn')[i].id = columnDeleteButtonId`${i}`;
     }
   };
-
-  const onClickMoveLeftButton = () => {
-    // Calculate new column index
-    let colElIdx = props.columnIndex;
-    let newColElIdx = colElIdx - 1;
-    // Switch column
-    if (newColElIdx >= 0) {
-      console.log(document.getElementById(columnElementId`${colElIdx}`));
-      console.log(document.getElementById(columnElementId`${newColElIdx}`));
-      document.getElementById('wrapper').insertBefore(document.getElementById(columnElementId`${colElIdx}`), document.getElementById(columnElementId`${newColElIdx}`));
-    } else {
-      document.getElementById('wrapper').appendChild(document.getElementById(columnElementId`${colElIdx}`));
-      newColElIdx += props.columnList.length;
-    }
-    // Update column list
-    let tmp = props.columnList[colElIdx];
-    props.columnList[colElIdx] = props.columnList[newColElIdx];
-    props.columnList[newColElIdx] = tmp;
-    // Update element id
-    updateElementID();
-    // Save column
-    saveColumns(props.columnList, props.setSavedTime);
-  }
-
-  const onClickMoveRightButton = () => {
-    // Calculate new column index
-    let colElIdx = props.columnIndex;
-    let newColElIdx = colElIdx + 1;
-    // Switch column
-    if (newColElIdx < props.columnList.length) {
-      document.getElementById('wrapper').insertBefore(document.getElementById(columnElementId`${newColElIdx}`), document.getElementById(columnElementId`${colElIdx}`));
-    } else {
-      document.getElementById('wrapper').insertBefore(document.getElementById(columnElementId`${colElIdx}`), document.getElementById(columnElementId`${0}`));
-      newColElIdx -= props.columnList.length;
-    }
-    // Update column list
-    let tmp = props.columnList[colElIdx];
-    props.columnList[colElIdx] = props.columnList[newColElIdx];
-    props.columnList[newColElIdx] = tmp;
-    // Update element id
-    updateElementID();
-    // Save column
-    saveColumns(props.columnList, props.setSavedTime);
-  }
 
   const onChangeWidthOption = (e) => {
     props.columnCofig.width = e.target.value;
@@ -95,16 +49,6 @@ export const Column: React.FC<{
       }}
     >
       <div className="col-header">
-        <Button
-          id={columnMoveLeftButtonId`${props.columnIndex}`}
-          className="btn btn-primary col-mv-l-btn"
-          onClick={onClickMoveLeftButton}
-        >&lt;</Button>
-        <Button
-          id={columnMoveRightButtonId`${props.columnIndex}`}
-          className="btn btn-primary col-mv-r-btn"
-          onClick={onClickMoveRightButton}
-        >&gt;</Button>
         <Form.Control
           type="text"
           value={colName}
