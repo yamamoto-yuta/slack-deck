@@ -1,7 +1,9 @@
 import React from "react";
 import { Button, Form, Modal } from "react-bootstrap";
+import ReactDOM from "react-dom";
 import { ColumnConfig, DEFAULT_WIDTH_OPTION, WIDTH_OPTION_LIST } from "../Contract";
-import { addColumn, saveColumns } from "../functions/column";
+import { saveColumns } from "../functions/column";
+import { Column } from "./Column";
 
 const columnNameDefaultValue = (_: TemplateStringsArray, columnIndex: number) => `Column ${columnIndex}`;
 
@@ -23,7 +25,14 @@ export const AddColumnModal: React.FC<{
 
   const onClickAddButton = () => {
     // Add column
-    document.getElementById('wrapper').appendChild(addColumn(props.columnList, props.setSavedTime, props.columnList.length, newColumnConfig));
+    let col = document.createElement('div');
+    ReactDOM.render(<Column
+      columnList={props.columnList}
+      setSavedTime={props.setSavedTime}
+      columnIndex={props.columnList.length}
+      columnCofig={newColumnConfig}
+    />, col);
+    document.getElementById('wrapper').appendChild(col);
     // Fix slack dom
     let pClient = document.getElementsByClassName('p-client')[0] as HTMLElement;
     pClient.style.width = '100%';

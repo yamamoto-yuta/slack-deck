@@ -8,7 +8,8 @@ import { ColumnConfig, GeneralConfig } from './Contract';
 import './contents.scss';
 import { ConfigModal } from './components/ConfigModal';
 import { AddColumnModal } from './components/AddColumnModal';
-import { addColumn, saveColumns } from './functions/column';
+import { saveColumns } from './functions/column';
+import { Column } from './components/Column';
 
 const pad0 = (num: number) => ('00' + num).slice(-2);
 const savedTimeTemplate = (_: TemplateStringsArray, currentDate: Date) => `${pad0(currentDate.getHours())}:${pad0(currentDate.getMinutes())}:${pad0(currentDate.getSeconds())}`;
@@ -37,7 +38,14 @@ const Main: React.FC = () => {
         if (value.columnList) {
           columnList = value.columnList;
           for (var i = 0; i < columnList.length; i++) {
-            wrapper.appendChild(addColumn(columnList, setSavedTime, i, columnList[i]));
+            let col = document.createElement('div');
+            ReactDOM.render(<Column
+              columnList={columnList}
+              setSavedTime={setSavedTime}
+              columnIndex={i}
+              columnCofig={columnList[i]}
+            />, col);
+            wrapper.appendChild(col);
           }
         }
         if (value.generalConfig) {
