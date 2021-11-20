@@ -9,10 +9,37 @@ export const ConfigModal: React.FC<{
   setGeneralConfig: React.Dispatch<React.SetStateAction<GeneralConfig>>
 }> = (props) => {
   const [updatedGeneralConfig, setUpdatedGeneralConfig] = React.useState<GeneralConfig>(props.currentGeneralConfig);
+  const [validateUrl, setValidateUrl] = React.useState<{
+    workspaceUrl: { message: string },
+    clientUrl: { message: string },
+  }>({
+    workspaceUrl: { message: "" },
+    clientUrl: { message: "" },
+  });
 
   React.useEffect(() => {
     setUpdatedGeneralConfig(props.currentGeneralConfig);
   }, [props.show]);
+
+  const onChangeWorkspaceUrl = (workspaceUrl: string) => {
+    const regex = new RegExp("^https://[a-z0-9]+[a-z0-9\-]+.slack.com/$");
+    if (regex.test(workspaceUrl)) {
+      setValidateUrl({ ...validateUrl, workspaceUrl: { message: "" } });
+    } else {
+      setValidateUrl({ ...validateUrl, workspaceUrl: { message: "Does not match format." } });
+    }
+    setUpdatedGeneralConfig({ ...updatedGeneralConfig, workspaceUrl: workspaceUrl });
+  };
+
+  const onChangeClientUrl = (clientUrl: string) => {
+    const regex = new RegExp("^https://app.slack.com/client/[A-Z0-9]{11}/$");
+    if (regex.test(clientUrl)) {
+      setValidateUrl({ ...validateUrl, clientUrl: { message: "" } });
+    } else {
+      setValidateUrl({ ...validateUrl, clientUrl: { message: "Does not match format." } });
+    }
+    setUpdatedGeneralConfig({ ...updatedGeneralConfig, clientUrl: clientUrl });
+  };
 
   const onClickSaveButton = () => {
     props.setGeneralConfig(updatedGeneralConfig);
@@ -23,7 +50,7 @@ export const ConfigModal: React.FC<{
     // Adapt config
     document.getElementById('mainBody').classList.toggle('text-light');
     document.getElementById('newBody').classList.toggle('text-light');
-  }
+  };
 
   return (
     <div>
@@ -47,36 +74,37 @@ export const ConfigModal: React.FC<{
                   type={"checkbox"}
                   checked={updatedGeneralConfig.useDarkTheme}
                   label={"Use dark theme"}
-                  onChange={(e) => setUpdatedGeneralConfig({ useDarkTheme: e.target.checked })}
+                  onChange={(e) => setUpdatedGeneralConfig({ ...updatedGeneralConfig, useDarkTheme: e.target.checked })}
                 /></div>
-
             </Form.Group>
           </Form>
           <hr />
           <h5>Register workspace URL</h5>
-          <p>Correspond <code>https://[workspace_url].slack.com/*</code> to <code>"https://app.slack.com/client/*</code>.</p>
-          <Form>
-            <Form.Group>
-              <Row>
-                <Col>
-                  <Form.Control
-                    type="text"
-                    placeholder="https://[workspace_url].slack.com/*"
-                  // onChange={(e) => setNewColumnConfig({ ...newColumnConfig, url: e.target.value })}
-                  />
-                  <Form.Text className="text-muted">aaa</Form.Text>
-                </Col>
-                <Col>
-                  <Form.Control
-                    type="text"
-                    placeholder="https://app.slack.com/client/*"
-                  // onChange={(e) => setNewColumnConfig({ ...newColumnConfig, url: e.target.value })}
-                  />
-                  <Form.Text className="text-muted">aaa</Form.Text>
-                </Col>
-              </Row>
-            </Form.Group>
-          </Form>
+          <p>Correspond <code>https://[workspace_url].slack.com/</code> to <code>"https://app.slack.com/client/XXXXXXXXXXX</code>.</p>
+          <Row>
+            <Col>
+              <Form>
+                <Form.Control
+                  type="text"
+                  value={updatedGeneralConfig.workspaceUrl}
+                  placeholder="https://[workspace_url].slack.com/"
+                  onChange={(e) => onChangeWorkspaceUrl(e.target.value)}
+                />
+                <Form.Text className="text-danger">{validateUrl.workspaceUrl.message}</Form.Text>
+              </Form>
+            </Col>
+            <Col>
+              <Form>
+                <Form.Control
+                  type="text"
+                  value={updatedGeneralConfig.clientUrl}
+                  placeholder="https://app.slack.com/client/XXXXXXXXXXX/"
+                  onChange={(e) => onChangeClientUrl(e.target.value)}
+                />
+                <Form.Text className="text-danger">{validateUrl.clientUrl.message}</Form.Text>
+              </Form>
+            </Col>
+          </Row>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="primary" onClick={() => onClickSaveButton()}>
@@ -84,6 +112,6 @@ export const ConfigModal: React.FC<{
           </Button>
         </Modal.Footer>
       </Modal>
-    </div>
+    </div >
   );
 };

@@ -14,7 +14,9 @@ let columnList: Array<ColumnConfig> = [];
 
 const Main: React.FC = () => {
   const [generalConfig, setGeneralConfig] = React.useState<GeneralConfig>({
-    useDarkTheme: false
+    useDarkTheme: false,
+    workspaceUrl: '',
+    clientUrl: '',
   });
 
   const [showAddColumnModal, setShowAddColumnModal] = React.useState<boolean>(false);
@@ -83,6 +85,7 @@ const Main: React.FC = () => {
         show={showAddColumnModal}
         onHide={handleAddColumnModalClose}
         columnList={columnList}
+        generalConfig={generalConfig}
       />
 
       <ConfigModal
@@ -91,6 +94,7 @@ const Main: React.FC = () => {
         currentGeneralConfig={generalConfig}
         setGeneralConfig={setGeneralConfig}
       />
+      {console.log(generalConfig)}
     </div>
   )
 }

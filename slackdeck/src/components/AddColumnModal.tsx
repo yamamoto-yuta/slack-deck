@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import ReactDOM from "react-dom";
-import { ColumnConfig, DEFAULT_WIDTH_OPTION, WIDTH_OPTION_LIST } from "../Contract";
+import { ColumnConfig, DEFAULT_WIDTH_OPTION, GeneralConfig, WIDTH_OPTION_LIST } from "../Contract";
 import { saveColumns } from "../functions/column";
 import { Column } from "./Column";
 
@@ -11,6 +11,7 @@ export const AddColumnModal: React.FC<{
   show: boolean,
   onHide: () => void,
   columnList: Array<ColumnConfig>,
+  generalConfig: GeneralConfig,
 }> = (props) => {
   const [newColumnConfig, setNewColumnConfig] = React.useState<ColumnConfig>({
     width: DEFAULT_WIDTH_OPTION.value,
@@ -21,6 +22,15 @@ export const AddColumnModal: React.FC<{
   React.useEffect(() => {
     setNewColumnConfig({ ...newColumnConfig, name: columnNameDefaultValue`${props.columnList.length}` });
   }, [props.show]);
+
+  const onChangeUrl = (url: string) => {
+    const regex = new RegExp("^https://[a-z0-9]+[a-z0-9\-]+.slack.com/archives/");
+    if (regex.test(url)) {
+      let result = regex.exec(url);
+      url = props.generalConfig.clientUrl + url.substr(result.index + result[0].length);
+    }
+    setNewColumnConfig({ ...newColumnConfig, url: url })
+  }
 
   const onClickAddButton = () => {
     // Add column
@@ -45,12 +55,23 @@ export const AddColumnModal: React.FC<{
 
   return (
     <div>
-      <Modal show={props.show} onHide={props.onHide} centered className="text-dark">
+      <Modal
+        className="text-dark"
+        size="lg"
+        show={props.show}
+        onHide={props.onHide}
+        centered
+      >
         <Modal.Header closeButton>
           <Modal.Title>Add new column</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <p>Enter the column width and URL of the column you want to add.</p>
+          <p>Enterable URLs:</p>
+          <ul>
+            <li><code>https://[workspace_url].slack.com/archives/[channel_id]/</code></li>
+            <li><code>https://app.slack.com/client/[workspace_id]/[channel_id]/</code></li>
+          </ul>
           <Form className="d-flex">
             <Form.Select
               className="w-auto mx-1"
@@ -66,8 +87,8 @@ export const AddColumnModal: React.FC<{
             <Form.Control
               type="text"
               className="mx-1"
-              placeholder="https://app.slack.com/client/*"
-              onChange={(e) => setNewColumnConfig({ ...newColumnConfig, url: e.target.value })}
+              placeholder="https://*"
+              onChange={(e) => onChangeUrl(e.target.value)}
             />
           </Form>
         </Modal.Body>
