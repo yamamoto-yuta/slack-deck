@@ -94,7 +94,6 @@ const Main: React.FC = () => {
         currentGeneralConfig={generalConfig}
         setGeneralConfig={setGeneralConfig}
       />
-      {console.log(generalConfig)}
     </div>
   )
 }
