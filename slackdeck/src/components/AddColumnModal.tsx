@@ -25,7 +25,7 @@ export const AddColumnModal: React.FC<{
 
   const onChangeUrl = (url: string) => {
     const regex = new RegExp("^https://[a-z0-9]+[a-z0-9\-]+.slack.com/archives/");
-    if (regex.test(url)) {
+    if (props.generalConfig.clientUrl.length > 0 && regex.test(url)) {
       let result = regex.exec(url);
       url = props.generalConfig.clientUrl + url.substr(result.index + result[0].length);
     }
