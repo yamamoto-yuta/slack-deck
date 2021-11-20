@@ -13,31 +13,43 @@ export const ConfigModal: React.FC<{
     workspaceUrl: { isValid: boolean, message: string },
     clientUrl: { isValid: boolean, message: string },
   }>({
-    workspaceUrl: { isValid: false, message: "" },
-    clientUrl: { isValid: false, message: "" },
+    workspaceUrl: { isValid: false, message: "Does not match format." },
+    clientUrl: { isValid: false, message: "Does not match format." },
   });
 
   React.useEffect(() => {
     setUpdatedGeneralConfig(props.currentGeneralConfig);
+    setValidateUrl({
+      workspaceUrl: urlValidator(new RegExp("^https://[a-z0-9]+[a-z0-9\-]+.slack.com/$"), props.currentGeneralConfig.workspaceUrl),
+      clientUrl: urlValidator(new RegExp("^https://app.slack.com/client/[A-Z0-9]{11}/$"), props.currentGeneralConfig.clientUrl),
+    });
   }, [props.show]);
 
-  const onChangeWorkspaceUrl = (workspaceUrl: string) => {
-    const regex = new RegExp("^https://[a-z0-9]+[a-z0-9\-]+.slack.com/$");
-    if (regex.test(workspaceUrl)) {
-      setValidateUrl({ ...validateUrl, workspaceUrl: { isValid: true, message: "" } });
+  const urlValidator = (regex: RegExp, url: string) => {
+    if (regex.test(url)) {
+      return { isValid: true, message: "" };
     } else {
-      setValidateUrl({ ...validateUrl, workspaceUrl: { isValid: false, message: "Does not match format." } });
+      return { isValid: false, message: "Does not match format." };
     }
+  };
+
+  const onChangeWorkspaceUrl = (workspaceUrl: string) => {
+    setValidateUrl({
+      ...validateUrl, workspaceUrl: urlValidator(
+        new RegExp("^https://[a-z0-9]+[a-z0-9\-]+.slack.com/$"),
+        workspaceUrl
+      )
+    });
     setUpdatedGeneralConfig({ ...updatedGeneralConfig, workspaceUrl: workspaceUrl });
   };
 
   const onChangeClientUrl = (clientUrl: string) => {
-    const regex = new RegExp("^https://app.slack.com/client/[A-Z0-9]{11}/$");
-    if (regex.test(clientUrl)) {
-      setValidateUrl({ ...validateUrl, clientUrl: { isValid: true, message: "" } });
-    } else {
-      setValidateUrl({ ...validateUrl, clientUrl: { isValid: false, message: "Does not match format." } });
-    }
+    setValidateUrl({
+      ...validateUrl, clientUrl: urlValidator(
+        new RegExp("^https://app.slack.com/client/[A-Z0-9]{11}/$"),
+        clientUrl
+      )
+    });
     setUpdatedGeneralConfig({ ...updatedGeneralConfig, clientUrl: clientUrl });
   };
 
