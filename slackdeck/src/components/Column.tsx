@@ -1,43 +1,112 @@
+import { faChevronLeft, faChevronRight, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { Button, Form } from "react-bootstrap";
 import { ColumnConfig, WIDTH_OPTION_LIST } from "../Contract";
 import { saveColumns } from "../functions/column";
 
+const columnMoveLeftButtonId = (_: TemplateStringsArray, columnIndex: number) => `col-mv-l-btn-${columnIndex}`;
+const columnMoveRightButtonId = (_: TemplateStringsArray, columnIndex: number) => `col-mv-r-btn-${columnIndex}`;
+const columnNameInputId = (_: TemplateStringsArray, columnIndex: number) => `col-name-input-${columnIndex}`;
+const columnWidthSelectId = (_: TemplateStringsArray, columnIndex: number) => `col-select-${columnIndex}`;
 const columnDeleteButtonId = (_: TemplateStringsArray, columnIndex: number) => `col-del-btn-${columnIndex}`;
 const columnIframeId = (_: TemplateStringsArray, columnIndex: number) => `col-iframe-${columnIndex}`;
 const columnElementId = (_: TemplateStringsArray, columnIndex: number) => `col-el-${columnIndex}`;
-const extractColumnIdxFromColumnDeleteButtonId = (colDelBtnId: string) => parseInt(colDelBtnId.split('-').slice(-1)[0]);
+const exttractColumnIdxFromId = (colDelBtnId: string) => parseInt(colDelBtnId.split('-').slice(-1)[0]);
 
 export const Column: React.FC<{
   columnList: Array<ColumnConfig>,
-  setSavedTime: React.Dispatch<React.SetStateAction<Date>>,
   columnIndex: number,
-  columnCofig: ColumnConfig
+  columnCofig: ColumnConfig,
+  columnElement: HTMLDivElement,
 }> = (props) => {
   const [colName, setColName] = React.useState<string>(props.columnCofig.name);
 
   const updateElementID = () => {
     for (var i = 0; i < props.columnList.length; i++) {
       document.getElementsByClassName('column')[i].id = columnElementId`${i}`;
+      document.getElementsByClassName('col-mv-l-btn')[i].id = columnMoveLeftButtonId`${i}`;
+      document.getElementsByClassName('col-mv-r-btn')[i].id = columnMoveRightButtonId`${i}`;
+      document.getElementsByClassName('col-name-input')[i].id = columnNameInputId`${i}`;
+      document.getElementsByClassName('col-width-select')[i].id = columnWidthSelectId`${i}`;
       document.getElementsByClassName('col-iframe')[i].id = columnIframeId`${i}`;
-      document.getElementsByClassName('col-del-btn')[i].id = columnDeleteButtonId`${i}`;
     }
   };
 
+  const onClickMoveLeftButton = () => {
+    // Save column
+    saveColumns(props.columnList);
+    // Calculate new column index
+    let colElIdx = exttractColumnIdxFromId(props.columnElement.getElementsByTagName('div')[0].id);
+    let newColElIdx = colElIdx - 1;
+    // Switch column
+    if (newColElIdx >= 0) {
+      document.getElementById('wrapper').insertBefore(
+        document.getElementById(columnElementId`${colElIdx}`).parentElement,
+        document.getElementById(columnElementId`${newColElIdx}`).parentElement
+      );
+    } else {
+      document.getElementById('wrapper').appendChild(
+        document.getElementById(columnElementId`${colElIdx}`).parentElement
+      );
+      newColElIdx += props.columnList.length;
+    }
+    document.getElementById(columnElementId`${colElIdx}`).getElementsByTagName('iframe')[0].src = props.columnList[colElIdx].url;
+    // Update column list
+    let tmp = props.columnList[colElIdx];
+    props.columnList[colElIdx] = props.columnList[newColElIdx];
+    props.columnList[newColElIdx] = tmp;
+    // Update element id
+    updateElementID();
+    // Save column
+    saveColumns(props.columnList);
+  }
+
+  const onClickMoveRightButton = () => {
+    // Save column
+    saveColumns(props.columnList);
+    // Calculate new column index
+    let colElIdx = exttractColumnIdxFromId(props.columnElement.getElementsByTagName('div')[0].id);
+    let newColElIdx = colElIdx + 1;
+    // Switch column
+    if (newColElIdx < props.columnList.length) {
+      document.getElementById('wrapper').insertBefore(
+        document.getElementById(columnElementId`${newColElIdx}`).parentElement,
+        document.getElementById(columnElementId`${colElIdx}`).parentElement
+      );
+      document.getElementById(columnElementId`${newColElIdx}`).getElementsByTagName('iframe')[0].src = props.columnList[newColElIdx].url;
+    } else {
+      document.getElementById('wrapper').insertBefore(
+        document.getElementById(columnElementId`${colElIdx}`).parentElement,
+        document.getElementById(columnElementId`${0}`).parentElement
+      );
+      document.getElementById(columnElementId`${colElIdx}`).getElementsByTagName('iframe')[0].src = props.columnList[colElIdx].url;
+      newColElIdx -= props.columnList.length;
+    }
+    // Update column list
+    let tmp = props.columnList[colElIdx];
+    props.columnList[colElIdx] = props.columnList[newColElIdx];
+    props.columnList[newColElIdx] = tmp;
+    // Update element id
+    updateElementID();
+    // Save column
+    saveColumns(props.columnList);
+  }
+
   const onChangeWidthOption = (e) => {
     props.columnCofig.width = e.target.value;
-    let colElIdx = extractColumnIdxFromColumnDeleteButtonId(e.target.id);
+    let colElIdx = exttractColumnIdxFromId(e.target.id);
     let _col = document.getElementsByClassName('column')[colElIdx] as HTMLElement;
     _col.style.minWidth = e.target.value;
     _col.style.width = e.target.value;
   }
 
-  const onClickDeleteButton = (e) => {
+  const onClickDeleteButton = () => {
     // Remove
-    let colElIdx = extractColumnIdxFromColumnDeleteButtonId(e.target.id);
+    let colElIdx = exttractColumnIdxFromId(props.columnElement.getElementsByTagName('div')[0].id);
     props.columnList.splice(colElIdx, 1);;
-    saveColumns(props.columnList, props.setSavedTime);
-    document.getElementsByClassName('column')[colElIdx].remove();
+    saveColumns(props.columnList);
+    props.columnElement.remove();
     // Update other elements
     updateElementID();
   }
@@ -52,14 +121,27 @@ export const Column: React.FC<{
       }}
     >
       <div className="col-header">
+        <Button
+          id={columnMoveLeftButtonId`${props.columnIndex}`}
+          className="btn btn-primary col-mv-l-btn"
+          onClick={onClickMoveLeftButton}
+        ><FontAwesomeIcon icon={faChevronLeft} /></Button>
+        <Button
+          id={columnMoveRightButtonId`${props.columnIndex}`}
+          className="btn btn-primary col-mv-r-btn"
+          onClick={onClickMoveRightButton}
+        ><FontAwesomeIcon icon={faChevronRight} /></Button>
         <Form.Control
+          id={columnNameInputId`${props.columnIndex}`}
+          className="col-name-input"
           type="text"
           value={colName}
           onChange={(e) => setColName(e.target.value)}
         />
         <Form.Select
-          className="w-auto"
-          onChange={onChangeWidthOption}
+          id={columnWidthSelectId`${props.columnIndex}`}
+          className="w-auto col-width-select"
+          onChange={(e) => onChangeWidthOption(e)}
         >
           {WIDTH_OPTION_LIST.map((option) => (
             <option
@@ -72,13 +154,13 @@ export const Column: React.FC<{
           id={columnDeleteButtonId`${props.columnIndex}`}
           className="btn btn-danger col-del-btn"
           onClick={onClickDeleteButton}
-        >x</Button>
+        ><FontAwesomeIcon icon={faTimes} /></Button>
       </div>
       <iframe
         id={columnIframeId`${props.columnIndex}`}
         className={"col-iframe"}
         src={props.columnCofig.url}
       />
-    </div>
+    </div >
   )
 }

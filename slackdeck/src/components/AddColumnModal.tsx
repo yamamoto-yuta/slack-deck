@@ -29,6 +29,7 @@ export const AddColumnModal: React.FC<{
       columnList={props.columnList}
       columnIndex={props.columnList.length}
       columnCofig={newColumnConfig}
+      columnElement={col}
     />, col);
     document.getElementById('wrapper').appendChild(col);
     // Fix slack dom
