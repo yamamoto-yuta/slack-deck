@@ -1,4 +1,3 @@
-import { Button, Form, Modal } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCog, faPlus, faSave } from '@fortawesome/free-solid-svg-icons';
 import React from 'react';
