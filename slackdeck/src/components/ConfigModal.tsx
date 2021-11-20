@@ -46,7 +46,7 @@ export const ConfigModal: React.FC<{
   const onChangeClientUrl = (clientUrl: string) => {
     setValidateUrl({
       ...validateUrl, clientUrl: urlValidator(
-        new RegExp("^https://app.slack.com/client/[A-Z0-9]{11}/$"),
+        new RegExp("^https://app.slack.com/client/[A-Z0-9]+/$"),
         clientUrl
       )
     });
@@ -92,7 +92,7 @@ export const ConfigModal: React.FC<{
           </Form>
           <hr />
           <h5>Register workspace URL</h5>
-          <p>Correspond <code>https://[workspace_url].slack.com/</code> to <code>"https://app.slack.com/client/XXXXXXXXXXX</code>.</p>
+          <p>Correspond <code>https://[workspace_url].slack.com/</code> to <code>"https://app.slack.com/client/*/</code>.</p>
           <Row>
             <Col>
               <Form>
