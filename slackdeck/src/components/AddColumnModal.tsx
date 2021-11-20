@@ -11,7 +11,6 @@ export const AddColumnModal: React.FC<{
   show: boolean,
   onHide: () => void,
   columnList: Array<ColumnConfig>,
-  setSavedTime: React.Dispatch<React.SetStateAction<Date>>,
 }> = (props) => {
   const [newColumnConfig, setNewColumnConfig] = React.useState<ColumnConfig>({
     width: DEFAULT_WIDTH_OPTION.value,
@@ -28,7 +27,6 @@ export const AddColumnModal: React.FC<{
     let col = document.createElement('div');
     ReactDOM.render(<Column
       columnList={props.columnList}
-      setSavedTime={props.setSavedTime}
       columnIndex={props.columnList.length}
       columnCofig={newColumnConfig}
     />, col);
@@ -39,7 +37,7 @@ export const AddColumnModal: React.FC<{
     // Push to columnList
     props.columnList.push(newColumnConfig);
     // Save current column state
-    saveColumns(props.columnList, props.setSavedTime);
+    saveColumns(props.columnList);
     // Close Mordal
     props.onHide();
   }

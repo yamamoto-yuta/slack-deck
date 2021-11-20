@@ -8,11 +8,8 @@ import { ColumnConfig, GeneralConfig } from './Contract';
 import './contents.scss';
 import { ConfigModal } from './components/ConfigModal';
 import { AddColumnModal } from './components/AddColumnModal';
-import { saveColumns } from './functions/column';
+import { saveColumns, updateSavedTime } from './functions/column';
 import { Column } from './components/Column';
-
-const pad0 = (num: number) => ('00' + num).slice(-2);
-const savedTimeTemplate = (_: TemplateStringsArray, currentDate: Date) => `${pad0(currentDate.getHours())}:${pad0(currentDate.getMinutes())}:${pad0(currentDate.getSeconds())}`;
 
 let columnList: Array<ColumnConfig> = [];
 
@@ -20,8 +17,6 @@ const Main: React.FC = () => {
   const [generalConfig, setGeneralConfig] = React.useState<GeneralConfig>({
     useDarkTheme: false
   });
-
-  const [savedTime, setSavedTime] = React.useState<Date>(new Date());
 
   const [showAddColumnModal, setShowAddColumnModal] = React.useState<boolean>(false);
   const handleAddColumnModalClose = () => setShowAddColumnModal(false);
@@ -41,9 +36,9 @@ const Main: React.FC = () => {
             let col = document.createElement('div');
             ReactDOM.render(<Column
               columnList={columnList}
-              setSavedTime={setSavedTime}
               columnIndex={i}
               columnCofig={columnList[i]}
+              columnElement={col}
             />, col);
             wrapper.appendChild(col);
           }
@@ -58,11 +53,11 @@ const Main: React.FC = () => {
       }
     );
     // Update saved time
-    setSavedTime(new Date());
+    updateSavedTime();
   }, []);
 
   const onClickSaveButton = () => {
-    saveColumns(columnList, setSavedTime);
+    saveColumns(columnList);
   }
 
   return (
@@ -77,7 +72,7 @@ const Main: React.FC = () => {
       ><FontAwesomeIcon icon={faSave} className="deck-btn-icon-circle" /></button>
       <div className="text-sm">
         <div id="savedAtText">Saved at</div>
-        <div id="savedAtTime">{savedTimeTemplate`${savedTime}`}</div>
+        <div id="savedAtTime"></div>
       </div>
 
       <button
@@ -89,7 +84,6 @@ const Main: React.FC = () => {
         show={showAddColumnModal}
         onHide={handleAddColumnModalClose}
         columnList={columnList}
-        setSavedTime={setSavedTime}
       />
 
       <ConfigModal

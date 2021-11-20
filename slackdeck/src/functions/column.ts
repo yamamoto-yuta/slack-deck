@@ -1,8 +1,7 @@
 import { ColumnConfig } from "../Contract";
 
 export const saveColumns = (
-  columnList: Array<ColumnConfig>,
-  setSavedTime: React.Dispatch<React.SetStateAction<Date>>
+  columnList: Array<ColumnConfig>
 ) => {
   for (var i = 0; i < columnList.length; i++) {
     columnList[i].name = document.getElementsByClassName('column')[i].getElementsByClassName('col-header')[0].getElementsByTagName('input')[0].value;
@@ -12,5 +11,11 @@ export const saveColumns = (
     }
   }
   chrome.storage.sync.set({ 'columnList': columnList });
-  setSavedTime(new Date());
+  updateSavedTime();
+}
+
+export const updateSavedTime = () => {
+  const pad0 = (num: number) => ('00' + num).slice(-2);
+  const savedTimeTemplate = (_: TemplateStringsArray, currentDate: Date) => `${pad0(currentDate.getHours())}:${pad0(currentDate.getMinutes())}:${pad0(currentDate.getSeconds())}`;
+  document.getElementById('savedAtTime').innerText = savedTimeTemplate`${new Date()}`;
 }
