@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Form, Modal } from "react-bootstrap";
+import { Button, Col, Form, Modal, Row } from "react-bootstrap";
 import { GeneralConfig } from "../Contract";
 
 export const ConfigModal: React.FC<{
@@ -27,7 +27,13 @@ export const ConfigModal: React.FC<{
 
   return (
     <div>
-      <Modal show={props.show} onHide={props.onHide} centered className="text-dark">
+      <Modal
+        className="text-dark"
+        size="lg"
+        show={props.show}
+        onHide={props.onHide}
+        centered
+      >
         <Modal.Header closeButton>
           <Modal.Title>Config</Modal.Title>
         </Modal.Header>
@@ -46,6 +52,29 @@ export const ConfigModal: React.FC<{
 
             </Form.Group>
           </Form>
+          <hr />
+          <h5>Register workspace URL</h5>
+          <p>Correspond <code>https://[workspace_url].slack.com/*</code> to <code>"https://app.slack.com/client/*</code>.</p>
+          <Form>
+            <Form.Group>
+              <Row>
+                <Col>
+                  <Form.Control
+                    type="text"
+                    placeholder="https://[workspace_url].slack.com/*"
+                  // onChange={(e) => setNewColumnConfig({ ...newColumnConfig, url: e.target.value })}
+                  />
+                  <Form.Text className="text-muted">aaa</Form.Text>
+                </Col>
+                <Col>
+                  <Form.Control
+                    type="text"
+                    placeholder="https://app.slack.com/client/*"
+                  // onChange={(e) => setNewColumnConfig({ ...newColumnConfig, url: e.target.value })}
+                  />
+                  <Form.Text className="text-muted">aaa</Form.Text>
+                </Col>
+              </Row>
             </Form.Group>
           </Form>
         </Modal.Body>
