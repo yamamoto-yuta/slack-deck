@@ -5,7 +5,9 @@ export type ColumnConfig = {
 }
 
 export type GeneralConfig = {
-  useDarkTheme: boolean
+  useDarkTheme: boolean,
+  workspaceUrl: string,
+  clientUrl: string,
 }
 
 export const WIDTH_OPTION_LIST = [
