@@ -32,9 +32,10 @@ export const ConfigModal: React.FC<{
           <Modal.Title>Config</Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          <h5>Use dark theme</h5>
+          <p>Check this box if you want to use the dark theme in Slack.</p>
           <Form>
             <Form.Group>
-              <h5>Dark Theme</h5>
               <div className="mb-3">
                 <Form.Check
                   type={"checkbox"}
@@ -42,9 +43,9 @@ export const ConfigModal: React.FC<{
                   label={"Use dark theme"}
                   onChange={(e) => setUpdatedGeneralConfig({ useDarkTheme: e.target.checked })}
                 /></div>
-              <Form.Text className="text-muted">
-                Check this box if you want to use the dark theme in Slack.
-              </Form.Text>
+
+            </Form.Group>
+          </Form>
             </Form.Group>
           </Form>
         </Modal.Body>
