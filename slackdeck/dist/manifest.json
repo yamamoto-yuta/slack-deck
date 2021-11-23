@@ -3,7 +3,7 @@
     "name": "SlackDeck",
     "description": "A Chrome extension to use Slack like TweetDeck",
     "version": "0.5.2",
-    "browser_action": {
+    "action": {
         "default_icon": "icon16.png",
         "default_popup": "popup.html"
     },
