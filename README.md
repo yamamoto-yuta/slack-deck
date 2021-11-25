@@ -2,7 +2,7 @@
 
 ## What is "SlackDeck" ?
 
-A Chrome extension to use Slack like TweetDeck.
+Display your Slack channels in column format.
 
 ## Screenshot
 
@@ -10,7 +10,11 @@ A Chrome extension to use Slack like TweetDeck.
 
 ## Install
 
-![image](https://user-images.githubusercontent.com/55144709/140644330-9f3016cc-170f-4cff-ba34-89e667fdffc6.png)
+### General Install (Recommended)
+
+- Chrome Web Store: [SlackDeck - Chrome Web Store](https://chrome.google.com/webstore/detail/slackdeck/cocnkjpcbmoopfpmogblnjpjdfcaohod?hl=ja&authuser=0)
+
+### Manual Install
 
 1. Download `chrome-extention.zip` from [Release](https://github.com/yamamoto-yuta/slack-deck/releases) and unzip it.
 1. Visit `chrome://extensions` .
