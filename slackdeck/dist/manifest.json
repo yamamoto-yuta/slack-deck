@@ -1,17 +1,14 @@
 {
-    "manifest_version": 2,
+    "manifest_version": 3,
     "name": "SlackDeck",
-    "description": "A Chrome extension to use Slack like TweetDeck",
-    "version": "0.5.1",
-    "browser_action": {
+    "description": "Display your Slack channels in column format",
+    "version": "0.5.2",
+    "action": {
         "default_icon": "icon16.png",
         "default_popup": "popup.html"
     },
     "background": {
-        "scripts": [
-            "js/eventPage.js"
-        ],
-        "persistent": false
+        "service_worker": "js/eventPage.js"
     },
     "content_scripts": [
         {
