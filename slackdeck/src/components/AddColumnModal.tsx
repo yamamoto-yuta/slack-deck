@@ -93,11 +93,6 @@ export const AddColumnModal: React.FC<{
         </Modal.Header>
         <Modal.Body>
           <p>Enter the column width and URL of the column you want to add.</p>
-          <p>Enterable URLs:</p>
-          <ul>
-            <li><code>https://[workspace_url].slack.com/archives/[channel_id]/</code></li>
-            <li><code>https://app.slack.com/client/[workspace_id]/[channel_id]/</code></li>
-          </ul>
           <Form className="d-flex">
             <Form.Select
               className="w-auto mx-1"
