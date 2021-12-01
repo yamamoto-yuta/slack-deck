@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import ReactDOM from "react-dom";
-import { ColumnConfig, DEFAULT_WIDTH_OPTION, GeneralConfig, WIDTH_OPTION_LIST } from "../Contract";
+import { CHANNEL_ID_PATTERN, CLIENT_MESSAGE_ID_PATTERN, ColumnConfig, DEFAULT_WIDTH_OPTION, extractClientIdFromClientUrl, GeneralConfig, WIDTH_OPTION_LIST, WORKSPACE_MESSAGE_ID_PATTERN } from "../Contract";
 import { saveColumns } from "../functions/column";
 import { Column } from "./Column";
 
@@ -24,11 +24,32 @@ export const AddColumnModal: React.FC<{
   }, [props.show]);
 
   const onChangeUrl = (url: string) => {
-    const regex = new RegExp("^https://[a-z0-9]+[a-z0-9\-]+.slack.com/archives/");
-    if (props.generalConfig.clientUrl.length > 0 && regex.test(url)) {
-      let result = regex.exec(url);
-      url = props.generalConfig.clientUrl + url.substr(result.index + result[0].length);
+    // const regex = new RegExp("^https://[a-z0-9]+[a-z0-9\-]+.slack.com/archives/");
+    // if (props.generalConfig.clientUrl.length > 0 && regex.test(url)) {
+    //   let result = regex.exec(url);
+    //   url = props.generalConfig.clientUrl + url.substr(result.index + result[0].length);
+    // }
+    const workspaceUrlPattern = `^${props.generalConfig.workspaceUrl}archives/`;
+    const workspaceUrlRegex = new RegExp(workspaceUrlPattern);
+    if (workspaceUrlRegex.test(url)) {
+      const workspaceChannelPattern = `${workspaceUrlPattern}${CHANNEL_ID_PATTERN}`;
+      const workspaceMessagePattern = `${workspaceChannelPattern}/${WORKSPACE_MESSAGE_ID_PATTERN}`;
+      const workspaceThreadMessagePattern = `${workspaceMessagePattern}\\?thread_ts=${CLIENT_MESSAGE_ID_PATTERN}&cid=${CHANNEL_ID_PATTERN}`;
+      const workspaceChannelRegex = new RegExp(workspaceChannelPattern);
+      const workspaceMessageRegex = new RegExp(workspaceMessagePattern);
+      const workspaceThreadMessageRegex = new RegExp(workspaceThreadMessagePattern);
+
+      if (workspaceThreadMessageRegex.test(url)) {
+        console.log("thred url");
+      } else if (workspaceMessageRegex.test(url)) {
+        console.log("message url");
+      } else if (workspaceChannelRegex.test(url)) {
+        console.log("channel url");
+      } else {
+        console.log("undefined url");
+      }
     }
+    console.log(url);
     setNewColumnConfig({ ...newColumnConfig, url: url })
   }
 
