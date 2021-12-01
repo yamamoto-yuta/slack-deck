@@ -22,6 +22,12 @@ Display your Slack channels in column format.
 1. Click on the "Load unpacked" button.
 1. Select the directory you have previously unzipped.
 
+## Initial Settings
+
+- Set the Workspace URL (`https://[workspace_url].slack.com/`) and Client URL (`https://app.slack.com/client/*/`) from the Config Modal.
+
+![image](https://user-images.githubusercontent.com/55144709/144297361-1372247e-3e0c-484c-b5f5-5100f9c410a4.png)
+
 ## Usage
 
 ### ➕ Add column
