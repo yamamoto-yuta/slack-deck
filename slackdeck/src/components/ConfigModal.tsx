@@ -21,8 +21,10 @@ export const ConfigModal: React.FC<{
     setUpdatedGeneralConfig(props.currentGeneralConfig);
     setValidateUrl({
       workspaceUrl: urlValidator(new RegExp("^https://[a-z0-9]+[a-z0-9\-]+.slack.com/$"), props.currentGeneralConfig.workspaceUrl),
-      clientUrl: urlValidator(new RegExp("^https://app.slack.com/client/[A-Z0-9]{11}/$"), props.currentGeneralConfig.clientUrl),
+      clientUrl: urlValidator(new RegExp("^https://app.slack.com/client/[A-Z0-9]+/$"), props.currentGeneralConfig.clientUrl),
     });
+    console.log(props.currentGeneralConfig.clientUrl);
+    console.log(validateUrl);
   }, [props.show]);
 
   const urlValidator = (regex: RegExp, url: string) => {
