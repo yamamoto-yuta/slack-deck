@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, Col, Form, Modal, Row } from "react-bootstrap";
-import { GeneralConfig } from "../Contract";
+import { CLIENT_URL_PATTERN, GeneralConfig, WORKSPACE_URL_PATTERN } from "../Contract";
 
 export const ConfigModal: React.FC<{
   show: boolean,
@@ -20,8 +20,8 @@ export const ConfigModal: React.FC<{
   React.useEffect(() => {
     setUpdatedGeneralConfig(props.currentGeneralConfig);
     setValidateUrl({
-      workspaceUrl: urlValidator(new RegExp("^https://[a-z0-9]+[a-z0-9\-]+.slack.com/$"), props.currentGeneralConfig.workspaceUrl),
-      clientUrl: urlValidator(new RegExp("^https://app.slack.com/client/[A-Z0-9]{11}/$"), props.currentGeneralConfig.clientUrl),
+      workspaceUrl: urlValidator(new RegExp(`${WORKSPACE_URL_PATTERN}$`), props.currentGeneralConfig.workspaceUrl),
+      clientUrl: urlValidator(new RegExp(`${CLIENT_URL_PATTERN}$`), props.currentGeneralConfig.clientUrl),
     });
   }, [props.show]);
 
@@ -92,7 +92,7 @@ export const ConfigModal: React.FC<{
           </Form>
           <hr />
           <h5>Register workspace URL</h5>
-          <p>Correspond <code>https://[workspace_url].slack.com/</code> to <code>"https://app.slack.com/client/*/</code>.</p>
+          <p>Correspond <code>https://[workspace_url].slack.com/</code> to <code>https://app.slack.com/client/*/</code>.</p>
           <Row>
             <Col>
               <Form>
