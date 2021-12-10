@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBullhorn, faCog, faHistory, faPlus, faSave } from '@fortawesome/free-solid-svg-icons';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { ColumnConfig, GeneralConfig } from './Contract';
+import { ColumnConfig, DEFAULT_GENERAL_CONFIG, GeneralConfig } from './Contract';
 
 import './contents.scss';
 import { ConfigModal } from './components/ConfigModal';
@@ -14,11 +14,7 @@ import { AnnounceModal } from './components/AnnounceModal';
 let columnList: Array<ColumnConfig> = [];
 
 const Main: React.FC = () => {
-  const [generalConfig, setGeneralConfig] = React.useState<GeneralConfig>({
-    useDarkTheme: false,
-    workspaceUrl: '',
-    clientUrl: '',
-  });
+  const [generalConfig, setGeneralConfig] = React.useState<GeneralConfig>(DEFAULT_GENERAL_CONFIG);
 
   const [showAnnounceModal, setShowAnnounceModal] = React.useState<boolean>(false);
   const handleAnnounceModalClose = () => setShowAnnounceModal(false);
@@ -49,10 +45,19 @@ const Main: React.FC = () => {
           }
         }
         if (value.generalConfig) {
-          setGeneralConfig(value.generalConfig);
           if (value.generalConfig.useDarkTheme) {
             body.classList.add('text-light');
             newBody.classList.add('text-light');
+          }
+          setGeneralConfig(value.generalConfig);
+
+          // Update legacy generalConfig (v0.5.3<)
+          if ("workspaceUrl" in value.generalConfig || "clientUrl" in value.generalConfig) {
+            let newGeneralConfig: GeneralConfig = {
+              useDarkTheme: value.generalConfig.useDarkTheme,
+              slackUrlTable: [{ workspaceUrl: value.generalConfig.workspaceUrl, clientUrl: value.generalConfig.clientUrl }],
+            };
+            setGeneralConfig(newGeneralConfig);
           }
         }
       }

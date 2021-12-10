@@ -4,11 +4,40 @@ export type ColumnConfig = {
   name: string,
 }
 
-export type GeneralConfig = {
-  useDarkTheme: boolean,
+export type SlackUrlConverter = {
   workspaceUrl: string,
   clientUrl: string,
 }
+
+export type GeneralConfig = {
+  useDarkTheme: boolean,
+  slackUrlTable: SlackUrlConverter[],
+}
+
+export type ValidationResult = {
+  isValid: boolean,
+  message: string,
+}
+
+export type SlackUrlValidateResult = {
+  workspaceUrl: ValidationResult,
+  clientUrl: ValidationResult,
+}
+
+export const VALIDATION_FAILED: ValidationResult = {
+  isValid: false,
+  message: "Does not match format.",
+}
+
+export const VALIDATION_SUCCESS: ValidationResult = {
+  isValid: true,
+  message: "",
+}
+
+export const DEFAULT_GENERAL_CONFIG: GeneralConfig = {
+  useDarkTheme: false,
+  slackUrlTable: [],
+};
 
 export const WIDTH_OPTION_LIST = [
   { text: "Narrow", value: "300px" },
@@ -18,6 +47,12 @@ export const WIDTH_OPTION_LIST = [
 ];
 export const DEFAULT_WIDTH_OPTION_INDEX = 1;
 export const DEFAULT_WIDTH_OPTION = WIDTH_OPTION_LIST[DEFAULT_WIDTH_OPTION_INDEX];
+
+export const DEFAULT_COLUMN_CONFIG: ColumnConfig = {
+  width: DEFAULT_WIDTH_OPTION.value,
+  url: "",
+  name: ""
+};
 
 export const CHANNEL_ID_PATTERN = "[A-Z0-9]+";
 export const channelIdRegex = new RegExp(CHANNEL_ID_PATTERN);
