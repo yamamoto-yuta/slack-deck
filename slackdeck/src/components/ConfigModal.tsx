@@ -37,33 +37,44 @@ export const ConfigModal: React.FC<{
     }
   };
 
+  const isValidAllSlackUrl = () => {
+    for (let result of validateUrl) {
+      if (!result.workspaceUrl.isValid || !result.clientUrl.isValid) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   const onChangeWorkspaceUrl = (workspaceUrl: string, index: number) => {
+    // Validate
     let newSlackUrlValidateResult: SlackUrlValidateResult[] = validateUrl.slice();
     newSlackUrlValidateResult[index].workspaceUrl = urlValidator(
       new RegExp("^https://[a-z0-9]+[a-z0-9\-]+.slack.com/$"),
       workspaceUrl
     );
     setValidateUrl(newSlackUrlValidateResult);
-
+    // Update state
     let newSlackUrlTable: SlackUrlConverter[] = updatedGeneralConfig.slackUrlTable.slice();
     newSlackUrlTable[index].workspaceUrl = workspaceUrl;
     setUpdatedGeneralConfig({ ...updatedGeneralConfig, slackUrlTable: newSlackUrlTable });
-
+    // Update All validation result
     setIsValidAllUrl(isValidAllSlackUrl());
   };
 
   const onChangeClientUrl = (clientUrl: string, index: number) => {
+    // Validate
     let newSlackUrlValidateResult: SlackUrlValidateResult[] = validateUrl.slice();
     newSlackUrlValidateResult[index].clientUrl = urlValidator(
       new RegExp("^https://app.slack.com/client/[A-Z0-9]+/$"),
       clientUrl
     );
     setValidateUrl(newSlackUrlValidateResult);
-
+    // Update state
     let newSlackUrlTable: SlackUrlConverter[] = updatedGeneralConfig.slackUrlTable.slice();
     newSlackUrlTable[index].clientUrl = clientUrl;
     setUpdatedGeneralConfig({ ...updatedGeneralConfig, slackUrlTable: newSlackUrlTable });
-
+    // Update All validation result
     setIsValidAllUrl(isValidAllSlackUrl());
   };
 
@@ -77,15 +88,6 @@ export const ConfigModal: React.FC<{
     document.getElementById('mainBody').classList.toggle('text-light');
     document.getElementById('newBody').classList.toggle('text-light');
   };
-
-  const isValidAllSlackUrl = () => {
-    for (let result of validateUrl) {
-      if (!result.workspaceUrl.isValid || !result.clientUrl.isValid) {
-        return false;
-      }
-    }
-    return true;
-  }
 
   return (
     <div>
