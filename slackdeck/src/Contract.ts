@@ -26,7 +26,7 @@ export type SlackUrlValidateResult = {
 
 export const VALIDATION_FAILED: ValidationResult = {
   isValid: false,
-  message: "Validation failed",
+  message: "Does not match format.",
 }
 
 export const VALIDATION_SUCCESS: ValidationResult = {
