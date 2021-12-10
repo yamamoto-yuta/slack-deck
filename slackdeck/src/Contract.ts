@@ -10,6 +10,12 @@ export type GeneralConfig = {
   clientUrl: string,
 }
 
+export const DEFAULT_GENERAL_CONFIG: GeneralConfig = {
+  useDarkTheme: false,
+  workspaceUrl: "",
+  clientUrl: "",
+};
+
 export const WIDTH_OPTION_LIST = [
   { text: "Narrow", value: "300px" },
   { text: "Medium", value: "500px" },
@@ -18,6 +24,12 @@ export const WIDTH_OPTION_LIST = [
 ];
 export const DEFAULT_WIDTH_OPTION_INDEX = 1;
 export const DEFAULT_WIDTH_OPTION = WIDTH_OPTION_LIST[DEFAULT_WIDTH_OPTION_INDEX];
+
+export const DEFAULT_COLUMN_CONFIG: ColumnConfig = {
+  width: DEFAULT_WIDTH_OPTION.value,
+  url: "",
+  name: ""
+};
 
 export const CHANNEL_ID_PATTERN = "[A-Z0-9]+";
 export const channelIdRegex = new RegExp(CHANNEL_ID_PATTERN);

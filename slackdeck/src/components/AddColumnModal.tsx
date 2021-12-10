@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import ReactDOM from "react-dom";
-import { CHANNEL_ID_PATTERN, clientMessageIdRegex, CLIENT_MESSAGE_ID_PATTERN, ColumnConfig, DEFAULT_WIDTH_OPTION, extractClientIdFromClientUrl, GeneralConfig, WIDTH_OPTION_LIST, WORKSPACE_MESSAGE_ID_PATTERN } from "../Contract";
+import { CHANNEL_ID_PATTERN, clientMessageIdRegex, CLIENT_MESSAGE_ID_PATTERN, ColumnConfig, DEFAULT_COLUMN_CONFIG, DEFAULT_WIDTH_OPTION, extractClientIdFromClientUrl, GeneralConfig, WIDTH_OPTION_LIST, WORKSPACE_MESSAGE_ID_PATTERN } from "../Contract";
 import { saveColumns } from "../functions/column";
 import { Column } from "./Column";
 
@@ -13,11 +13,7 @@ export const AddColumnModal: React.FC<{
   columnList: Array<ColumnConfig>,
   generalConfig: GeneralConfig,
 }> = (props) => {
-  const [newColumnConfig, setNewColumnConfig] = React.useState<ColumnConfig>({
-    width: DEFAULT_WIDTH_OPTION.value,
-    url: "",
-    name: ""
-  });
+  const [newColumnConfig, setNewColumnConfig] = React.useState<ColumnConfig>(DEFAULT_COLUMN_CONFIG);
 
   React.useEffect(() => {
     setNewColumnConfig({ ...newColumnConfig, name: columnNameDefaultValue`${props.columnList.length}` });
