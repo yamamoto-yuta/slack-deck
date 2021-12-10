@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCog, faPlus, faSave } from '@fortawesome/free-solid-svg-icons';
+import { faBullhorn, faCog, faHistory, faPlus, faSave } from '@fortawesome/free-solid-svg-icons';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { ColumnConfig, GeneralConfig } from './Contract';
@@ -9,6 +9,7 @@ import { ConfigModal } from './components/ConfigModal';
 import { AddColumnModal } from './components/AddColumnModal';
 import { saveColumns, updateSavedTime } from './functions/column';
 import { Column } from './components/Column';
+import { AnnounceModal } from './components/AnnounceModal';
 
 let columnList: Array<ColumnConfig> = [];
 
@@ -19,6 +20,9 @@ const Main: React.FC = () => {
     clientUrl: '',
   });
 
+  const [showAnnounceModal, setShowAnnounceModal] = React.useState<boolean>(false);
+  const handleAnnounceModalClose = () => setShowAnnounceModal(false);
+  const handleAnnounceModalOpen = () => setShowAnnounceModal(true);
   const [showAddColumnModal, setShowAddColumnModal] = React.useState<boolean>(false);
   const handleAddColumnModalClose = () => setShowAddColumnModal(false);
   const handleAddColumnModalOpen = () => setShowAddColumnModal(true);
@@ -77,9 +81,25 @@ const Main: React.FC = () => {
       </div>
 
       <button
-        className="mt-auto btn my-1 p-0"
+        className="mt-auto btn my-2 p-0"
+        onClick={handleAnnounceModalOpen}
+      ><FontAwesomeIcon icon={faBullhorn} className="deck-btn-icon-natural" /></button>
+
+      <a
+        className="btn my-2 p-0"
+        href='https://github.com/yamamoto-yuta/slack-deck/releases'
+        target='_blank'
+      ><FontAwesomeIcon icon={faHistory} className="deck-btn-icon-natural" /></a>
+
+      <button
+        className="btn my-2 p-0"
         onClick={handleConfigModalOpen}
       ><FontAwesomeIcon icon={faCog} className="deck-btn-icon-natural" /></button>
+
+      <AnnounceModal
+        show={showAnnounceModal}
+        onHide={handleAnnounceModalClose}
+      />
 
       <AddColumnModal
         show={showAddColumnModal}
