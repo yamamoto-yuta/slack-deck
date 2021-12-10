@@ -119,8 +119,13 @@ export const ConfigModal: React.FC<{
     // Hide modal
     props.onHide();
     // Adapt config
-    document.getElementById('mainBody').classList.toggle('text-light');
-    document.getElementById('newBody').classList.toggle('text-light');
+    if (updatedGeneralConfig.useDarkTheme) {
+      document.getElementById('mainBody').classList.add('text-light');
+      document.getElementById('newBody').classList.add('text-light');
+    } else {
+      document.getElementById('mainBody').classList.remove('text-light');
+      document.getElementById('newBody').classList.remove('text-light');
+    }
   };
 
   return (
