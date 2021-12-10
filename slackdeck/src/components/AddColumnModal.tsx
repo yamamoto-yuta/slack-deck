@@ -20,38 +20,38 @@ export const AddColumnModal: React.FC<{
   }, [props.show]);
 
   const onChangeUrl = (url: string) => {
-    const workspaceUrlPattern = `^${props.generalConfig.workspaceUrl}archives/`;
-    const workspaceUrlRegex = new RegExp(workspaceUrlPattern);
+    // const workspaceUrlPattern = `^${props.generalConfig.workspaceUrl}archives/`;
+    // const workspaceUrlRegex = new RegExp(workspaceUrlPattern);
 
-    if (workspaceUrlRegex.test(url)) {
-      const workspaceChannelPattern = `${workspaceUrlPattern}${CHANNEL_ID_PATTERN}`;
-      const workspaceMessagePattern = `${workspaceChannelPattern}/${WORKSPACE_MESSAGE_ID_PATTERN}`;
-      const workspaceThredMessagePattern = `${workspaceMessagePattern}\\?thread_ts=${CLIENT_MESSAGE_ID_PATTERN}&cid=${CHANNEL_ID_PATTERN}`;
-      const workspaceChannelRegex = new RegExp(workspaceChannelPattern);
-      const extractChannelIdFromWorkspaceUrl = (workspaceUrl: string): string => workspaceChannelRegex.exec(workspaceUrl)[0].split("/").slice(-1)[0];
-      const workspaceMessageRegex = new RegExp(workspaceMessagePattern);
-      const extractMessageIdFromWorkspaceUrl = (workspaceUrl: string): string => workspaceMessageRegex.exec(workspaceUrl)[0].split("/").slice(-1)[0];
-      const workspaceThreadMessageRegex = new RegExp(workspaceThredMessagePattern);
-      const extractThreadMessageIdFromWorkspaceUrl = (workspaceUrl: string): string => clientMessageIdRegex.exec(workspaceThreadMessageRegex.exec(workspaceUrl)[0].split("?").slice(-1)[0])[0];
+    // if (workspaceUrlRegex.test(url)) {
+    //   const workspaceChannelPattern = `${workspaceUrlPattern}${CHANNEL_ID_PATTERN}`;
+    //   const workspaceMessagePattern = `${workspaceChannelPattern}/${WORKSPACE_MESSAGE_ID_PATTERN}`;
+    //   const workspaceThredMessagePattern = `${workspaceMessagePattern}\\?thread_ts=${CLIENT_MESSAGE_ID_PATTERN}&cid=${CHANNEL_ID_PATTERN}`;
+    //   const workspaceChannelRegex = new RegExp(workspaceChannelPattern);
+    //   const extractChannelIdFromWorkspaceUrl = (workspaceUrl: string): string => workspaceChannelRegex.exec(workspaceUrl)[0].split("/").slice(-1)[0];
+    //   const workspaceMessageRegex = new RegExp(workspaceMessagePattern);
+    //   const extractMessageIdFromWorkspaceUrl = (workspaceUrl: string): string => workspaceMessageRegex.exec(workspaceUrl)[0].split("/").slice(-1)[0];
+    //   const workspaceThreadMessageRegex = new RegExp(workspaceThredMessagePattern);
+    //   const extractThreadMessageIdFromWorkspaceUrl = (workspaceUrl: string): string => clientMessageIdRegex.exec(workspaceThreadMessageRegex.exec(workspaceUrl)[0].split("?").slice(-1)[0])[0];
 
-      if (workspaceThreadMessageRegex.test(url)) {
-        const channelId = extractChannelIdFromWorkspaceUrl(url);
-        const clientThreadMessageId = extractThreadMessageIdFromWorkspaceUrl(url);
-        url = `${props.generalConfig.clientUrl}${channelId}/thread/${channelId}-${clientThreadMessageId}`;
-      } else if (workspaceMessageRegex.test(url)) {
-        const channelId = extractChannelIdFromWorkspaceUrl(url);
-        const workspaceMessageId = extractMessageIdFromWorkspaceUrl(url);
-        const clientMessageId = `${workspaceMessageId.slice(1, 11)}.${workspaceMessageId.slice(11, 11 + 6)}`;
-        url = `${props.generalConfig.clientUrl}${channelId}/${clientMessageId}`;
-      } else if (workspaceChannelRegex.test(url)) {
-        const channelId = extractChannelIdFromWorkspaceUrl(url)
-        url = `${props.generalConfig.clientUrl}${channelId}`;
-      } else {
-        console.log("undefined url");
-      }
-    }
+    //   if (workspaceThreadMessageRegex.test(url)) {
+    //     const channelId = extractChannelIdFromWorkspaceUrl(url);
+    //     const clientThreadMessageId = extractThreadMessageIdFromWorkspaceUrl(url);
+    //     url = `${props.generalConfig.clientUrl}${channelId}/thread/${channelId}-${clientThreadMessageId}`;
+    //   } else if (workspaceMessageRegex.test(url)) {
+    //     const channelId = extractChannelIdFromWorkspaceUrl(url);
+    //     const workspaceMessageId = extractMessageIdFromWorkspaceUrl(url);
+    //     const clientMessageId = `${workspaceMessageId.slice(1, 11)}.${workspaceMessageId.slice(11, 11 + 6)}`;
+    //     url = `${props.generalConfig.clientUrl}${channelId}/${clientMessageId}`;
+    //   } else if (workspaceChannelRegex.test(url)) {
+    //     const channelId = extractChannelIdFromWorkspaceUrl(url)
+    //     url = `${props.generalConfig.clientUrl}${channelId}`;
+    //   } else {
+    //     console.log("undefined url");
+    //   }
+    // }
 
-    setNewColumnConfig({ ...newColumnConfig, url: url })
+    // setNewColumnConfig({ ...newColumnConfig, url: url })
   }
 
   const onClickAddButton = () => {

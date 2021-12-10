@@ -1,6 +1,9 @@
 import React from "react";
 import { Button, Col, Form, Modal, Row } from "react-bootstrap";
-import { CLIENT_URL_PATTERN, GeneralConfig, WORKSPACE_URL_PATTERN } from "../Contract";
+import { CLIENT_URL_PATTERN, GeneralConfig, SlackUrlConverter, SlackUrlValidateResult, ValidationResult, WORKSPACE_URL_PATTERN } from "../Contract";
+
+const workspaceUrlInputName = (_: TemplateStringsArray, index: number) => `input-workspace-url-${index}`;
+const clientUrlInputName = (_: TemplateStringsArray, index: number) => `input-client-url-${index}`;
 
 export const ConfigModal: React.FC<{
   show: boolean,
@@ -9,20 +12,21 @@ export const ConfigModal: React.FC<{
   setGeneralConfig: React.Dispatch<React.SetStateAction<GeneralConfig>>
 }> = (props) => {
   const [updatedGeneralConfig, setUpdatedGeneralConfig] = React.useState<GeneralConfig>(props.currentGeneralConfig);
-  const [validateUrl, setValidateUrl] = React.useState<{
-    workspaceUrl: { isValid: boolean, message: string },
-    clientUrl: { isValid: boolean, message: string },
-  }>({
-    workspaceUrl: { isValid: false, message: "Does not match format." },
-    clientUrl: { isValid: false, message: "Does not match format." },
-  });
+  const [validateUrl, setValidateUrl] = React.useState<SlackUrlValidateResult[]>([]);
+  const [isValidAllUrl, setIsValidAllUrl] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     setUpdatedGeneralConfig(props.currentGeneralConfig);
-    setValidateUrl({
-      workspaceUrl: urlValidator(new RegExp(`${WORKSPACE_URL_PATTERN}$`), props.currentGeneralConfig.workspaceUrl),
-      clientUrl: urlValidator(new RegExp(`${CLIENT_URL_PATTERN}$`), props.currentGeneralConfig.clientUrl),
-    });
+
+    let validationResult: SlackUrlValidateResult[] = [];
+    for (let converter of props.currentGeneralConfig.slackUrlTable) {
+      validationResult.push({
+        workspaceUrl: urlValidator(new RegExp(`${WORKSPACE_URL_PATTERN}$`), converter.workspaceUrl),
+        clientUrl: urlValidator(new RegExp(`${CLIENT_URL_PATTERN}$`), converter.clientUrl),
+      });
+    }
+    setValidateUrl(validationResult);
+
   }, [props.show]);
 
   const urlValidator = (regex: RegExp, url: string) => {
@@ -33,24 +37,34 @@ export const ConfigModal: React.FC<{
     }
   };
 
-  const onChangeWorkspaceUrl = (workspaceUrl: string) => {
-    setValidateUrl({
-      ...validateUrl, workspaceUrl: urlValidator(
-        new RegExp("^https://[a-z0-9]+[a-z0-9\-]+.slack.com/$"),
-        workspaceUrl
-      )
-    });
-    setUpdatedGeneralConfig({ ...updatedGeneralConfig, workspaceUrl: workspaceUrl });
+  const onChangeWorkspaceUrl = (workspaceUrl: string, index: number) => {
+    let newSlackUrlValidateResult: SlackUrlValidateResult[] = validateUrl.slice();
+    newSlackUrlValidateResult[index].workspaceUrl = urlValidator(
+      new RegExp("^https://[a-z0-9]+[a-z0-9\-]+.slack.com/$"),
+      workspaceUrl
+    );
+    setValidateUrl(newSlackUrlValidateResult);
+
+    let newSlackUrlTable: SlackUrlConverter[] = updatedGeneralConfig.slackUrlTable.slice();
+    newSlackUrlTable[index].workspaceUrl = workspaceUrl;
+    setUpdatedGeneralConfig({ ...updatedGeneralConfig, slackUrlTable: newSlackUrlTable });
+
+    setIsValidAllUrl(isValidAllSlackUrl());
   };
 
-  const onChangeClientUrl = (clientUrl: string) => {
-    setValidateUrl({
-      ...validateUrl, clientUrl: urlValidator(
-        new RegExp("^https://app.slack.com/client/[A-Z0-9]+/$"),
-        clientUrl
-      )
-    });
-    setUpdatedGeneralConfig({ ...updatedGeneralConfig, clientUrl: clientUrl });
+  const onChangeClientUrl = (clientUrl: string, index: number) => {
+    let newSlackUrlValidateResult: SlackUrlValidateResult[] = validateUrl.slice();
+    newSlackUrlValidateResult[index].clientUrl = urlValidator(
+      new RegExp("^https://app.slack.com/client/[A-Z0-9]+/$"),
+      clientUrl
+    );
+    setValidateUrl(newSlackUrlValidateResult);
+
+    let newSlackUrlTable: SlackUrlConverter[] = updatedGeneralConfig.slackUrlTable.slice();
+    newSlackUrlTable[index].clientUrl = clientUrl;
+    setUpdatedGeneralConfig({ ...updatedGeneralConfig, slackUrlTable: newSlackUrlTable });
+
+    setIsValidAllUrl(isValidAllSlackUrl());
   };
 
   const onClickSaveButton = () => {
@@ -63,6 +77,15 @@ export const ConfigModal: React.FC<{
     document.getElementById('mainBody').classList.toggle('text-light');
     document.getElementById('newBody').classList.toggle('text-light');
   };
+
+  const isValidAllSlackUrl = () => {
+    for (let result of validateUrl) {
+      if (!result.workspaceUrl.isValid || !result.clientUrl.isValid) {
+        return false;
+      }
+    }
+    return true;
+  }
 
   return (
     <div>
@@ -93,35 +116,53 @@ export const ConfigModal: React.FC<{
           <hr />
           <h5>Register workspace URL</h5>
           <p>Correspond <code>https://[workspace_url].slack.com/</code> and <code>https://app.slack.com/client/*/</code>.</p>
-          <Row>
-            <Col>
-              <Form>
-                <Form.Control
-                  type="text"
-                  value={updatedGeneralConfig.workspaceUrl}
-                  placeholder="https://[workspace_url].slack.com/"
-                  onChange={(e) => onChangeWorkspaceUrl(e.target.value)}
-                />
-                <Form.Text className="text-danger">{validateUrl.workspaceUrl.message}</Form.Text>
-              </Form>
-            </Col>
-            <Col>
-              <Form>
-                <Form.Control
-                  type="text"
-                  value={updatedGeneralConfig.clientUrl}
-                  placeholder="https://app.slack.com/client/XXXXXXXXXXX/"
-                  onChange={(e) => onChangeClientUrl(e.target.value)}
-                />
-                <Form.Text className="text-danger">{validateUrl.clientUrl.message}</Form.Text>
-              </Form>
-            </Col>
-          </Row>
+          <div>
+            {updatedGeneralConfig.slackUrlTable.map((converter, index) => {
+              console.log(converter);
+              return (
+                <div className="d-flex my-1">
+                  <Form className="flex-fill">
+                    <Form.Control
+                      type="text"
+                      name={workspaceUrlInputName`${index}`}
+                      value={converter.workspaceUrl}
+                      placeholder="https://[workspace_url].slack.com/"
+                      onChange={(e) => onChangeWorkspaceUrl(e.target.value, parseInt(e.target.name))}
+                    />
+                    <Form.Text className="text-danger">{validateUrl[index].workspaceUrl.message}</Form.Text>
+                  </Form>
+                  <Form className="flex-fill">
+                    <Form.Control
+                      type="text"
+                      name={clientUrlInputName`${index}`}
+                      className="flex-fill"
+                      value={converter.clientUrl}
+                      placeholder="https://app.slack.com/client/XXXXXXXXXXX/"
+                      onChange={(e) => onChangeClientUrl(e.target.value, parseInt(e.target.name))}
+                    />
+                    <Form.Text className="text-danger">{validateUrl[index].clientUrl.message}</Form.Text>
+                  </Form>
+                  <Button
+                    variant="danger"
+                  // onClick={onClickSaveButton}
+                  >
+                    -
+                  </Button>
+                </div>
+              )
+            })}
+          </div>
+          <Button
+            variant="primary"
+          // onClick={onClickSaveButton}
+          >
+            +
+          </Button>
         </Modal.Body>
         <Modal.Footer>
           <Button
             variant="primary"
-            disabled={!(validateUrl.workspaceUrl.isValid && validateUrl.clientUrl.isValid)}
+            disabled={!(isValidAllSlackUrl)}
             onClick={onClickSaveButton}
           >
             Save

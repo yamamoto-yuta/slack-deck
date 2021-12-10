@@ -4,16 +4,39 @@ export type ColumnConfig = {
   name: string,
 }
 
-export type GeneralConfig = {
-  useDarkTheme: boolean,
+export type SlackUrlConverter = {
   workspaceUrl: string,
   clientUrl: string,
 }
 
+export type GeneralConfig = {
+  useDarkTheme: boolean,
+  slackUrlTable: SlackUrlConverter[],
+}
+
+export type ValidationResult = {
+  isValid: boolean,
+  message: string,
+}
+
+export type SlackUrlValidateResult = {
+  workspaceUrl: ValidationResult,
+  clientUrl: ValidationResult,
+}
+
+export const VALIDATION_FAILED: ValidationResult = {
+  isValid: false,
+  message: "Validation failed",
+}
+
+export const VALIDATION_SUCCESS: ValidationResult = {
+  isValid: true,
+  message: "",
+}
+
 export const DEFAULT_GENERAL_CONFIG: GeneralConfig = {
   useDarkTheme: false,
-  workspaceUrl: "",
-  clientUrl: "",
+  slackUrlTable: [],
 };
 
 export const WIDTH_OPTION_LIST = [

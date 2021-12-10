@@ -45,10 +45,19 @@ const Main: React.FC = () => {
           }
         }
         if (value.generalConfig) {
-          setGeneralConfig(value.generalConfig);
           if (value.generalConfig.useDarkTheme) {
             body.classList.add('text-light');
             newBody.classList.add('text-light');
+          }
+          setGeneralConfig(value.generalConfig);
+
+          // Update legacy generalConfig (v0.5.3<)
+          if ("workspaceUrl" in value.generalConfig || "clientUrl" in value.generalConfig) {
+            let newGeneralConfig: GeneralConfig = {
+              useDarkTheme: value.generalConfig.useDarkTheme,
+              slackUrlTable: [{ workspaceUrl: value.generalConfig.workspaceUrl, clientUrl: value.generalConfig.clientUrl }],
+            };
+            setGeneralConfig(newGeneralConfig);
           }
         }
       }
