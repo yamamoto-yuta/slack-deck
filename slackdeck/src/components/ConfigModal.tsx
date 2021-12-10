@@ -1,6 +1,7 @@
 import React from "react";
-import { Button, Col, Form, Modal, Row } from "react-bootstrap";
-import { CLIENT_URL_PATTERN, GeneralConfig, SlackUrlConverter, SlackUrlValidateResult, ValidationResult, VALIDATION_FAILED, VALIDATION_SUCCESS, WORKSPACE_URL_PATTERN } from "../Contract";
+import cloneDeep from 'lodash/cloneDeep';
+import { Button, Form, Modal } from "react-bootstrap";
+import { CLIENT_URL_PATTERN, GeneralConfig, SlackUrlConverter, SlackUrlValidateResult, VALIDATION_FAILED, VALIDATION_SUCCESS, WORKSPACE_URL_PATTERN } from "../Contract";
 
 const workspaceUrlInputName = (_: TemplateStringsArray, index: number) => `input-workspace-url-${index}`;
 const clientUrlInputName = (_: TemplateStringsArray, index: number) => `input-client-url-${index}`;
@@ -17,7 +18,7 @@ export const ConfigModal: React.FC<{
   const [isValidAllUrl, setIsValidAllUrl] = React.useState<boolean>(false);
 
   React.useEffect(() => {
-    setUpdatedGeneralConfig(props.currentGeneralConfig);
+    setUpdatedGeneralConfig(cloneDeep(props.currentGeneralConfig));
 
     let validationResult: SlackUrlValidateResult[] = [];
     for (let converter of props.currentGeneralConfig.slackUrlTable) {
@@ -28,7 +29,7 @@ export const ConfigModal: React.FC<{
     }
     setValidateUrl(validationResult);
 
-    setIsValidAllUrl(true);
+    setIsValidAllUrl(isValidAllSlackUrl(validationResult));
 
   }, [props.show]);
 
@@ -40,8 +41,8 @@ export const ConfigModal: React.FC<{
     }
   };
 
-  const isValidAllSlackUrl = () => {
-    for (let result of validateUrl) {
+  const isValidAllSlackUrl = (validationResult: SlackUrlValidateResult[]) => {
+    for (let result of validationResult) {
       if (!result.workspaceUrl.isValid || !result.clientUrl.isValid) {
         return false;
       }
@@ -57,12 +58,12 @@ export const ConfigModal: React.FC<{
       workspaceUrl
     );
     setValidateUrl(newSlackUrlValidateResult);
+    // Update All validation result
+    setIsValidAllUrl(isValidAllSlackUrl(newSlackUrlValidateResult));
     // Update state
     let newSlackUrlTable: SlackUrlConverter[] = updatedGeneralConfig.slackUrlTable.slice();
     newSlackUrlTable[index].workspaceUrl = workspaceUrl;
     setUpdatedGeneralConfig({ ...updatedGeneralConfig, slackUrlTable: newSlackUrlTable });
-    // Update All validation result
-    setIsValidAllUrl(isValidAllSlackUrl());
   };
 
   const onChangeClientUrl = (clientUrl: string, index: number) => {
@@ -73,16 +74,17 @@ export const ConfigModal: React.FC<{
       clientUrl
     );
     setValidateUrl(newSlackUrlValidateResult);
+    // Update All validation result
+    setIsValidAllUrl(isValidAllSlackUrl(newSlackUrlValidateResult));
     // Update state
     let newSlackUrlTable: SlackUrlConverter[] = updatedGeneralConfig.slackUrlTable.slice();
     newSlackUrlTable[index].clientUrl = clientUrl;
     setUpdatedGeneralConfig({ ...updatedGeneralConfig, slackUrlTable: newSlackUrlTable });
-    // Update All validation result
-    setIsValidAllUrl(isValidAllSlackUrl());
+    console.log(props.currentGeneralConfig.slackUrlTable);
   };
 
   const onClickAddSlackUrlInputFormButton = () => {
-    // Update satate
+    // Update state
     let newSlackUrlTable: SlackUrlConverter[] = updatedGeneralConfig.slackUrlTable.slice();
     newSlackUrlTable.push({ workspaceUrl: "", clientUrl: "" });
     setUpdatedGeneralConfig({ ...updatedGeneralConfig, slackUrlTable: newSlackUrlTable });
@@ -94,8 +96,21 @@ export const ConfigModal: React.FC<{
     });
     setValidateUrl(newSlackUrlValidateResult);
     // Update All validation result
-    setIsValidAllUrl(false);
-  }
+    setIsValidAllUrl(isValidAllSlackUrl(newSlackUrlValidateResult));
+  };
+
+  const onClickRemoveSlackUrlInputFormButton = (index: number) => {
+    // Update general config state
+    let newSlackUrlTable: SlackUrlConverter[] = updatedGeneralConfig.slackUrlTable.slice();
+    newSlackUrlTable.splice(index, 1);
+    setUpdatedGeneralConfig({ ...updatedGeneralConfig, slackUrlTable: newSlackUrlTable });
+    // Update validation result state
+    let newSlackUrlValidateResult: SlackUrlValidateResult[] = validateUrl.slice();
+    newSlackUrlValidateResult.splice(index, 1)
+    setValidateUrl(newSlackUrlValidateResult);
+    // Update All validation result
+    setIsValidAllUrl(isValidAllSlackUrl(newSlackUrlValidateResult));
+  };
 
   const onClickSaveButton = () => {
     props.setGeneralConfig(updatedGeneralConfig);
@@ -164,7 +179,7 @@ export const ConfigModal: React.FC<{
                   </Form>
                   <Button
                     variant="danger"
-                  // onClick={onClickSaveButton}
+                    onClick={() => onClickRemoveSlackUrlInputFormButton(index)}
                   >
                     -
                   </Button>
