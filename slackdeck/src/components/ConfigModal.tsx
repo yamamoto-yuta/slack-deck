@@ -2,6 +2,8 @@ import React from "react";
 import cloneDeep from 'lodash/cloneDeep';
 import { Button, Form, Modal } from "react-bootstrap";
 import { CLIENT_URL_PATTERN, GeneralConfig, SlackUrlConverter, SlackUrlValidateResult, VALIDATION_FAILED, VALIDATION_SUCCESS, WORKSPACE_URL_PATTERN } from "../Contract";
+import { faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const workspaceUrlInputName = (_: TemplateStringsArray, index: number) => `input-workspace-url-${index}`;
 const clientUrlInputName = (_: TemplateStringsArray, index: number) => `input-client-url-${index}`;
@@ -185,9 +187,7 @@ export const ConfigModal: React.FC<{
                   <Button
                     variant="danger"
                     onClick={() => onClickRemoveSlackUrlInputFormButton(index)}
-                  >
-                    -
-                  </Button>
+                  ><FontAwesomeIcon icon={faMinus} /></Button>
                 </div>
               )
             })}
@@ -195,9 +195,7 @@ export const ConfigModal: React.FC<{
           <Button
             variant="primary"
             onClick={onClickAddSlackUrlInputFormButton}
-          >
-            +
-          </Button>
+          ><FontAwesomeIcon icon={faPlus} /></Button>
         </Modal.Body>
         <Modal.Footer>
           <Button
