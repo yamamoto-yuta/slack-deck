@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBullhorn, faCog, faHistory, faPlus, faSave } from '@fortawesome/free-solid-svg-icons';
+import { faBullhorn, faChevronRight, faCog, faHistory, faPlus, faSave } from '@fortawesome/free-solid-svg-icons';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { ColumnConfig, DEFAULT_GENERAL_CONFIG, GeneralConfig } from './Contract';
@@ -10,6 +10,10 @@ import { AddColumnModal } from './components/AddColumnModal';
 import { saveColumns, updateSavedTime } from './functions/column';
 import { Column } from './components/Column';
 import { AnnounceModal } from './components/AnnounceModal';
+import { OverlayTrigger, Tooltip } from 'react-bootstrap';
+
+const NORMAL_DECK_WIDTH = "60px";
+const EXPAND_DECK_WIDTH = "200px";
 
 let columnList: Array<ColumnConfig> = [];
 
@@ -70,6 +74,10 @@ const Main: React.FC = () => {
     saveColumns(columnList);
   }
 
+  const onClickExpandDeckButton = () => {
+    document.getElementById('deck').style.width = EXPAND_DECK_WIDTH;
+  }
+
   return (
     <div className="d-flex flex-column h-100">
       <button
@@ -80,9 +88,40 @@ const Main: React.FC = () => {
         className="btn btn-outline-primary rounded-circle my-1 btn-outline-primary-icon-color"
         onClick={onClickSaveButton}
       ><FontAwesomeIcon icon={faSave} className="deck-btn-icon-circle" /></button>
-      <div className="text-sm">
+      <div>
         <div id="savedAtText">Saved at</div>
         <div id="savedAtTime"></div>
+      </div>
+
+
+
+      <div className="my-3">
+        <OverlayTrigger
+          placement="right"
+          overlay={
+            <Tooltip>main</Tooltip>
+          }
+        >
+          <a
+            className="btn btn-outline-light my-1"
+            href="#mainBody"
+          >#</a>
+        </OverlayTrigger>
+        {columnList.map((column, index) => {
+          return (
+            <OverlayTrigger
+              placement="right"
+              overlay={
+                <Tooltip>{column.name}</Tooltip>
+              }
+            >
+              <a
+                className="btn btn-outline-light my-1"
+                href={"#col-el-" + index}
+              >{index}</a>
+            </OverlayTrigger>
+          )
+        })}
       </div>
 
       <button
@@ -97,7 +136,7 @@ const Main: React.FC = () => {
       ><FontAwesomeIcon icon={faHistory} className="deck-btn-icon-natural" /></a>
 
       <button
-        className="btn my-2 p-0"
+        className="btn my-2 p-0 text-primary"
         onClick={handleConfigModalOpen}
       ><FontAwesomeIcon icon={faCog} className="deck-btn-icon-natural" /></button>
 
