@@ -92,7 +92,7 @@ const Main: React.FC = () => {
 
 
 
-      <div className="my-3">
+      <div className="my-3 deck-scrollbar">
         <OverlayTrigger
           placement="right"
           overlay={

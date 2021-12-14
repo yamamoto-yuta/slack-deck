@@ -53,6 +53,23 @@ $deck-width: 60px;
   color: $light;
 }
 
+.deck-scrollbar {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.deck-scrollbar::-webkit-scrollbar {
+  width: 1px;
+}
+
+.deck-scrollbar::-webkit-scrollbar-track {
+  background: $secondary;
+}
+
+.deck-scrollbar::-webkit-scrollbar-thumb {
+  background: $primary;
+}
+
 #savedAtText {
   font-size: x-small;
 }
