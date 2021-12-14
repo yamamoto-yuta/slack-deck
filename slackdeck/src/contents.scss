@@ -41,7 +41,7 @@ $deck-width: 60px;
 }
 
 .deck-btn-icon-natural {
-  color: white;
+  color: $primary;
   font-size: x-large;
 }
 
@@ -51,6 +51,23 @@ $deck-width: 60px;
 
 .btn-outline-primary-icon-color:hover .deck-btn-icon-circle {
   color: $light;
+}
+
+.deck-scrollbar {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.deck-scrollbar::-webkit-scrollbar {
+  width: 1px;
+}
+
+.deck-scrollbar::-webkit-scrollbar-track {
+  background: $secondary;
+}
+
+.deck-scrollbar::-webkit-scrollbar-thumb {
+  background: $primary;
 }
 
 #savedAtText {

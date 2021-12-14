@@ -2,7 +2,7 @@
     "manifest_version": 3,
     "name": "SlackDeck",
     "description": "Display your Slack channels in column format",
-    "version": "0.6.0",
+    "version": "0.7.0",
     "action": {
         "default_icon": "icon16.png",
         "default_popup": "popup.html"

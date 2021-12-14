@@ -15,6 +15,7 @@ const columnElementId = (_: TemplateStringsArray, columnIndex: number) => `col-e
 const exttractColumnIdxFromId = (colDelBtnId: string) => parseInt(colDelBtnId.split('-').slice(-1)[0]);
 
 export const Column: React.FC<{
+  rerender: React.Dispatch<React.SetStateAction<number>>,
   columnList: Array<ColumnConfig>,
   columnIndex: number,
   columnCofig: ColumnConfig,
@@ -60,6 +61,8 @@ export const Column: React.FC<{
     updateElementID();
     // Save column
     saveColumns(props.columnList);
+    // Rerender deck
+    props.rerender(Math.random());
   }
 
   const onClickMoveRightButton = () => {
@@ -91,6 +94,8 @@ export const Column: React.FC<{
     updateElementID();
     // Save column
     saveColumns(props.columnList);
+    // Rerender deck
+    props.rerender(Math.random());
   }
 
   const onChangeWidthOption = (e) => {
@@ -109,6 +114,8 @@ export const Column: React.FC<{
     props.columnElement.remove();
     // Update other elements
     updateElementID();
+    // Rerender deck
+    props.rerender(Math.random());
   }
 
   return (
