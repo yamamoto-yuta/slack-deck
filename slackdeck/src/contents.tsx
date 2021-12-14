@@ -1,9 +1,8 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBullhorn, faChevronRight, faCog, faHistory, faPlus, faSave } from '@fortawesome/free-solid-svg-icons';
+import { faBullhorn, faCog, faHistory, faPlus, faSave } from '@fortawesome/free-solid-svg-icons';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { ColumnConfig, DEFAULT_GENERAL_CONFIG, GeneralConfig } from './Contract';
-
 import './contents.scss';
 import { ConfigModal } from './components/ConfigModal';
 import { AddColumnModal } from './components/AddColumnModal';
@@ -12,12 +11,11 @@ import { Column } from './components/Column';
 import { AnnounceModal } from './components/AnnounceModal';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
-const NORMAL_DECK_WIDTH = "60px";
-const EXPAND_DECK_WIDTH = "200px";
 
 let columnList: Array<ColumnConfig> = [];
 
 const Main: React.FC = () => {
+  const [, rerender] = React.useState<number>(Math.random());
   const [generalConfig, setGeneralConfig] = React.useState<GeneralConfig>(DEFAULT_GENERAL_CONFIG);
 
   const [showAnnounceModal, setShowAnnounceModal] = React.useState<boolean>(false);
@@ -40,6 +38,7 @@ const Main: React.FC = () => {
           for (var i = 0; i < columnList.length; i++) {
             let col = document.createElement('div');
             ReactDOM.render(<Column
+              rerender={rerender}
               columnList={columnList}
               columnIndex={i}
               columnCofig={columnList[i]}
@@ -72,11 +71,9 @@ const Main: React.FC = () => {
 
   const onClickSaveButton = () => {
     saveColumns(columnList);
+    rerender(Math.random());
   }
 
-  const onClickExpandDeckButton = () => {
-    document.getElementById('deck').style.width = EXPAND_DECK_WIDTH;
-  }
 
   return (
     <div className="d-flex flex-column h-100">
@@ -107,12 +104,12 @@ const Main: React.FC = () => {
             href="#mainBody"
           >#</a>
         </OverlayTrigger>
-        {columnList.map((column, index) => {
+        {columnList.map((_, index) => {
           return (
             <OverlayTrigger
               placement="right"
               overlay={
-                <Tooltip>{column.name}</Tooltip>
+                <Tooltip>{(document.getElementsByClassName("col-name-input")[index] as HTMLInputElement).value}</Tooltip>
               }
             >
               <a
@@ -150,6 +147,7 @@ const Main: React.FC = () => {
         onHide={handleAddColumnModalClose}
         columnList={columnList}
         generalConfig={generalConfig}
+        rerender={rerender}
       />
 
       <ConfigModal
@@ -158,6 +156,7 @@ const Main: React.FC = () => {
         currentGeneralConfig={generalConfig}
         setGeneralConfig={setGeneralConfig}
       />
+      {console.log(columnList)}
     </div>
   )
 }
