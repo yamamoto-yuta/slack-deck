@@ -18,17 +18,11 @@ export const AnnounceModal: React.FC<{
           <Modal.Title>Announcement</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <h5>2021/12/10 - Add announcement modal</h5>
-          <p>
-            Added a modal to announce important changes, etc. Please check it periodically in the future.
-          </p>
-          <p>
-            The detailed change history can be found on the &nbsp;
-            <a href="https://github.com/yamamoto-yuta/slack-deck/releases" target="_blank">
-              Release
-            </a>
-            &nbsp; page.
-          </p>
+          <h5>2021/12/15 - v0.7.0 Released</h5>
+          <h6>✨New Feature</h6>
+          <ul>
+            <li>Added a jump to column button to Deck.</li>
+          </ul>
         </Modal.Body>
         <Modal.Footer>
           <Button
