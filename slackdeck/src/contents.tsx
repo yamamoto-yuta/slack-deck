@@ -3,17 +3,19 @@ import { faBullhorn, faCog, faHistory, faPlus, faSave } from '@fortawesome/free-
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { ColumnConfig, DEFAULT_GENERAL_CONFIG, GeneralConfig } from './Contract';
-
 import './contents.scss';
 import { ConfigModal } from './components/ConfigModal';
 import { AddColumnModal } from './components/AddColumnModal';
 import { saveColumns, updateSavedTime } from './functions/column';
 import { Column } from './components/Column';
 import { AnnounceModal } from './components/AnnounceModal';
+import { OverlayTrigger, Tooltip } from 'react-bootstrap';
+
 
 let columnList: Array<ColumnConfig> = [];
 
 const Main: React.FC = () => {
+  const [, rerender] = React.useState<number>(Math.random());
   const [generalConfig, setGeneralConfig] = React.useState<GeneralConfig>(DEFAULT_GENERAL_CONFIG);
 
   const [showAnnounceModal, setShowAnnounceModal] = React.useState<boolean>(false);
@@ -36,6 +38,7 @@ const Main: React.FC = () => {
           for (var i = 0; i < columnList.length; i++) {
             let col = document.createElement('div');
             ReactDOM.render(<Column
+              rerender={rerender}
               columnList={columnList}
               columnIndex={i}
               columnCofig={columnList[i]}
@@ -68,7 +71,9 @@ const Main: React.FC = () => {
 
   const onClickSaveButton = () => {
     saveColumns(columnList);
+    rerender(Math.random());
   }
+
 
   return (
     <div className="d-flex flex-column h-100">
@@ -80,9 +85,40 @@ const Main: React.FC = () => {
         className="btn btn-outline-primary rounded-circle my-1 btn-outline-primary-icon-color"
         onClick={onClickSaveButton}
       ><FontAwesomeIcon icon={faSave} className="deck-btn-icon-circle" /></button>
-      <div className="text-sm">
+      <div>
         <div id="savedAtText">Saved at</div>
         <div id="savedAtTime"></div>
+      </div>
+
+
+
+      <div className="my-3 deck-scrollbar">
+        <OverlayTrigger
+          placement="right"
+          overlay={
+            <Tooltip>main</Tooltip>
+          }
+        >
+          <a
+            className="btn btn-outline-light my-1"
+            href="#mainBody"
+          >#</a>
+        </OverlayTrigger>
+        {columnList.map((_, index) => {
+          return (
+            <OverlayTrigger
+              placement="right"
+              overlay={
+                <Tooltip>{(document.getElementsByClassName("col-name-input")[index] as HTMLInputElement).value}</Tooltip>
+              }
+            >
+              <a
+                className="btn btn-outline-light my-1"
+                href={"#col-el-" + index}
+              >{index}</a>
+            </OverlayTrigger>
+          )
+        })}
       </div>
 
       <button
@@ -97,7 +133,7 @@ const Main: React.FC = () => {
       ><FontAwesomeIcon icon={faHistory} className="deck-btn-icon-natural" /></a>
 
       <button
-        className="btn my-2 p-0"
+        className="btn my-2 p-0 text-primary"
         onClick={handleConfigModalOpen}
       ><FontAwesomeIcon icon={faCog} className="deck-btn-icon-natural" /></button>
 
@@ -111,6 +147,7 @@ const Main: React.FC = () => {
         onHide={handleAddColumnModalClose}
         columnList={columnList}
         generalConfig={generalConfig}
+        rerender={rerender}
       />
 
       <ConfigModal
@@ -119,6 +156,7 @@ const Main: React.FC = () => {
         currentGeneralConfig={generalConfig}
         setGeneralConfig={setGeneralConfig}
       />
+      {console.log(columnList)}
     </div>
   )
 }

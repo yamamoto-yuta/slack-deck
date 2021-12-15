@@ -12,6 +12,7 @@ export const AddColumnModal: React.FC<{
   onHide: () => void,
   columnList: Array<ColumnConfig>,
   generalConfig: GeneralConfig,
+  rerender: React.Dispatch<React.SetStateAction<number>>,
 }> = (props) => {
   const [newColumnConfig, setNewColumnConfig] = React.useState<ColumnConfig>(DEFAULT_COLUMN_CONFIG);
 
@@ -66,6 +67,7 @@ export const AddColumnModal: React.FC<{
     // Add column
     let col = document.createElement('div');
     ReactDOM.render(<Column
+      rerender={props.rerender}
       columnList={props.columnList}
       columnIndex={props.columnList.length}
       columnCofig={newColumnConfig}
