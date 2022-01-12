@@ -82,7 +82,6 @@ export const ConfigModal: React.FC<{
     let newSlackUrlTable: SlackUrlConverter[] = updatedGeneralConfig.slackUrlTable.slice();
     newSlackUrlTable[index].clientUrl = clientUrl;
     setUpdatedGeneralConfig({ ...updatedGeneralConfig, slackUrlTable: newSlackUrlTable });
-    console.log(props.currentGeneralConfig.slackUrlTable);
   };
 
   const onClickAddSlackUrlInputFormButton = () => {
