@@ -17,7 +17,11 @@ export const AddColumnModal: React.FC<{
   const [newColumnConfig, setNewColumnConfig] = React.useState<ColumnConfig>(DEFAULT_COLUMN_CONFIG);
 
   React.useEffect(() => {
-    setNewColumnConfig({ ...newColumnConfig, name: columnNameDefaultValue`${props.columnList.length}` });
+    setNewColumnConfig({
+      ...newColumnConfig,
+      name: columnNameDefaultValue`${props.columnList.length}`,
+      width: DEFAULT_WIDTH_OPTION.value
+    });
   }, [props.show]);
 
   const convertWorkspaceUrlToClientUrl = (workspaceUrl: string, clientUrl: string, url: string) => {
