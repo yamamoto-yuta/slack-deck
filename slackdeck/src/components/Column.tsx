@@ -1,4 +1,4 @@
-import { faChevronLeft, faChevronRight, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { faChevronLeft, faChevronRight, faClone, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { Button, Form } from "react-bootstrap";
@@ -7,6 +7,7 @@ import { saveColumns } from "../functions/column";
 
 const columnMoveLeftButtonId = (_: TemplateStringsArray, columnIndex: number) => `col-mv-l-btn-${columnIndex}`;
 const columnMoveRightButtonId = (_: TemplateStringsArray, columnIndex: number) => `col-mv-r-btn-${columnIndex}`;
+const columnDuplicateButtonId = (_: TemplateStringsArray, columnIndex: number) => `col-dup-btn-${columnIndex}`;
 const columnNameInputId = (_: TemplateStringsArray, columnIndex: number) => `col-name-input-${columnIndex}`;
 const columnWidthSelectId = (_: TemplateStringsArray, columnIndex: number) => `col-select-${columnIndex}`;
 const columnDeleteButtonId = (_: TemplateStringsArray, columnIndex: number) => `col-del-btn-${columnIndex}`;
@@ -138,6 +139,11 @@ export const Column: React.FC<{
           className="btn btn-primary col-mv-r-btn"
           onClick={onClickMoveRightButton}
         ><FontAwesomeIcon icon={faChevronRight} /></Button>
+        <Button
+          id={columnDuplicateButtonId`${props.columnIndex}`}
+          className="btn btn-primary col-dup-btn"
+        // onClick={onClickMoveRightButton}
+        ><FontAwesomeIcon icon={faClone} /></Button>
         <Form.Control
           id={columnNameInputId`${props.columnIndex}`}
           className="col-name-input"
