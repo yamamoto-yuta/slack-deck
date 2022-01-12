@@ -15,7 +15,7 @@ const columnWidthSelectId = (_: TemplateStringsArray, columnIndex: number) => `c
 const columnDeleteButtonId = (_: TemplateStringsArray, columnIndex: number) => `col-del-btn-${columnIndex}`;
 const columnIframeId = (_: TemplateStringsArray, columnIndex: number) => `col-iframe-${columnIndex}`;
 const columnElementId = (_: TemplateStringsArray, columnIndex: number) => `col-el-${columnIndex}`;
-const exttractColumnIdxFromId = (colDelBtnId: string) => parseInt(colDelBtnId.split('-').slice(-1)[0]);
+const extractColumnIdxFromId = (colDelBtnId: string) => parseInt(colDelBtnId.split('-').slice(-1)[0]);
 
 export const Column: React.FC<{
   rerender: React.Dispatch<React.SetStateAction<number>>,
@@ -93,7 +93,7 @@ export const Column: React.FC<{
     // Save column
     saveColumns(props.columnList);
     // Calculate new column index
-    let colElIdx = exttractColumnIdxFromId(props.columnElement.getElementsByTagName('div')[0].id);
+    let colElIdx = extractColumnIdxFromId(props.columnElement.getElementsByTagName('div')[0].id);
     let newColElIdx = colElIdx - 1;
     // Switch column
     moveColumnLeft(
@@ -114,7 +114,7 @@ export const Column: React.FC<{
     // Save column
     saveColumns(props.columnList);
     // Calculate new column index
-    let colElIdx = exttractColumnIdxFromId(props.columnElement.getElementsByTagName('div')[0].id);
+    let colElIdx = extractColumnIdxFromId(props.columnElement.getElementsByTagName('div')[0].id);
     let newColElIdx = colElIdx + 1;
     // Switch column
     moveColumnRight(
@@ -157,7 +157,7 @@ export const Column: React.FC<{
 
   const onChangeWidthOption = (e) => {
     props.columnCofig.width = e.target.value;
-    let colElIdx = exttractColumnIdxFromId(e.target.id);
+    let colElIdx = extractColumnIdxFromId(e.target.id);
     let _col = document.getElementsByClassName('column')[colElIdx] as HTMLElement;
     _col.style.minWidth = e.target.value;
     _col.style.width = e.target.value;
@@ -165,7 +165,7 @@ export const Column: React.FC<{
 
   const onClickDeleteButton = () => {
     // Remove
-    let colElIdx = exttractColumnIdxFromId(props.columnElement.getElementsByTagName('div')[0].id);
+    let colElIdx = extractColumnIdxFromId(props.columnElement.getElementsByTagName('div')[0].id);
     props.columnList.splice(colElIdx, 1);;
     saveColumns(props.columnList);
     props.columnElement.remove();
