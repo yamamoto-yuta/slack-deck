@@ -37,40 +37,50 @@ export const Column: React.FC<{
     }
   };
 
-  const moveColumnLeft = (colElIdx: number, newColElIdx: number) => {
+  const moveColumnLeft = (
+    colElIdx: number,
+    colEl: HTMLElement,
+    newColElIdx: number,
+    newColEl: HTMLElement
+  ) => {
     // Switch column
     if (newColElIdx >= 0) {
       document.getElementById('wrapper').insertBefore(
-        document.getElementById(columnElementId`${colElIdx}`).parentElement,
-        document.getElementById(columnElementId`${newColElIdx}`).parentElement
+        colEl.parentElement,
+        newColEl.parentElement
       );
     } else {
       document.getElementById('wrapper').appendChild(
-        document.getElementById(columnElementId`${colElIdx}`).parentElement
+        colEl.parentElement
       );
       newColElIdx += props.columnList.length;
     }
-    document.getElementById(columnElementId`${colElIdx}`).getElementsByTagName('iframe')[0].src = props.columnList[colElIdx].url;
+    colEl.getElementsByTagName('iframe')[0].src = props.columnList[colElIdx].url;
     // Update column list
     let tmp = props.columnList[colElIdx];
     props.columnList[colElIdx] = props.columnList[newColElIdx];
     props.columnList[newColElIdx] = tmp;
   }
 
-  const moveColumnRight = (colElIdx: number, newColElIdx: number) => {
+  const moveColumnRight = (
+    colElIdx: number,
+    colEl: HTMLElement,
+    newColElIdx: number,
+    newColEl: HTMLElement
+  ) => {
     // Switch column
     if (newColElIdx < props.columnList.length) {
       document.getElementById('wrapper').insertBefore(
-        document.getElementById(columnElementId`${newColElIdx}`).parentElement,
-        document.getElementById(columnElementId`${colElIdx}`).parentElement
+        newColEl.parentElement,
+        colEl.parentElement
       );
-      document.getElementById(columnElementId`${newColElIdx}`).getElementsByTagName('iframe')[0].src = props.columnList[newColElIdx].url;
+      newColEl.getElementsByTagName('iframe')[0].src = props.columnList[newColElIdx].url;
     } else {
       document.getElementById('wrapper').insertBefore(
-        document.getElementById(columnElementId`${colElIdx}`).parentElement,
+        colEl.parentElement,
         document.getElementById(columnElementId`${0}`).parentElement
       );
-      document.getElementById(columnElementId`${colElIdx}`).getElementsByTagName('iframe')[0].src = props.columnList[colElIdx].url;
+      colEl.getElementsByTagName('iframe')[0].src = props.columnList[colElIdx].url;
       newColElIdx -= props.columnList.length;
     }
     // Update column list
@@ -86,7 +96,12 @@ export const Column: React.FC<{
     let colElIdx = exttractColumnIdxFromId(props.columnElement.getElementsByTagName('div')[0].id);
     let newColElIdx = colElIdx - 1;
     // Switch column
-    moveColumnLeft(colElIdx, newColElIdx);
+    moveColumnLeft(
+      colElIdx,
+      document.getElementById(columnElementId`${colElIdx}`),
+      newColElIdx,
+      document.getElementById(columnElementId`${newColElIdx}`)
+    );
     // Update element id
     updateElementID();
     // Save column
@@ -102,7 +117,12 @@ export const Column: React.FC<{
     let colElIdx = exttractColumnIdxFromId(props.columnElement.getElementsByTagName('div')[0].id);
     let newColElIdx = colElIdx + 1;
     // Switch column
-    moveColumnRight(colElIdx, newColElIdx);
+    moveColumnRight(
+      colElIdx,
+      document.getElementById(columnElementId`${colElIdx}`),
+      newColElIdx,
+      document.getElementById(columnElementId`${newColElIdx}`)
+    );
     // Update element id
     updateElementID();
     // Save column
