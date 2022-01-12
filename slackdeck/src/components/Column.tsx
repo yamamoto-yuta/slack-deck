@@ -89,6 +89,24 @@ export const Column: React.FC<{
     props.columnList[newColElIdx] = tmp;
   }
 
+  const insertDuplicatedColumnAfterOriginalColumn = (dupColEl: HTMLElement, newColumnConfig: ColumnConfig) => {
+    // Push to columnList
+    let orgColElIdx = extractColumnIdxFromId(props.columnElement.getElementsByTagName('div')[0].id);
+    let orgColEl = document.getElementById(columnElementId`${orgColElIdx}`).parentElement;
+    let insertPos = orgColElIdx + 1;
+    // Switch column
+    if (insertPos < props.columnList.length) {
+      document.getElementById('wrapper').insertBefore(
+        dupColEl,
+        orgColEl
+      );
+      props.columnList.splice(orgColElIdx + 1, 0, newColumnConfig);
+    } else {
+      document.getElementById('wrapper').appendChild(dupColEl);
+      props.columnList.push(newColumnConfig);
+    }
+  }
+
   const onClickMoveLeftButton = () => {
     // Save column
     saveColumns(props.columnList);
@@ -136,7 +154,7 @@ export const Column: React.FC<{
     saveColumns(props.columnList);
     // Clone column config
     let newColumnConfig = cloneDeep(props.columnCofig);
-    // Add column
+    // Insert column after original column
     let col = document.createElement('div');
     ReactDOM.render(<Column
       rerender={props.rerender}
@@ -145,12 +163,10 @@ export const Column: React.FC<{
       columnCofig={newColumnConfig}
       columnElement={col}
     />, col);
-    document.getElementById('wrapper').appendChild(col);
+    insertDuplicatedColumnAfterOriginalColumn(col, newColumnConfig);
     // Fix slack dom
     let pClient = document.getElementsByClassName('p-client')[0] as HTMLElement;
     pClient.style.width = '100%';
-    // Push to columnList
-    props.columnList.push(newColumnConfig);
     // Save current column state
     saveColumns(props.columnList);
     // Rerender deck
