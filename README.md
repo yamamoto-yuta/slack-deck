@@ -68,7 +68,15 @@ $ docker exec -it <CONTAINER_ID> bash
 1. `npm run dev` or `npm run watch`
 1. `npm run build`
 
-This project uses this boilerplate project: [Chrome Extension (built with TypeScript + React)](https://github.com/martellaj/chrome-extension-react-typescript-boilerplate)
+By using the `make` command, you can make sure that the container is started only when necessary.
+
+Support command:
+
+- `npm i` -> `make i`
+- `npm run dev` -> `make dev`
+- `npm run build` -> `make build`
+
+\*This project uses this boilerplate project: [Chrome Extension (built with TypeScript + React)](https://github.com/martellaj/chrome-extension-react-typescript-boilerplate)
 
 ## Reference
 
