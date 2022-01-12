@@ -132,6 +132,8 @@ export const Column: React.FC<{
   }
 
   const onClickDuplicateButton = () => {
+    // Save column
+    saveColumns(props.columnList);
     // Clone column config
     let newColumnConfig = cloneDeep(props.columnCofig);
     // Add column
