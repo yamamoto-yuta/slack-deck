@@ -102,8 +102,9 @@ export const Column: React.FC<{
   }
 
   const onClickDuplicateButton = () => {
-    // Add column
+    // Clone column config
     let newColumnConfig = cloneDeep(props.columnCofig);
+    // Add column
     let col = document.createElement('div');
     ReactDOM.render(<Column
       rerender={props.rerender}
