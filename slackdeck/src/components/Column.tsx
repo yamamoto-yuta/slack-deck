@@ -2,8 +2,10 @@ import { faChevronLeft, faChevronRight, faClone, faTimes } from "@fortawesome/fr
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { Button, Form } from "react-bootstrap";
+import ReactDOM from "react-dom";
 import { ColumnConfig, WIDTH_OPTION_LIST } from "../Contract";
 import { saveColumns } from "../functions/column";
+import cloneDeep from 'lodash/cloneDeep';
 
 const columnMoveLeftButtonId = (_: TemplateStringsArray, columnIndex: number) => `col-mv-l-btn-${columnIndex}`;
 const columnMoveRightButtonId = (_: TemplateStringsArray, columnIndex: number) => `col-mv-r-btn-${columnIndex}`;
@@ -99,6 +101,29 @@ export const Column: React.FC<{
     props.rerender(Math.random());
   }
 
+  const onClickDuplicateButton = () => {
+    // Add column
+    let newColumnConfig = cloneDeep(props.columnCofig);
+    let col = document.createElement('div');
+    ReactDOM.render(<Column
+      rerender={props.rerender}
+      columnList={props.columnList}
+      columnIndex={props.columnList.length}
+      columnCofig={newColumnConfig}
+      columnElement={col}
+    />, col);
+    document.getElementById('wrapper').appendChild(col);
+    // Fix slack dom
+    let pClient = document.getElementsByClassName('p-client')[0] as HTMLElement;
+    pClient.style.width = '100%';
+    // Push to columnList
+    props.columnList.push(newColumnConfig);
+    // Save current column state
+    saveColumns(props.columnList);
+    // Rerender deck
+    props.rerender(Math.random());
+  }
+
   const onChangeWidthOption = (e) => {
     props.columnCofig.width = e.target.value;
     let colElIdx = exttractColumnIdxFromId(e.target.id);
@@ -142,7 +167,7 @@ export const Column: React.FC<{
         <Button
           id={columnDuplicateButtonId`${props.columnIndex}`}
           className="btn btn-primary col-dup-btn"
-        // onClick={onClickMoveRightButton}
+          onClick={onClickDuplicateButton}
         ><FontAwesomeIcon icon={faClone} /></Button>
         <Form.Control
           id={columnNameInputId`${props.columnIndex}`}
