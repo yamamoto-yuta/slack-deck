@@ -37,12 +37,7 @@ export const Column: React.FC<{
     }
   };
 
-  const onClickMoveLeftButton = () => {
-    // Save column
-    saveColumns(props.columnList);
-    // Calculate new column index
-    let colElIdx = exttractColumnIdxFromId(props.columnElement.getElementsByTagName('div')[0].id);
-    let newColElIdx = colElIdx - 1;
+  const moveColumnLeft = (colElIdx: number, newColElIdx: number) => {
     // Switch column
     if (newColElIdx >= 0) {
       document.getElementById('wrapper').insertBefore(
@@ -60,20 +55,9 @@ export const Column: React.FC<{
     let tmp = props.columnList[colElIdx];
     props.columnList[colElIdx] = props.columnList[newColElIdx];
     props.columnList[newColElIdx] = tmp;
-    // Update element id
-    updateElementID();
-    // Save column
-    saveColumns(props.columnList);
-    // Rerender deck
-    props.rerender(Math.random());
   }
 
-  const onClickMoveRightButton = () => {
-    // Save column
-    saveColumns(props.columnList);
-    // Calculate new column index
-    let colElIdx = exttractColumnIdxFromId(props.columnElement.getElementsByTagName('div')[0].id);
-    let newColElIdx = colElIdx + 1;
+  const moveColumnRight = (colElIdx: number, newColElIdx: number) => {
     // Switch column
     if (newColElIdx < props.columnList.length) {
       document.getElementById('wrapper').insertBefore(
@@ -93,6 +77,32 @@ export const Column: React.FC<{
     let tmp = props.columnList[colElIdx];
     props.columnList[colElIdx] = props.columnList[newColElIdx];
     props.columnList[newColElIdx] = tmp;
+  }
+
+  const onClickMoveLeftButton = () => {
+    // Save column
+    saveColumns(props.columnList);
+    // Calculate new column index
+    let colElIdx = exttractColumnIdxFromId(props.columnElement.getElementsByTagName('div')[0].id);
+    let newColElIdx = colElIdx - 1;
+    // Switch column
+    moveColumnLeft(colElIdx, newColElIdx);
+    // Update element id
+    updateElementID();
+    // Save column
+    saveColumns(props.columnList);
+    // Rerender deck
+    props.rerender(Math.random());
+  }
+
+  const onClickMoveRightButton = () => {
+    // Save column
+    saveColumns(props.columnList);
+    // Calculate new column index
+    let colElIdx = exttractColumnIdxFromId(props.columnElement.getElementsByTagName('div')[0].id);
+    let newColElIdx = colElIdx + 1;
+    // Switch column
+    moveColumnRight(colElIdx, newColElIdx);
     // Update element id
     updateElementID();
     // Save column
