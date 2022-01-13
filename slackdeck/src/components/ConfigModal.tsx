@@ -1,7 +1,7 @@
 import React from "react";
 import cloneDeep from 'lodash/cloneDeep';
 import { Button, Form, Modal } from "react-bootstrap";
-import { CLIENT_URL_PATTERN, GeneralConfig, SlackUrlConverter, SlackUrlValidateResult, VALIDATION_FAILED, VALIDATION_SUCCESS, WORKSPACE_URL_PATTERN } from "../Contract";
+import { CLIENT_URL_PATTERN, GeneralConfig, SlackUrlConverter, SlackUrlValidateResult, VALIDATION_FAILED, VALIDATION_SUCCESS, WIDTH_OPTION_LIST, WORKSPACE_URL_PATTERN } from "../Contract";
 import { faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -82,7 +82,6 @@ export const ConfigModal: React.FC<{
     let newSlackUrlTable: SlackUrlConverter[] = updatedGeneralConfig.slackUrlTable.slice();
     newSlackUrlTable[index].clientUrl = clientUrl;
     setUpdatedGeneralConfig({ ...updatedGeneralConfig, slackUrlTable: newSlackUrlTable });
-    console.log(props.currentGeneralConfig.slackUrlTable);
   };
 
   const onClickAddSlackUrlInputFormButton = () => {
@@ -155,6 +154,21 @@ export const ConfigModal: React.FC<{
                   onChange={(e) => setUpdatedGeneralConfig({ ...updatedGeneralConfig, useDarkTheme: e.target.checked })}
                 /></div>
             </Form.Group>
+          </Form>
+          <hr />
+          <h5>Default column width</h5>
+          <p>Choose default column width.</p>
+          <Form>
+            <Form.Select
+              onChange={(e) => setUpdatedGeneralConfig({ ...updatedGeneralConfig, defaultColumnWidth: e.target.value })}
+            >
+              {WIDTH_OPTION_LIST.map((option) => (
+                <option
+                  value={option.value}
+                  selected={updatedGeneralConfig.defaultColumnWidth === option.value}
+                >{option.text}</option>
+              ))}
+            </Form.Select>
           </Form>
           <hr />
           <h5>Register workspace URL</h5>

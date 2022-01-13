@@ -1,18 +1,21 @@
-import { faChevronLeft, faChevronRight, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { faChevronLeft, faChevronRight, faClone, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { Button, Form } from "react-bootstrap";
+import ReactDOM from "react-dom";
 import { ColumnConfig, WIDTH_OPTION_LIST } from "../Contract";
 import { saveColumns } from "../functions/column";
+import cloneDeep from 'lodash/cloneDeep';
 
 const columnMoveLeftButtonId = (_: TemplateStringsArray, columnIndex: number) => `col-mv-l-btn-${columnIndex}`;
 const columnMoveRightButtonId = (_: TemplateStringsArray, columnIndex: number) => `col-mv-r-btn-${columnIndex}`;
+const columnDuplicateButtonId = (_: TemplateStringsArray, columnIndex: number) => `col-dup-btn-${columnIndex}`;
 const columnNameInputId = (_: TemplateStringsArray, columnIndex: number) => `col-name-input-${columnIndex}`;
 const columnWidthSelectId = (_: TemplateStringsArray, columnIndex: number) => `col-select-${columnIndex}`;
 const columnDeleteButtonId = (_: TemplateStringsArray, columnIndex: number) => `col-del-btn-${columnIndex}`;
 const columnIframeId = (_: TemplateStringsArray, columnIndex: number) => `col-iframe-${columnIndex}`;
 const columnElementId = (_: TemplateStringsArray, columnIndex: number) => `col-el-${columnIndex}`;
-const exttractColumnIdxFromId = (colDelBtnId: string) => parseInt(colDelBtnId.split('-').slice(-1)[0]);
+const extractColumnIdxFromId = (colDelBtnId: string) => parseInt(colDelBtnId.split('-').slice(-1)[0]);
 
 export const Column: React.FC<{
   rerender: React.Dispatch<React.SetStateAction<number>>,
@@ -34,29 +37,89 @@ export const Column: React.FC<{
     }
   };
 
-  const onClickMoveLeftButton = () => {
-    // Save column
-    saveColumns(props.columnList);
-    // Calculate new column index
-    let colElIdx = exttractColumnIdxFromId(props.columnElement.getElementsByTagName('div')[0].id);
-    let newColElIdx = colElIdx - 1;
+  const moveColumnLeft = (
+    colElIdx: number,
+    colEl: HTMLElement,
+    newColElIdx: number,
+    newColEl: HTMLElement
+  ) => {
     // Switch column
     if (newColElIdx >= 0) {
       document.getElementById('wrapper').insertBefore(
-        document.getElementById(columnElementId`${colElIdx}`).parentElement,
-        document.getElementById(columnElementId`${newColElIdx}`).parentElement
+        colEl.parentElement,
+        newColEl.parentElement
       );
     } else {
       document.getElementById('wrapper').appendChild(
-        document.getElementById(columnElementId`${colElIdx}`).parentElement
+        colEl.parentElement
       );
       newColElIdx += props.columnList.length;
     }
-    document.getElementById(columnElementId`${colElIdx}`).getElementsByTagName('iframe')[0].src = props.columnList[colElIdx].url;
+    colEl.getElementsByTagName('iframe')[0].src = props.columnList[colElIdx].url;
     // Update column list
     let tmp = props.columnList[colElIdx];
     props.columnList[colElIdx] = props.columnList[newColElIdx];
     props.columnList[newColElIdx] = tmp;
+  }
+
+  const moveColumnRight = (
+    colElIdx: number,
+    colEl: HTMLElement,
+    newColElIdx: number,
+    newColEl: HTMLElement
+  ) => {
+    // Switch column
+    if (newColElIdx < props.columnList.length) {
+      document.getElementById('wrapper').insertBefore(
+        newColEl.parentElement,
+        colEl.parentElement
+      );
+      newColEl.getElementsByTagName('iframe')[0].src = props.columnList[newColElIdx].url;
+    } else {
+      document.getElementById('wrapper').insertBefore(
+        colEl.parentElement,
+        document.getElementById(columnElementId`${0}`).parentElement
+      );
+      colEl.getElementsByTagName('iframe')[0].src = props.columnList[colElIdx].url;
+      newColElIdx -= props.columnList.length;
+    }
+    // Update column list
+    let tmp = props.columnList[colElIdx];
+    props.columnList[colElIdx] = props.columnList[newColElIdx];
+    props.columnList[newColElIdx] = tmp;
+  }
+
+  const insertDuplicatedColumnAfterOriginalColumn = (dupColEl: HTMLElement, newColumnConfig: ColumnConfig) => {
+    // Push to columnList
+    let orgColElIdx = extractColumnIdxFromId(props.columnElement.getElementsByTagName('div')[0].id);
+    let orgColEl = document.getElementById(columnElementId`${orgColElIdx}`).parentElement;
+    let insertPos = orgColElIdx + 1;
+    // Switch column
+    if (insertPos < props.columnList.length) {
+      document.getElementById('wrapper').insertBefore(
+        dupColEl,
+        orgColEl
+      );
+      props.columnList.splice(orgColElIdx + 1, 0, newColumnConfig);
+    } else {
+      document.getElementById('wrapper').appendChild(dupColEl);
+      props.columnList.push(newColumnConfig);
+    }
+  }
+
+  const onClickMoveLeftButton = () => {
+    // Save column
+    saveColumns(props.columnList);
+    // Calculate new column index
+    let colElIdx = extractColumnIdxFromId(props.columnElement.getElementsByTagName('div')[0].id);
+    let newColElIdx = colElIdx - 1;
+    // Switch column
+    moveColumnLeft(
+      colElIdx,
+      document.getElementById(columnElementId`${colElIdx}`),
+      newColElIdx,
+      document.getElementById(columnElementId`${newColElIdx}`)
+    );
     // Update element id
     updateElementID();
     // Save column
@@ -69,27 +132,15 @@ export const Column: React.FC<{
     // Save column
     saveColumns(props.columnList);
     // Calculate new column index
-    let colElIdx = exttractColumnIdxFromId(props.columnElement.getElementsByTagName('div')[0].id);
+    let colElIdx = extractColumnIdxFromId(props.columnElement.getElementsByTagName('div')[0].id);
     let newColElIdx = colElIdx + 1;
     // Switch column
-    if (newColElIdx < props.columnList.length) {
-      document.getElementById('wrapper').insertBefore(
-        document.getElementById(columnElementId`${newColElIdx}`).parentElement,
-        document.getElementById(columnElementId`${colElIdx}`).parentElement
-      );
-      document.getElementById(columnElementId`${newColElIdx}`).getElementsByTagName('iframe')[0].src = props.columnList[newColElIdx].url;
-    } else {
-      document.getElementById('wrapper').insertBefore(
-        document.getElementById(columnElementId`${colElIdx}`).parentElement,
-        document.getElementById(columnElementId`${0}`).parentElement
-      );
-      document.getElementById(columnElementId`${colElIdx}`).getElementsByTagName('iframe')[0].src = props.columnList[colElIdx].url;
-      newColElIdx -= props.columnList.length;
-    }
-    // Update column list
-    let tmp = props.columnList[colElIdx];
-    props.columnList[colElIdx] = props.columnList[newColElIdx];
-    props.columnList[newColElIdx] = tmp;
+    moveColumnRight(
+      colElIdx,
+      document.getElementById(columnElementId`${colElIdx}`),
+      newColElIdx,
+      document.getElementById(columnElementId`${newColElIdx}`)
+    );
     // Update element id
     updateElementID();
     // Save column
@@ -98,9 +149,33 @@ export const Column: React.FC<{
     props.rerender(Math.random());
   }
 
+  const onClickDuplicateButton = () => {
+    // Save column
+    saveColumns(props.columnList);
+    // Clone column config
+    let newColumnConfig = cloneDeep(props.columnCofig);
+    // Insert column after original column
+    let col = document.createElement('div');
+    ReactDOM.render(<Column
+      rerender={props.rerender}
+      columnList={props.columnList}
+      columnIndex={props.columnList.length}
+      columnCofig={newColumnConfig}
+      columnElement={col}
+    />, col);
+    insertDuplicatedColumnAfterOriginalColumn(col, newColumnConfig);
+    // Fix slack dom
+    let pClient = document.getElementsByClassName('p-client')[0] as HTMLElement;
+    pClient.style.width = '100%';
+    // Save current column state
+    saveColumns(props.columnList);
+    // Rerender deck
+    props.rerender(Math.random());
+  }
+
   const onChangeWidthOption = (e) => {
     props.columnCofig.width = e.target.value;
-    let colElIdx = exttractColumnIdxFromId(e.target.id);
+    let colElIdx = extractColumnIdxFromId(e.target.id);
     let _col = document.getElementsByClassName('column')[colElIdx] as HTMLElement;
     _col.style.minWidth = e.target.value;
     _col.style.width = e.target.value;
@@ -108,7 +183,7 @@ export const Column: React.FC<{
 
   const onClickDeleteButton = () => {
     // Remove
-    let colElIdx = exttractColumnIdxFromId(props.columnElement.getElementsByTagName('div')[0].id);
+    let colElIdx = extractColumnIdxFromId(props.columnElement.getElementsByTagName('div')[0].id);
     props.columnList.splice(colElIdx, 1);;
     saveColumns(props.columnList);
     props.columnElement.remove();
@@ -138,6 +213,11 @@ export const Column: React.FC<{
           className="btn btn-primary col-mv-r-btn"
           onClick={onClickMoveRightButton}
         ><FontAwesomeIcon icon={faChevronRight} /></Button>
+        <Button
+          id={columnDuplicateButtonId`${props.columnIndex}`}
+          className="btn btn-primary col-dup-btn"
+          onClick={onClickDuplicateButton}
+        ><FontAwesomeIcon icon={faClone} /></Button>
         <Form.Control
           id={columnNameInputId`${props.columnIndex}`}
           className="col-name-input"

@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import ReactDOM from "react-dom";
-import { CHANNEL_ID_PATTERN, clientMessageIdRegex, CLIENT_MESSAGE_ID_PATTERN, ColumnConfig, DEFAULT_COLUMN_CONFIG, DEFAULT_WIDTH_OPTION, extractClientIdFromClientUrl, GeneralConfig, WIDTH_OPTION_LIST, WORKSPACE_MESSAGE_ID_PATTERN } from "../Contract";
+import { CHANNEL_ID_PATTERN, clientMessageIdRegex, CLIENT_MESSAGE_ID_PATTERN, ColumnConfig, DEFAULT_COLUMN_CONFIG, GeneralConfig, WIDTH_OPTION_LIST, WORKSPACE_MESSAGE_ID_PATTERN } from "../Contract";
 import { saveColumns } from "../functions/column";
 import { Column } from "./Column";
 
@@ -17,7 +17,11 @@ export const AddColumnModal: React.FC<{
   const [newColumnConfig, setNewColumnConfig] = React.useState<ColumnConfig>(DEFAULT_COLUMN_CONFIG);
 
   React.useEffect(() => {
-    setNewColumnConfig({ ...newColumnConfig, name: columnNameDefaultValue`${props.columnList.length}` });
+    setNewColumnConfig({
+      ...newColumnConfig,
+      name: columnNameDefaultValue`${props.columnList.length}`,
+      width: props.generalConfig.defaultColumnWidth
+    });
   }, [props.show]);
 
   const convertWorkspaceUrlToClientUrl = (workspaceUrl: string, clientUrl: string, url: string) => {
@@ -63,6 +67,10 @@ export const AddColumnModal: React.FC<{
     setNewColumnConfig({ ...newColumnConfig, url: url });
   }
 
+  const onChangeColumnName = (name: string) => {
+    setNewColumnConfig({ ...newColumnConfig, name: name });
+  }
+
   const onClickAddButton = () => {
     // Add column
     let col = document.createElement('div');
@@ -99,24 +107,36 @@ export const AddColumnModal: React.FC<{
         </Modal.Header>
         <Modal.Body>
           <p>Enter the column width and URL of the column you want to add.</p>
-          <Form className="d-flex">
-            <Form.Select
-              className="w-auto mx-1"
-              onChange={(e) => setNewColumnConfig({ ...newColumnConfig, width: e.target.value })}
-            >
-              {WIDTH_OPTION_LIST.map((option) => (
-                <option
-                  value={option.value}
-                  selected={DEFAULT_WIDTH_OPTION.value === option.value}
-                >{option.text}</option>
-              ))}
-            </Form.Select>
-            <Form.Control
-              type="text"
-              className="mx-1"
-              placeholder="https://*"
-              onChange={(e) => onChangeUrl(e.target.value)}
-            />
+          <Form>
+            <Form.Group className="mb-3">
+              <Form.Label>URL</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="https://*"
+                onChange={(e) => onChangeUrl(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Column width</Form.Label>
+              <Form.Select
+                onChange={(e) => setNewColumnConfig({ ...newColumnConfig, width: e.target.value })}
+              >
+                {WIDTH_OPTION_LIST.map((option) => (
+                  <option
+                    value={option.value}
+                    selected={props.generalConfig.defaultColumnWidth === option.value}
+                  >{option.text}</option>
+                ))}
+              </Form.Select>
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Column name (Optional)</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Column name"
+                onChange={(e) => onChangeColumnName(e.target.value)}
+              />
+            </Form.Group>
           </Form>
         </Modal.Body>
         <Modal.Footer>
