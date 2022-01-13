@@ -58,6 +58,7 @@ const Main: React.FC = () => {
           if ("workspaceUrl" in value.generalConfig || "clientUrl" in value.generalConfig) {
             let newGeneralConfig: GeneralConfig = {
               useDarkTheme: value.generalConfig.useDarkTheme,
+              defaultColumnWidth: value.generalConfig.defaultColumnWidth,
               slackUrlTable: [{ workspaceUrl: value.generalConfig.workspaceUrl, clientUrl: value.generalConfig.clientUrl }],
             };
             setGeneralConfig(newGeneralConfig);
