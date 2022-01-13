@@ -165,21 +165,21 @@ const deck = document.createElement('div');
 deck.id = 'deck';
 deck.className = 'bg-dark px-2 py-2 text-center text-light';
 
-const deckSpacer = document.createElement('div');
-deckSpacer.id = 'deckSpacer';
-
 const body = document.body;
 body.id = 'mainBody';
 
 const wrapper = document.createElement('div');
 wrapper.id = 'wrapper';
 
+const mainElement = document.createElement('div');
+mainElement.id = 'main-element';
+mainElement.appendChild(body);
+mainElement.appendChild(wrapper);
+
 const newBody = document.createElement('body');
 newBody.id = 'newBody';
 newBody.appendChild(deck);
-newBody.appendChild(deckSpacer);
-newBody.appendChild(body);
-newBody.appendChild(wrapper);
+newBody.appendChild(mainElement);
 document.documentElement.appendChild(newBody);
 
 ReactDOM.render(<Main />, deck);
