@@ -6,6 +6,7 @@ $deck-width: 60px;
 #newBody {
   display: flex;
   overflow-x: scroll;
+  height: 100vh;
 }
 
 #mainBody {
