@@ -5,8 +5,13 @@ $deck-width: 60px;
 
 #newBody {
   display: flex;
-  overflow-x: scroll;
   height: 100vh;
+}
+
+#main-element {
+  display: flex;
+  overflow-x: scroll;
+  width: 100%;
 }
 
 #mainBody {
@@ -25,15 +30,6 @@ $deck-width: 60px;
   text-align: center;
   width: $deck-width;
   height: 100%;
-  z-index: 999;
-  position: fixed;
-  top: 0;
-  left: 0;
-}
-
-#deckSpacer {
-  min-width: $deck-width;
-  width: $deck-width;
 }
 
 .deck-btn-icon-circle {
