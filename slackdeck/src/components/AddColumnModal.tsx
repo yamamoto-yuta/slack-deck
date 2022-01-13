@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import ReactDOM from "react-dom";
-import { CHANNEL_ID_PATTERN, clientMessageIdRegex, CLIENT_MESSAGE_ID_PATTERN, ColumnConfig, DEFAULT_COLUMN_CONFIG, DEFAULT_WIDTH_OPTION, extractClientIdFromClientUrl, GeneralConfig, WIDTH_OPTION_LIST, WORKSPACE_MESSAGE_ID_PATTERN } from "../Contract";
+import { CHANNEL_ID_PATTERN, clientMessageIdRegex, CLIENT_MESSAGE_ID_PATTERN, ColumnConfig, DEFAULT_COLUMN_CONFIG, GeneralConfig, WIDTH_OPTION_LIST, WORKSPACE_MESSAGE_ID_PATTERN } from "../Contract";
 import { saveColumns } from "../functions/column";
 import { Column } from "./Column";
 
@@ -20,7 +20,7 @@ export const AddColumnModal: React.FC<{
     setNewColumnConfig({
       ...newColumnConfig,
       name: columnNameDefaultValue`${props.columnList.length}`,
-      width: DEFAULT_WIDTH_OPTION.value
+      width: props.generalConfig.defaultColumnWidth
     });
   }, [props.show]);
 
@@ -124,7 +124,7 @@ export const AddColumnModal: React.FC<{
                 {WIDTH_OPTION_LIST.map((option) => (
                   <option
                     value={option.value}
-                    selected={DEFAULT_WIDTH_OPTION.value === option.value}
+                    selected={props.generalConfig.defaultColumnWidth === option.value}
                   >{option.text}</option>
                 ))}
               </Form.Select>

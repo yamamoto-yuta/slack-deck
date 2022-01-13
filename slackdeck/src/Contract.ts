@@ -11,6 +11,7 @@ export type SlackUrlConverter = {
 
 export type GeneralConfig = {
   useDarkTheme: boolean,
+  defaultColumnWidth: string,
   slackUrlTable: SlackUrlConverter[],
 }
 
@@ -34,24 +35,25 @@ export const VALIDATION_SUCCESS: ValidationResult = {
   message: "",
 }
 
-export const DEFAULT_GENERAL_CONFIG: GeneralConfig = {
-  useDarkTheme: false,
-  slackUrlTable: [],
-};
-
 export const WIDTH_OPTION_LIST = [
   { text: "Narrow", value: "300px" },
   { text: "Medium", value: "500px" },
   { text: "Wide", value: "700px" },
   { text: "Main", value: "1000px" },
 ];
-export const DEFAULT_WIDTH_OPTION_INDEX = 1;
-export const DEFAULT_WIDTH_OPTION = WIDTH_OPTION_LIST[DEFAULT_WIDTH_OPTION_INDEX];
+const DEFAULT_WIDTH_OPTION_INDEX = 1;
+const DEFAULT_WIDTH_OPTION = WIDTH_OPTION_LIST[DEFAULT_WIDTH_OPTION_INDEX];
 
 export const DEFAULT_COLUMN_CONFIG: ColumnConfig = {
   width: DEFAULT_WIDTH_OPTION.value,
   url: "",
   name: ""
+};
+
+export const DEFAULT_GENERAL_CONFIG: GeneralConfig = {
+  useDarkTheme: false,
+  defaultColumnWidth: DEFAULT_WIDTH_OPTION.value,
+  slackUrlTable: [],
 };
 
 export const CHANNEL_ID_PATTERN = "[A-Z0-9]+";
