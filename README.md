@@ -4,9 +4,25 @@
 
 Display your Slack channels in column format.
 
-## Screenshot
+## Usage
 
 ![Videotogif](https://user-images.githubusercontent.com/55144709/149324142-10437629-a472-4875-b1ea-49c0b79f68db.gif)
+
+### ➕ Add column
+
+1. Click on the "➕" button to add a column.
+1. Enter the column width and URL of the column you want to add.
+1. To delete a column, click the "❌" button at the top of the column you want to delete.
+
+### 💾 Save column
+
+1. Click "💾" button to save the added column.
+1. Restore the previously added columns when the page loads.
+
+### ↔️ Move column
+
+1. Click on the "<"/">" button to move the column to the left/right.
+1. When the column crosses the end, it loops to the opposite end.
 
 ## Install
 
