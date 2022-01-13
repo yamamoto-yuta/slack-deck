@@ -18,10 +18,20 @@ export const AnnounceModal: React.FC<{
           <Modal.Title>Announcement</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <h5>2021/12/15 - v0.7.0 Released</h5>
+          <h5>2022/1/13 - v0.7.1 Released</h5>
           <h6>✨New Feature</h6>
           <ul>
-            <li>Added a jump to column button to Deck.</li>
+            <li>Columns can now be duplicated.</li>
+          </ul>
+          <h6>👍Feature Improvement</h6>
+          <ul>
+            <li>The default column width can now be changed.</li>
+            <li>The column name can now be set when adding a column.</li>
+            <li>Add a horizontal scroll bar.</li>
+          </ul>
+          <h6>🐛 Bug Fix</h6>
+          <ul>
+            <li>Fixed a bug that columns were added with the previously set column width when adding a column with the default value after changing the column width from the default value.</li>
           </ul>
         </Modal.Body>
         <Modal.Footer>
