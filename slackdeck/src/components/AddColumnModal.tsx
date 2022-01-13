@@ -67,6 +67,10 @@ export const AddColumnModal: React.FC<{
     setNewColumnConfig({ ...newColumnConfig, url: url });
   }
 
+  const onChangeColumnName = (name: string) => {
+    setNewColumnConfig({ ...newColumnConfig, name: name });
+  }
+
   const onClickAddButton = () => {
     // Add column
     let col = document.createElement('div');
@@ -103,24 +107,39 @@ export const AddColumnModal: React.FC<{
         </Modal.Header>
         <Modal.Body>
           <p>Enter the column width and URL of the column you want to add.</p>
-          <Form className="d-flex">
-            <Form.Select
-              className="w-auto mx-1"
-              onChange={(e) => setNewColumnConfig({ ...newColumnConfig, width: e.target.value })}
-            >
-              {WIDTH_OPTION_LIST.map((option) => (
-                <option
-                  value={option.value}
-                  selected={DEFAULT_WIDTH_OPTION.value === option.value}
-                >{option.text}</option>
-              ))}
-            </Form.Select>
-            <Form.Control
-              type="text"
-              className="mx-1"
-              placeholder="https://*"
-              onChange={(e) => onChangeUrl(e.target.value)}
-            />
+          <Form>
+            <Form.Group className="mb-3">
+              <Form.Label>Column width</Form.Label>
+              <Form.Select
+                className="w-auto"
+                onChange={(e) => setNewColumnConfig({ ...newColumnConfig, width: e.target.value })}
+              >
+                {WIDTH_OPTION_LIST.map((option) => (
+                  <option
+                    value={option.value}
+                    selected={DEFAULT_WIDTH_OPTION.value === option.value}
+                  >{option.text}</option>
+                ))}
+              </Form.Select>
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>URL</Form.Label>
+              <Form.Control
+                type="text"
+                className=""
+                placeholder="https://*"
+                onChange={(e) => onChangeUrl(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Column name (Optional)</Form.Label>
+              <Form.Control
+                type="text"
+                className=""
+                placeholder="Column name"
+                onChange={(e) => onChangeColumnName(e.target.value)}
+              />
+            </Form.Group>
           </Form>
         </Modal.Body>
         <Modal.Footer>
