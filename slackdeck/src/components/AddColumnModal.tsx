@@ -109,9 +109,16 @@ export const AddColumnModal: React.FC<{
           <p>Enter the column width and URL of the column you want to add.</p>
           <Form>
             <Form.Group className="mb-3">
+              <Form.Label>URL</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="https://*"
+                onChange={(e) => onChangeUrl(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
               <Form.Label>Column width</Form.Label>
               <Form.Select
-                className="w-auto"
                 onChange={(e) => setNewColumnConfig({ ...newColumnConfig, width: e.target.value })}
               >
                 {WIDTH_OPTION_LIST.map((option) => (
@@ -123,19 +130,9 @@ export const AddColumnModal: React.FC<{
               </Form.Select>
             </Form.Group>
             <Form.Group className="mb-3">
-              <Form.Label>URL</Form.Label>
-              <Form.Control
-                type="text"
-                className=""
-                placeholder="https://*"
-                onChange={(e) => onChangeUrl(e.target.value)}
-              />
-            </Form.Group>
-            <Form.Group className="mb-3">
               <Form.Label>Column name (Optional)</Form.Label>
               <Form.Control
                 type="text"
-                className=""
                 placeholder="Column name"
                 onChange={(e) => onChangeColumnName(e.target.value)}
               />
