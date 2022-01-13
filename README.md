@@ -6,7 +6,7 @@ Display your Slack channels in column format.
 
 ## Screenshot
 
-![Videotogif](https://user-images.githubusercontent.com/55144709/143466276-caa9270d-a036-417f-9b9b-245d98928791.gif)
+![Videotogif](https://user-images.githubusercontent.com/55144709/149324142-10437629-a472-4875-b1ea-49c0b79f68db.gif)
 
 ## Install
 
