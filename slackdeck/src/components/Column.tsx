@@ -1,8 +1,14 @@
 import React from 'react';
-import { COLUMN_WIDTH_OPTIONS_VALUE } from '../shared/column';
+import { ColumnConfig, COLUMN_WIDTH_OPTIONS_VALUE } from '../shared/column';
 import { ColumnHeader } from './ColumnHeader';
 
-export const Column: React.FC = () => {
+export const Column: React.FC<{
+  rerender: React.Dispatch<React.SetStateAction<number>>,
+  columnList: ColumnConfig[],
+  columnIndex: number,
+  columnCofig: ColumnConfig,
+  columnElement: HTMLDivElement,
+}> = (props) => {
   const [selectedColumnWidthOptionIndex, setSelectedColumnWidthOptionIndex] = React.useState(0);
 
   return (

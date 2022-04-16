@@ -9,13 +9,17 @@ import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArro
 import { ConfigModal } from './ConfigModal';
 import { VERSION } from '../shared/general';
 import { AddColumnModal } from './AddColumnModal';
+import { ColumnConfig } from '../shared/column';
 
 const columnNameList = [
   "#times-yamamoto",
   "#88888",
 ]
 
-const AddSpeedDial: React.FC = () => {
+const AddSpeedDial: React.FC<{
+  columnList: ColumnConfig[],
+  rerender: React.Dispatch<React.SetStateAction<number>>
+}> = (props) => {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -44,7 +48,12 @@ const AddSpeedDial: React.FC = () => {
           />
         ))}
       </SpeedDial>
-      <AddColumnModal open={open} onClose={handleClose} />
+      <AddColumnModal
+        open={open}
+        onClose={handleClose}
+        columnList={props.columnList}
+        rerender={props.rerender}
+      />
       <div id="add-speed-dial-spacer" />
     </div>
   )
@@ -77,7 +86,10 @@ const CollapseDeckSwitch: React.FC<{
   )
 };
 
-export const Deck: React.FC = () => {
+export const Deck: React.FC<{
+  columnList: ColumnConfig[],
+}> = (props) => {
+  const [, rerender] = React.useState<number>(Math.random());
   const [collapseDeckchecked, setCollapseDeckChecked] = React.useState(false);
   return (
     <div id="deck">
@@ -86,7 +98,7 @@ export const Deck: React.FC = () => {
           height: 180,
           transform: "translateZ(0px)"
         }}>
-          <AddSpeedDial />
+          <AddSpeedDial columnList={props.columnList} rerender={rerender} />
           <Fab size="medium" color="secondary" sx={{ my: 1 }}>
             <SaveIcon />
           </Fab>

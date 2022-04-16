@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { SelectChangeEvent, Modal, Box, Typography, Divider, FormControl, Select, MenuItem, TextField, Button, InputLabel } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import { COLUMN_WIDTH_OPTIONS_TEXT } from '../shared/column';
+import { ColumnConfig, COLUMN_WIDTH_OPTIONS_TEXT, COLUMN_WIDTH_OPTIONS_VALUE, DEFAULT_COLUMN_CONFIG } from '../shared/column';
 import "../style/addColumnModal.scss";
 import { Column } from './Column';
 
@@ -10,6 +10,8 @@ import { Column } from './Column';
 export const AddColumnModal: React.FC<{
   open: boolean,
   onClose: () => void,
+  columnList: ColumnConfig[],
+  rerender: React.Dispatch<React.SetStateAction<number>>
 }> = (props) => {
   const style = {
     position: 'absolute' as 'absolute',
@@ -22,17 +24,45 @@ export const AddColumnModal: React.FC<{
     boxShadow: 24,
     p: 4,
   };
+  const [newColumnConfig, setNewColumnConfig] = React.useState<ColumnConfig>(DEFAULT_COLUMN_CONFIG);
   const [selectedColumnWidth, setSelectedColumnWidth] = React.useState<string>("");
+
   const handleSelectedColumnWidthChange = (event: SelectChangeEvent) => {
     setSelectedColumnWidth(event.target.value as string);
+    setNewColumnConfig({ ...newColumnConfig, width: event.target.value as string });
   };
+
+  const onChangeUrl = (inputUrl: string) => {
+    setNewColumnConfig({ ...newColumnConfig, url: inputUrl });
+  };
+
+  const onChangeColumnName = (inputColumnName: string) => {
+    setNewColumnConfig({ ...newColumnConfig, name: inputColumnName });
+  };
+
   const onClickAddButton = () => {
+    // Add column
     let col = document.createElement('div');
-    ReactDOM.render(<Column />, col);
+    ReactDOM.render(<Column
+      rerender={props.rerender}
+      columnList={props.columnList}
+      columnIndex={props.columnList.length}
+      columnCofig={newColumnConfig}
+      columnElement={col}
+    />, col);
     document.getElementById('wrapper').appendChild(col);
 
+    // Fix slack dom
+    let pClient = document.getElementsByClassName('p-client')[0] as HTMLElement;
+    pClient.style.width = '100%';
+
+    // Push to columnList
+    props.columnList.push(newColumnConfig);
+
+    // Close Mordal
     props.onClose();
   };
+
   return (
     <div>
       <Modal
@@ -45,7 +75,13 @@ export const AddColumnModal: React.FC<{
           </Typography>
           <Divider sx={{ my: 1 }} />
 
-          <TextField label="URL" variant="outlined" sx={{ my: 1 }} fullWidth />
+          <TextField
+            label="URL"
+            variant="outlined"
+            sx={{ my: 1 }}
+            fullWidth
+            onChange={(e) => { onChangeUrl(e.target.value) }}
+          />
 
           <FormControl fullWidth>
             <InputLabel id="column-width-select-label">Column Width</InputLabel>
@@ -56,14 +92,20 @@ export const AddColumnModal: React.FC<{
               onChange={handleSelectedColumnWidthChange}
             >
               {COLUMN_WIDTH_OPTIONS_TEXT.map((option, index) => (
-                <MenuItem key={index} value={option}>
+                <MenuItem key={index} value={COLUMN_WIDTH_OPTIONS_VALUE[index]}>
                   {option}
                 </MenuItem>
               ))}
             </Select>
           </FormControl>
 
-          <TextField label="Column Name" variant="outlined" sx={{ my: 1 }} fullWidth />
+          <TextField
+            label="Column Name"
+            variant="outlined"
+            sx={{ my: 1 }}
+            fullWidth
+            onChange={(e) => { onChangeColumnName(e.target.value) }}
+          />
 
           <Divider sx={{ my: 1 }} />
 
