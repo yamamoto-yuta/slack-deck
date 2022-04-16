@@ -1,3 +1,9 @@
+export type ColumnConfig = {
+  width: string,
+  url: string,
+  name: string,
+}
+
 export const COLUMN_WIDTH_OPTIONS_TEXT: string[] = [
   "S",
   "M",
