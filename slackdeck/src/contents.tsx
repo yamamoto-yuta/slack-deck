@@ -1,15 +1,10 @@
-import { Button } from '@mui/material';
-import ClearIcon from '@mui/icons-material/Clear';
 import React from 'react';
 import ReactDOM from 'react-dom';
-
-export const Deck: React.FC = () => {
-  return (
-    <div>
-      <Button variant="contained" startIcon={<ClearIcon />}></Button>
-    </div>
-  )
-};
+import "./style/contents.scss";
+import "./style/column.scss";
+import "./style/deck.scss";
+import { Column } from './components/Column';
+import { Deck } from './components/Deck';
 
 // Slack body
 const body = document.body;
@@ -23,7 +18,6 @@ ReactDOM.render(<Deck />, deckElement);
 // Column wrapper
 const wrapper = document.createElement("div");
 wrapper.id = "wrapper";
-
 // Columns
 // const column1 = document.createElement("div");
 // wrapper.appendChild(column1);

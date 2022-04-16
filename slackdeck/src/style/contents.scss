@@ -1,0 +1,33 @@
+$main-col-width: 1000px;
+
+#new-body {
+    display: flex;
+}
+
+#deck {
+    background-color: #212529;
+}
+
+#deck-element {
+    z-index: 999;
+    width: 78px;
+    min-width: 78px;
+}
+
+#main-element {
+    display: flex;
+    overflow-x: scroll;
+}
+
+#main-body {
+    min-width: $main-col-width;
+    height: 100%;
+}
+
+#main-body .p-client {
+    width: 100%;
+}
+
+#wrapper {
+    display: flex;
+}
