@@ -7,7 +7,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import HelpIcon from '@mui/icons-material/Help';
 import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
 import { ConfigModal } from './ConfigModal';
-import { VERSION } from '../consts/general';
+import { VERSION } from '../shared/general';
 import { AddColumnModal } from './AddColumnModal';
 
 const columnNameList = [
@@ -45,7 +45,6 @@ const AddSpeedDial: React.FC = () => {
         ))}
       </SpeedDial>
       <AddColumnModal open={open} onClose={handleClose} />
-      {console.log(open)}
       <div id="add-speed-dial-spacer" />
     </div>
   )
