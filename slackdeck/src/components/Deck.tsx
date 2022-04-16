@@ -76,7 +76,7 @@ const CollapseDeckSwitch: React.FC<{
     <FormControlLabel
       value="top"
       control={<Switch color="primary" checked={props.collapseDeckchecked} onChange={handleChange} />}
-      label={<KeyboardDoubleArrowRightIcon />}
+      label={<KeyboardDoubleArrowRightIcon color="primary" />}
       labelPlacement="top"
       sx={{ mx: 0 }}
     />
@@ -99,7 +99,7 @@ const MainColumnResponsiveSwitch: React.FC<{
     <FormControlLabel
       value="top"
       control={<Switch color="primary" checked={props.mainColumnResponsiveChecked} onChange={handleChange} />}
-      label={<FitScreenIcon />}
+      label={<FitScreenIcon color="primary" />}
       labelPlacement="top"
       sx={{ mx: 0 }}
     />
