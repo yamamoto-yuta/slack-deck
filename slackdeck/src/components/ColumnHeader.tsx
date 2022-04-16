@@ -9,6 +9,16 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import ContentPasteGoIcon from '@mui/icons-material/ContentPasteGo';
 import { ColumnConfig, COLUMN_WIDTH_OPTIONS_TEXT } from '../shared/column';
 
+const columnMoveLeftButtonId = (_: TemplateStringsArray, columnIndex: number) => `col-mv-l-btn-${columnIndex}`;
+const columnMoveRightButtonId = (_: TemplateStringsArray, columnIndex: number) => `col-mv-r-btn-${columnIndex}`;
+const columnDuplicateButtonId = (_: TemplateStringsArray, columnIndex: number) => `col-dup-btn-${columnIndex}`;
+const columnNameInputId = (_: TemplateStringsArray, columnIndex: number) => `col-name-input-${columnIndex}`;
+const columnWidthSelectId = (_: TemplateStringsArray, columnIndex: number) => `col-select-${columnIndex}`;
+const columnDeleteButtonId = (_: TemplateStringsArray, columnIndex: number) => `col-del-btn-${columnIndex}`;
+const columnIframeId = (_: TemplateStringsArray, columnIndex: number) => `col-iframe-${columnIndex}`;
+const columnElementId = (_: TemplateStringsArray, columnIndex: number) => `col-el-${columnIndex}`;
+const extractColumnIdxFromId = (colDelBtnId: string) => parseInt(colDelBtnId.split('-').slice(-1)[0]);
+
 const ColumnWidthMenu: React.FC<{
   selectedColumnWidthOptionIndex: number,
   setSelectedColumnWidthOptionIndex: React.Dispatch<React.SetStateAction<number>>,
@@ -67,7 +77,10 @@ const ColumnWidthMenu: React.FC<{
 export const ColumnHeader: React.FC<{
   selectedColumnWidthOptionIndex: number,
   setSelectedColumnWidthOptionIndex: React.Dispatch<React.SetStateAction<number>>,
+  columnList: ColumnConfig[],
+  columnIndex: number,
   columnConfig: ColumnConfig,
+  columnElement: HTMLDivElement,
 }> = (props) => {
   return (
     <div className="column-header">
@@ -77,7 +90,7 @@ export const ColumnHeader: React.FC<{
 
             {/* Column action buttons */}
 
-            <IconButton color="inherit">
+            <IconButton color="inherit" id={columnMoveLeftButtonId`${props.columnIndex}`}>
               <ChevronLeftIcon />
             </IconButton>
 
@@ -99,7 +112,6 @@ export const ColumnHeader: React.FC<{
               inputProps={{ style: { color: "white" } }}
               sx={{ ml: 1, flex: 1 }}
               placeholder="Column name..."
-              defaultValue={props.columnConfig.name}
             />
 
             {/* Column width menu */}
@@ -117,6 +129,6 @@ export const ColumnHeader: React.FC<{
           </Toolbar>
         </AppBar>
       </Box>
-    </div>
+    </div >
   )
 };

@@ -6,10 +6,10 @@ export const Column: React.FC<{
   rerender: React.Dispatch<React.SetStateAction<number>>,
   columnList: ColumnConfig[],
   columnIndex: number,
-  columnCofig: ColumnConfig,
+  columnConfig: ColumnConfig,
   columnElement: HTMLDivElement,
 }> = (props) => {
-  const [selectedColumnWidthOptionIndex, setSelectedColumnWidthOptionIndex] = React.useState(COLUMN_WIDTH_OPTIONS_VALUE.indexOf(props.columnCofig.width));
+  const [selectedColumnWidthOptionIndex, setSelectedColumnWidthOptionIndex] = React.useState(COLUMN_WIDTH_OPTIONS_VALUE.indexOf(props.columnConfig.width));
 
   return (
     <div
@@ -26,9 +26,12 @@ export const Column: React.FC<{
       <ColumnHeader
         selectedColumnWidthOptionIndex={selectedColumnWidthOptionIndex}
         setSelectedColumnWidthOptionIndex={setSelectedColumnWidthOptionIndex}
-        columnConfig={props.columnCofig}
+        columnList={props.columnList}
+        columnIndex={props.columnIndex}
+        columnConfig={props.columnConfig}
+        columnElement={props.columnElement}
       />
-      <iframe src={props.columnCofig.url} />
+      <iframe src={props.columnConfig.url} />
     </div >
   )
 };

@@ -52,7 +52,7 @@ export const AddColumnModal: React.FC<{
       rerender={props.rerender}
       columnList={props.columnList}
       columnIndex={props.columnList.length}
-      columnCofig={newColumnConfig}
+      columnConfig={newColumnConfig}
       columnElement={col}
     />, col);
     document.getElementById('wrapper').appendChild(col);
