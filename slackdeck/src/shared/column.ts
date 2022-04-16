@@ -60,3 +60,5 @@ export const columnIframeId = (_: TemplateStringsArray, columnIndex: number) => 
 export const columnElementClassName = "col-el";
 export const columnElementId = (_: TemplateStringsArray, columnIndex: number) => `${columnElementClassName}-${columnIndex}`;
 export const extractColumnIdxFromId = (colElId: string) => parseInt(colElId.split('-').slice(-1)[0]);
+
+export const chooseColumnColor = (columnIndex: number) => (columnIndex % 2 == 0) ? '#1565c0' : '#7b1fa2';

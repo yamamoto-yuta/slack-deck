@@ -1,5 +1,5 @@
 import React from 'react';
-import { ColumnConfig, columnElementId, columnIframeClassName, columnIframeId, COLUMN_WIDTH_OPTIONS_VALUE } from '../shared/column';
+import { chooseColumnColor, ColumnConfig, columnElementId, columnIframeClassName, columnIframeId, COLUMN_WIDTH_OPTIONS_VALUE } from '../shared/column';
 import { ColumnHeader } from './ColumnHeader';
 
 export const Column: React.FC<{
@@ -18,10 +18,10 @@ export const Column: React.FC<{
       style={{
         minWidth: COLUMN_WIDTH_OPTIONS_VALUE[selectedColumnWidthOptionIndex],
         width: COLUMN_WIDTH_OPTIONS_VALUE[selectedColumnWidthOptionIndex],
-        // backgroundColor: "red",
-        // borderWidth: "1px",
-        // borderStyle: "solid",
-        // borderColor: "red",
+        backgroundColor: chooseColumnColor(props.columnIndex),
+        borderWidth: "1px",
+        borderStyle: "solid",
+        borderColor: chooseColumnColor(props.columnIndex),
       }}
     >
       <ColumnHeader

@@ -7,7 +7,7 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import ContentPasteGoIcon from '@mui/icons-material/ContentPasteGo';
-import { ColumnConfig, columnDeleteButtonClassName, columnDeleteButtonId, columnDuplicateButtonClassName, columnDuplicateButtonId, columnElementId, columnIframeClassName, columnIframeId, columnMoveLeftButtonClassName, columnMoveLeftButtonId, columnMoveRightButtonClassName, columnMoveRightButtonId, columnOpenFromClipboardButtonClassName, columnOpenFromClipboardButtonId, COLUMN_WIDTH_OPTIONS_TEXT, extractColumnIdxFromId } from '../shared/column';
+import { chooseColumnColor, ColumnConfig, columnDeleteButtonClassName, columnDeleteButtonId, columnDuplicateButtonClassName, columnDuplicateButtonId, columnElementId, columnIframeClassName, columnIframeId, columnMoveLeftButtonClassName, columnMoveLeftButtonId, columnMoveRightButtonClassName, columnMoveRightButtonId, columnOpenFromClipboardButtonClassName, columnOpenFromClipboardButtonId, COLUMN_WIDTH_OPTIONS_TEXT, extractColumnIdxFromId } from '../shared/column';
 import ReactDOM from 'react-dom';
 import { Column } from './Column';
 
@@ -76,9 +76,12 @@ export const ColumnHeader: React.FC<{
   columnElement: HTMLDivElement,
 }> = (props) => {
 
-  const updateElementID = () => {
+  const updateElement = () => {
     for (var i = 0; i < props.columnList.length; i++) {
-      document.getElementsByClassName('column')[i].id = columnElementId`${i}`;
+      const columnElement = document.getElementsByClassName('column')[i] as HTMLDivElement;
+      columnElement.style.backgroundColor = chooseColumnColor(i);
+      columnElement.style.borderColor = chooseColumnColor(i);
+      columnElement.id = columnElementId`${i}`;
       document.getElementsByClassName(columnMoveLeftButtonClassName)[i].id = columnMoveLeftButtonId`${i}`;
       document.getElementsByClassName(columnMoveRightButtonClassName)[i].id = columnMoveRightButtonId`${i}`;
       // document.getElementsByClassName('col-name-input')[i].id = columnNameInputId`${i}`;
@@ -125,6 +128,8 @@ export const ColumnHeader: React.FC<{
     pClient.style.width = '100%';
     // Save current column state
     // saveColumns(props.columnList);
+    // Update other elements
+    updateElement();
     // Rerender deck
     props.rerender(Math.random());
   };
@@ -136,7 +141,7 @@ export const ColumnHeader: React.FC<{
     // saveColumns(props.columnList);
     props.columnElement.remove();
     // Update other elements
-    updateElementID();
+    updateElement();
     // Rerender deck
     props.rerender(Math.random());
   };
