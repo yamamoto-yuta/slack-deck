@@ -1,7 +1,7 @@
 version: "3"
 
 services:
-  slackdeck:
+  app:
     image: node:14.15.1
     container_name: slackdeck
     environment:
