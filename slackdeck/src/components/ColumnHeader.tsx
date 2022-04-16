@@ -9,14 +9,25 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import ContentPasteGoIcon from '@mui/icons-material/ContentPasteGo';
 import { ColumnConfig, COLUMN_WIDTH_OPTIONS_TEXT } from '../shared/column';
 
-const columnMoveLeftButtonId = (_: TemplateStringsArray, columnIndex: number) => `col-mv-l-btn-${columnIndex}`;
-const columnMoveRightButtonId = (_: TemplateStringsArray, columnIndex: number) => `col-mv-r-btn-${columnIndex}`;
-const columnDuplicateButtonId = (_: TemplateStringsArray, columnIndex: number) => `col-dup-btn-${columnIndex}`;
-const columnNameInputId = (_: TemplateStringsArray, columnIndex: number) => `col-name-input-${columnIndex}`;
-const columnWidthSelectId = (_: TemplateStringsArray, columnIndex: number) => `col-select-${columnIndex}`;
-const columnDeleteButtonId = (_: TemplateStringsArray, columnIndex: number) => `col-del-btn-${columnIndex}`;
-const columnIframeId = (_: TemplateStringsArray, columnIndex: number) => `col-iframe-${columnIndex}`;
-const columnElementId = (_: TemplateStringsArray, columnIndex: number) => `col-el-${columnIndex}`;
+
+const columnMoveLeftButtonClassName = "col-mv-l-btn";
+const columnMoveLeftButtonId = (_: TemplateStringsArray, columnIndex: number) => `${columnMoveLeftButtonClassName}-${columnIndex}`;
+const columnMoveRightButtonClassName = "col-mv-r-btn";
+const columnMoveRightButtonId = (_: TemplateStringsArray, columnIndex: number) => `${columnMoveRightButtonClassName}-${columnIndex}`;
+const columnDuplicateButtonClassName = "col-dup-btn";
+const columnDuplicateButtonId = (_: TemplateStringsArray, columnIndex: number) => `${columnDuplicateButtonClassName}-${columnIndex}`;
+const columnOpenFromClipboardButtonClassName = "col-clp-btn";
+const columnOpenFromClipboardButtonId = (_: TemplateStringsArray, columnIndex: number) => `${columnOpenFromClipboardButtonClassName}-${columnIndex}`;
+const columnNameInputClassName = "col-name-input";
+const columnNameInputId = (_: TemplateStringsArray, columnIndex: number) => `${columnNameInputClassName}-${columnIndex}`;
+const columnWidthSelectClassName = "col-select";
+const columnWidthSelectId = (_: TemplateStringsArray, columnIndex: number) => `${columnWidthSelectClassName}-${columnIndex}`;
+const columnDeleteButtonClassName = "col-del-btn";
+const columnDeleteButtonId = (_: TemplateStringsArray, columnIndex: number) => `${columnDeleteButtonClassName}-${columnIndex}`;
+const columnIframeClassName = "col-iframe";
+const columnIframeId = (_: TemplateStringsArray, columnIndex: number) => `${columnIframeClassName}-${columnIndex}`;
+const columnElementClassName = "col-el";
+const columnElementId = (_: TemplateStringsArray, columnIndex: number) => `${columnElementClassName}-${columnIndex}`;
 const extractColumnIdxFromId = (colDelBtnId: string) => parseInt(colDelBtnId.split('-').slice(-1)[0]);
 
 const ColumnWidthMenu: React.FC<{
@@ -90,19 +101,35 @@ export const ColumnHeader: React.FC<{
 
             {/* Column action buttons */}
 
-            <IconButton color="inherit" id={columnMoveLeftButtonId`${props.columnIndex}`}>
+            <IconButton
+              color="inherit"
+              id={columnMoveLeftButtonId`${props.columnIndex}`}
+              className={columnMoveLeftButtonClassName}
+            >
               <ChevronLeftIcon />
             </IconButton>
 
-            <IconButton color="inherit">
+            <IconButton
+              color="inherit"
+              id={columnMoveRightButtonId`${props.columnIndex}`}
+              className={columnMoveRightButtonClassName}
+            >
               <ChevronRightIcon />
             </IconButton>
 
-            <IconButton color="inherit">
+            <IconButton
+              color="inherit"
+              id={columnDuplicateButtonId`${props.columnIndex}`}
+              className={columnDuplicateButtonClassName}
+            >
               <ContentCopyIcon />
             </IconButton>
 
-            <IconButton color="inherit">
+            <IconButton
+              color="inherit"
+              id={columnOpenFromClipboardButtonId`${props.columnIndex}`}
+              className={columnOpenFromClipboardButtonClassName}
+            >
               <ContentPasteGoIcon />
             </IconButton>
 
@@ -123,7 +150,11 @@ export const ColumnHeader: React.FC<{
 
             {/* Delete buttion */}
 
-            <IconButton color="inherit">
+            <IconButton
+              color="inherit"
+              id={columnDeleteButtonId`${props.columnIndex}`}
+              className={columnDeleteButtonClassName}
+            >
               <ClearIcon />
             </IconButton>
           </Toolbar>
