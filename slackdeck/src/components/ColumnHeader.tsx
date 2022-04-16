@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, AppBar, Toolbar, IconButton, InputBase, Button, Menu, MenuItem } from '@mui/material';
-
+import cloneDeep from 'lodash/cloneDeep';
 import ClearIcon from '@mui/icons-material/Clear';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
@@ -8,6 +8,8 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import ContentPasteGoIcon from '@mui/icons-material/ContentPasteGo';
 import { ColumnConfig, columnDeleteButtonClassName, columnDeleteButtonId, columnDuplicateButtonClassName, columnDuplicateButtonId, columnElementId, columnIframeClassName, columnIframeId, columnMoveLeftButtonClassName, columnMoveLeftButtonId, columnMoveRightButtonClassName, columnMoveRightButtonId, columnOpenFromClipboardButtonClassName, columnOpenFromClipboardButtonId, COLUMN_WIDTH_OPTIONS_TEXT, extractColumnIdxFromId } from '../shared/column';
+import ReactDOM from 'react-dom';
+import { Column } from './Column';
 
 const ColumnWidthMenu: React.FC<{
   selectedColumnWidthOptionIndex: number,
@@ -85,6 +87,48 @@ export const ColumnHeader: React.FC<{
     }
   };
 
+  const insertCopyRightSide = (copiedColEl: HTMLElement, newColumnConfig: ColumnConfig) => {
+    // Push to columnList
+    let orgColElIdx = extractColumnIdxFromId(props.columnElement.getElementsByTagName('div')[0].id);
+    let orgColEl = document.getElementById(columnElementId`${orgColElIdx}`).parentElement;
+    let insertPos = orgColElIdx + 1;
+    // Switch column
+    if (insertPos < props.columnList.length) {
+      document.getElementById('wrapper').insertBefore(
+        copiedColEl,
+        orgColEl
+      );
+      props.columnList.splice(orgColElIdx + 1, 0, newColumnConfig);
+    } else {
+      document.getElementById('wrapper').appendChild(copiedColEl);
+      props.columnList.push(newColumnConfig);
+    }
+  }
+
+  const onClickDuplicateButton = () => {
+    // Save column
+    // saveColumns(props.columnList);
+    // Clone column config
+    let newColumnConfig = cloneDeep(props.columnConfig);
+    // Insert column after original column
+    let col = document.createElement('div');
+    ReactDOM.render(<Column
+      rerender={props.rerender}
+      columnList={props.columnList}
+      columnIndex={props.columnList.length}
+      columnConfig={newColumnConfig}
+      columnElement={col}
+    />, col);
+    insertCopyRightSide(col, newColumnConfig);
+    // Fix slack dom
+    let pClient = document.getElementsByClassName('p-client')[0] as HTMLElement;
+    pClient.style.width = '100%';
+    // Save current column state
+    // saveColumns(props.columnList);
+    // Rerender deck
+    props.rerender(Math.random());
+  };
+
   const onClickDeleteButton = () => {
     // Remove
     let colElIdx = extractColumnIdxFromId(props.columnElement.getElementsByTagName('div')[0].id);
@@ -125,6 +169,7 @@ export const ColumnHeader: React.FC<{
               color="inherit"
               id={columnDuplicateButtonId`${props.columnIndex}`}
               className={columnDuplicateButtonClassName}
+              onClick={onClickDuplicateButton}
             >
               <ContentCopyIcon />
             </IconButton>
