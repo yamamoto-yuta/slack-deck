@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { SelectChangeEvent, Modal, Box, Typography, Divider, FormControl, Select, MenuItem, TextField, Button, InputLabel } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import { COLUMN_WIDTH_OPTIONS_TEXT } from '../shared/columnWidth';
+import { COLUMN_WIDTH_OPTIONS_TEXT } from '../shared/column';
 import "../style/addColumnModal.scss";
 import { Column } from './Column';
 
