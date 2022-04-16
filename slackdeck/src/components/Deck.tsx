@@ -11,11 +11,6 @@ import { VERSION } from '../shared/general';
 import { AddColumnModal } from './AddColumnModal';
 import { ColumnConfig } from '../shared/column';
 
-const columnNameList = [
-  "#times-yamamoto",
-  "#88888",
-]
-
 const AddSpeedDial: React.FC<{
   columnList: ColumnConfig[],
   rerender: React.Dispatch<React.SetStateAction<number>>
@@ -116,11 +111,11 @@ export const Deck: React.FC<{
           collapseDeckchecked={collapseDeckchecked}
           setCollapseDeckChecked={setCollapseDeckChecked}
         />
-        {columnNameList.map((columnName, index) => (
-          <Tooltip key={index} title={columnName} placement="right">
+        {props.columnList.map((config, index) => (
+          <Tooltip key={index} title={config.name} placement="right">
             <Button className="column-jump-button" variant="outlined" href="#">
               <Typography variant="caption" component="div">
-                {index}{!collapseDeckchecked ? "" : ": " + columnName}
+                {index}{!collapseDeckchecked ? "" : ": " + config.name}
               </Typography>
             </Button>
           </Tooltip>
@@ -139,6 +134,7 @@ export const Deck: React.FC<{
           v{VERSION}
         </Typography>
       </div>
+      {console.log(props.columnList)}
     </div>
   )
 };

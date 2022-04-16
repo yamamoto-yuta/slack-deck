@@ -59,6 +59,9 @@ export const AddColumnModal: React.FC<{
     // Push to columnList
     props.columnList.push(newColumnConfig);
 
+    // Rerender deck
+    props.rerender(Math.random());
+
     // Close Mordal
     props.onClose();
   };
