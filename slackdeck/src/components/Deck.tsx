@@ -6,6 +6,7 @@ import ContentPasteGoIcon from '@mui/icons-material/ContentPasteGo';
 import SaveIcon from '@mui/icons-material/Save';
 import HelpIcon from '@mui/icons-material/Help';
 import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
+import HomeIcon from '@mui/icons-material/Home';
 import { ConfigModal } from './ConfigModal';
 import { VERSION } from '../shared/general';
 import { AddColumnModal } from './AddColumnModal';
@@ -111,6 +112,11 @@ export const Deck: React.FC<{
           collapseDeckchecked={collapseDeckchecked}
           setCollapseDeckChecked={setCollapseDeckChecked}
         />
+        <Tooltip title="Home" placement="right">
+          <Button className="column-jump-button" variant="outlined" href="#main-body">
+            <HomeIcon />
+          </Button>
+        </Tooltip>
         {props.columnList.map((config, index) => (
           <Tooltip key={index} title={config.name} placement="right">
             <Button className="column-jump-button" variant="outlined" href="#">
