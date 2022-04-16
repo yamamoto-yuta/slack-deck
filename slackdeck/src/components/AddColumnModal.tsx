@@ -25,7 +25,7 @@ export const AddColumnModal: React.FC<{
     p: 4,
   };
   const [newColumnConfig, setNewColumnConfig] = React.useState<ColumnConfig>(DEFAULT_COLUMN_CONFIG);
-  const [selectedColumnWidth, setSelectedColumnWidth] = React.useState<string>("");
+  const [selectedColumnWidth, setSelectedColumnWidth] = React.useState<string>(DEFAULT_COLUMN_CONFIG.width);
 
   const handleSelectedColumnWidthChange = (event: SelectChangeEvent) => {
     setSelectedColumnWidth(event.target.value as string);

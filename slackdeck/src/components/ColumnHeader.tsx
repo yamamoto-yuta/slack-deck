@@ -7,13 +7,14 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import ContentPasteGoIcon from '@mui/icons-material/ContentPasteGo';
-import { COLUMN_WIDTH_OPTIONS_TEXT } from '../shared/column';
+import { ColumnConfig, COLUMN_WIDTH_OPTIONS_TEXT } from '../shared/column';
 
 const ColumnWidthMenu: React.FC<{
-  setSelectedColumnWidthOptionIndex: React.Dispatch<React.SetStateAction<number>>
+  selectedColumnWidthOptionIndex: number,
+  setSelectedColumnWidthOptionIndex: React.Dispatch<React.SetStateAction<number>>,
 }> = (props) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [selectedIndex, setSelectedIndex] = React.useState(0);
+  const [selectedIndex, setSelectedIndex] = React.useState<number>(props.selectedColumnWidthOptionIndex);
   const open = Boolean(anchorEl);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -64,7 +65,9 @@ const ColumnWidthMenu: React.FC<{
 
 
 export const ColumnHeader: React.FC<{
-  setSelectedColumnWidthOptionIndex: React.Dispatch<React.SetStateAction<number>>
+  selectedColumnWidthOptionIndex: number,
+  setSelectedColumnWidthOptionIndex: React.Dispatch<React.SetStateAction<number>>,
+  columnConfig: ColumnConfig,
 }> = (props) => {
   return (
     <div className="column-header">
@@ -93,13 +96,16 @@ export const ColumnHeader: React.FC<{
             {/* Column name input */}
 
             <InputBase
+              inputProps={{ style: { color: "white" } }}
               sx={{ ml: 1, flex: 1 }}
               placeholder="Column name..."
+              defaultValue={props.columnConfig.name}
             />
 
             {/* Column width menu */}
 
             <ColumnWidthMenu
+              selectedColumnWidthOptionIndex={props.selectedColumnWidthOptionIndex}
               setSelectedColumnWidthOptionIndex={props.setSelectedColumnWidthOptionIndex}
             />
 

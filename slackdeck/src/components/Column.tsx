@@ -9,7 +9,7 @@ export const Column: React.FC<{
   columnCofig: ColumnConfig,
   columnElement: HTMLDivElement,
 }> = (props) => {
-  const [selectedColumnWidthOptionIndex, setSelectedColumnWidthOptionIndex] = React.useState(0);
+  const [selectedColumnWidthOptionIndex, setSelectedColumnWidthOptionIndex] = React.useState(COLUMN_WIDTH_OPTIONS_VALUE.indexOf(props.columnCofig.width));
 
   return (
     <div
@@ -24,9 +24,11 @@ export const Column: React.FC<{
       }}
     >
       <ColumnHeader
+        selectedColumnWidthOptionIndex={selectedColumnWidthOptionIndex}
         setSelectedColumnWidthOptionIndex={setSelectedColumnWidthOptionIndex}
+        columnConfig={props.columnCofig}
       />
-      <iframe src="https://app.slack.com/client/T02M52Z4VPA/unreads" />
+      <iframe src={props.columnCofig.url} />
     </div >
   )
 };
