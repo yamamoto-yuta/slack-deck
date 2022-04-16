@@ -90,6 +90,52 @@ export const ColumnHeader: React.FC<{
     }
   };
 
+  const moveColumnLeft = (
+    colElIdx: number,
+    colEl: HTMLElement,
+    newColElIdx: number,
+    newColEl: HTMLElement
+  ) => {
+    // Switch column
+    if (newColElIdx >= 0) {
+      document.getElementById('wrapper').insertBefore(
+        colEl.parentElement,
+        newColEl.parentElement
+      );
+    } else {
+      document.getElementById('wrapper').appendChild(
+        colEl.parentElement
+      );
+      newColElIdx += props.columnList.length;
+    }
+    colEl.getElementsByTagName('iframe')[0].src = props.columnList[colElIdx].url;
+    // Update column list
+    let tmp = props.columnList[colElIdx];
+    props.columnList[colElIdx] = props.columnList[newColElIdx];
+    props.columnList[newColElIdx] = tmp;
+  }
+
+  const onClickMoveLeftButton = () => {
+    // Save column
+    // saveColumns(props.columnList);
+    // Calculate new column index
+    let colElIdx = extractColumnIdxFromId(props.columnElement.getElementsByTagName('div')[0].id);
+    let newColElIdx = colElIdx - 1;
+    // Switch column
+    moveColumnLeft(
+      colElIdx,
+      document.getElementById(columnElementId`${colElIdx}`),
+      newColElIdx,
+      document.getElementById(columnElementId`${newColElIdx}`)
+    );
+    // Update element id
+    updateElement();
+    // Save column
+    // saveColumns(props.columnList);
+    // Rerender deck
+    props.rerender(Math.random());
+  }
+
   const insertCopyRightSide = (copiedColEl: HTMLElement, newColumnConfig: ColumnConfig) => {
     // Push to columnList
     let orgColElIdx = extractColumnIdxFromId(props.columnElement.getElementsByTagName('div')[0].id);
@@ -158,6 +204,7 @@ export const ColumnHeader: React.FC<{
               color="inherit"
               id={columnMoveLeftButtonId`${props.columnIndex}`}
               className={columnMoveLeftButtonClassName}
+              onClick={onClickMoveLeftButton}
             >
               <ChevronLeftIcon />
             </IconButton>
