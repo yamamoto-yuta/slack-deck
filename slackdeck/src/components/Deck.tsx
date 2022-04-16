@@ -8,6 +8,7 @@ import HelpIcon from '@mui/icons-material/Help';
 import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
 import { ConfigModal } from './ConfigModal';
 import { VERSION } from '../consts/general';
+import { AddColumnModal } from './AddColumnModal';
 
 const columnNameList = [
   "#times-yamamoto",
@@ -15,10 +16,13 @@ const columnNameList = [
 ]
 
 const AddSpeedDial: React.FC = () => {
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
   const actions = [
-    { icon: <AddIcon />, name: "Add from Modal" },
-    { icon: <ContentCopyIcon />, name: "Add Current Page" },
-    { icon: <ContentPasteGoIcon />, name: "Add from Clipboard" },
+    { icon: <AddIcon />, name: "Add from Modal", onclick: handleOpen },
+    { icon: <ContentCopyIcon />, name: "Add Current Page", onclick: () => { console.log("Add Current Page") } },
+    { icon: <ContentPasteGoIcon />, name: "Add from Clipboard", onclick: () => { console.log("Add from Clipboard") } },
   ];
   return (
     <div>
@@ -36,9 +40,12 @@ const AddSpeedDial: React.FC = () => {
             tooltipTitle={action.name}
             tooltipPlacement="bottom-start"
             sx={{ whiteSpace: "nowrap" }}
+            onClick={action.onclick}
           />
         ))}
       </SpeedDial>
+      <AddColumnModal open={open} onClose={handleClose} />
+      {console.log(open)}
       <div id="add-speed-dial-spacer" />
     </div>
   )
