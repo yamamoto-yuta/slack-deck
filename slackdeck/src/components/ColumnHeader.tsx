@@ -7,7 +7,7 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import ContentPasteGoIcon from '@mui/icons-material/ContentPasteGo';
-import { COLUMN_WIDTH_OPTIONS_TEXT } from '../consts/columnWidth';
+import { COLUMN_WIDTH_OPTIONS_TEXT } from '../shared/columnWidth';
 
 const ColumnWidthMenu: React.FC<{
   setSelectedColumnWidthOptionIndex: React.Dispatch<React.SetStateAction<number>>

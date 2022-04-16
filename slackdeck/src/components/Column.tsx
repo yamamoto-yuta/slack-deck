@@ -1,5 +1,5 @@
 import React from 'react';
-import { COLUMN_WIDTH_OPTIONS_VALUE } from '../consts/columnWidth';
+import { COLUMN_WIDTH_OPTIONS_VALUE } from '../shared/columnWidth';
 import { ColumnHeader } from './ColumnHeader';
 
 export const Column: React.FC = () => {

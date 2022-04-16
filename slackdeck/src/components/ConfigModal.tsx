@@ -1,7 +1,7 @@
 import React from 'react';
 import { SelectChangeEvent, IconButton, Modal, Box, Typography, Divider, FormControl, Select, MenuItem } from '@mui/material';
 import SettingsIcon from '@mui/icons-material/Settings';
-import { COLUMN_WIDTH_OPTIONS_TEXT } from '../consts/columnWidth';
+import { COLUMN_WIDTH_OPTIONS_TEXT } from '../shared/columnWidth';
 
 const DefaultColumnWidthSelect: React.FC = () => {
   const [selectedColumnWidth, setSelectedColumnWidth] = React.useState<string>("");

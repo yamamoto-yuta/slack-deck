@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, AppBar, Toolbar, InputBase, Button, Menu, MenuItem } from '@mui/material';
 
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { MAIN_COLUMN_WIDTH_OPTIONS_TEXT, MAIN_COLUMN_WIDTH_OPTIONS_VALUE } from '../consts/columnWidth';
+import { MAIN_COLUMN_WIDTH_OPTIONS_TEXT, MAIN_COLUMN_WIDTH_OPTIONS_VALUE } from '../shared/columnWidth';
 
 const ColumnWidthMenu: React.FC = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
