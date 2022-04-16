@@ -95,7 +95,7 @@ export const Deck: React.FC<{
           transform: "translateZ(0px)"
         }}>
           <AddSpeedDial columnList={props.columnList} rerender={rerender} />
-          <Fab size="medium" color="secondary" sx={{ my: 1 }}>
+          <Fab size="medium" sx={{ my: 1 }}>
             <SaveIcon />
           </Fab>
           <Typography variant="caption" component="div" sx={{ color: "white" }}>

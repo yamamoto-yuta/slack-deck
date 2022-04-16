@@ -18,10 +18,10 @@ export const Column: React.FC<{
       style={{
         minWidth: COLUMN_WIDTH_OPTIONS_VALUE[selectedColumnWidthOptionIndex],
         width: COLUMN_WIDTH_OPTIONS_VALUE[selectedColumnWidthOptionIndex],
-        backgroundColor: "red",
-        borderWidth: "1px",
-        borderStyle: "solid",
-        borderColor: "red",
+        // backgroundColor: "red",
+        // borderWidth: "1px",
+        // borderStyle: "solid",
+        // borderColor: "red",
       }}
     >
       <ColumnHeader
