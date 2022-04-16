@@ -10,7 +10,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import { ConfigModal } from './ConfigModal';
 import { VERSION } from '../shared/general';
 import { AddColumnModal } from './AddColumnModal';
-import { ColumnConfig } from '../shared/column';
+import { ColumnConfig, columnElementId } from '../shared/column';
 
 const AddSpeedDial: React.FC<{
   columnList: ColumnConfig[],
@@ -119,7 +119,7 @@ export const Deck: React.FC<{
         </Tooltip>
         {props.columnList.map((config, index) => (
           <Tooltip key={index} title={config.name} placement="right">
-            <Button className="column-jump-button" variant="outlined" href="#">
+            <Button className="column-jump-button" variant="outlined" href={`#${columnElementId`${index}`}`}>
               <Typography variant="caption" component="div">
                 {index}{!collapseDeckchecked ? "" : ": " + config.name}
               </Typography>

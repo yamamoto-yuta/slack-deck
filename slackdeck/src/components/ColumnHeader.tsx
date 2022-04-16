@@ -7,28 +7,7 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import ContentPasteGoIcon from '@mui/icons-material/ContentPasteGo';
-import { ColumnConfig, COLUMN_WIDTH_OPTIONS_TEXT } from '../shared/column';
-
-
-const columnMoveLeftButtonClassName = "col-mv-l-btn";
-const columnMoveLeftButtonId = (_: TemplateStringsArray, columnIndex: number) => `${columnMoveLeftButtonClassName}-${columnIndex}`;
-const columnMoveRightButtonClassName = "col-mv-r-btn";
-const columnMoveRightButtonId = (_: TemplateStringsArray, columnIndex: number) => `${columnMoveRightButtonClassName}-${columnIndex}`;
-const columnDuplicateButtonClassName = "col-dup-btn";
-const columnDuplicateButtonId = (_: TemplateStringsArray, columnIndex: number) => `${columnDuplicateButtonClassName}-${columnIndex}`;
-const columnOpenFromClipboardButtonClassName = "col-clp-btn";
-const columnOpenFromClipboardButtonId = (_: TemplateStringsArray, columnIndex: number) => `${columnOpenFromClipboardButtonClassName}-${columnIndex}`;
-const columnNameInputClassName = "col-name-input";
-const columnNameInputId = (_: TemplateStringsArray, columnIndex: number) => `${columnNameInputClassName}-${columnIndex}`;
-const columnWidthSelectClassName = "col-select";
-const columnWidthSelectId = (_: TemplateStringsArray, columnIndex: number) => `${columnWidthSelectClassName}-${columnIndex}`;
-const columnDeleteButtonClassName = "col-del-btn";
-const columnDeleteButtonId = (_: TemplateStringsArray, columnIndex: number) => `${columnDeleteButtonClassName}-${columnIndex}`;
-const columnIframeClassName = "col-iframe";
-const columnIframeId = (_: TemplateStringsArray, columnIndex: number) => `${columnIframeClassName}-${columnIndex}`;
-const columnElementClassName = "col-el";
-const columnElementId = (_: TemplateStringsArray, columnIndex: number) => `${columnElementClassName}-${columnIndex}`;
-const extractColumnIdxFromId = (colDelBtnId: string) => parseInt(colDelBtnId.split('-').slice(-1)[0]);
+import { ColumnConfig, columnDeleteButtonClassName, columnDeleteButtonId, columnDuplicateButtonClassName, columnDuplicateButtonId, columnElementId, columnIframeClassName, columnIframeId, columnMoveLeftButtonClassName, columnMoveLeftButtonId, columnMoveRightButtonClassName, columnMoveRightButtonId, columnOpenFromClipboardButtonClassName, columnOpenFromClipboardButtonId, COLUMN_WIDTH_OPTIONS_TEXT, extractColumnIdxFromId } from '../shared/column';
 
 const ColumnWidthMenu: React.FC<{
   selectedColumnWidthOptionIndex: number,
@@ -164,6 +143,7 @@ export const ColumnHeader: React.FC<{
               inputProps={{ style: { color: "white" } }}
               sx={{ ml: 1, flex: 1 }}
               placeholder="Column name..."
+              defaultValue={props.columnConfig.name}
             />
 
             {/* Column width menu */}

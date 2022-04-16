@@ -1,5 +1,5 @@
 import React from 'react';
-import { ColumnConfig, COLUMN_WIDTH_OPTIONS_VALUE } from '../shared/column';
+import { ColumnConfig, columnElementId, columnIframeClassName, columnIframeId, COLUMN_WIDTH_OPTIONS_VALUE } from '../shared/column';
 import { ColumnHeader } from './ColumnHeader';
 
 export const Column: React.FC<{
@@ -13,6 +13,7 @@ export const Column: React.FC<{
 
   return (
     <div
+      id={columnElementId`${props.columnIndex}`}
       className="column"
       style={{
         minWidth: COLUMN_WIDTH_OPTIONS_VALUE[selectedColumnWidthOptionIndex],
@@ -32,7 +33,11 @@ export const Column: React.FC<{
         columnConfig={props.columnConfig}
         columnElement={props.columnElement}
       />
-      <iframe src={props.columnConfig.url} />
+      <iframe
+        id={columnIframeId`${props.columnIndex}`}
+        className={columnIframeClassName}
+        src={props.columnConfig.url}
+      />
     </div >
   )
 };
