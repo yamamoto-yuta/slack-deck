@@ -7,7 +7,7 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import ContentPasteGoIcon from '@mui/icons-material/ContentPasteGo';
-import { chooseColumnColor, ColumnConfig, columnDeleteButtonClassName, columnDeleteButtonId, columnDuplicateButtonClassName, columnDuplicateButtonId, columnElementId, columnIframeClassName, columnIframeId, columnMoveLeftButtonClassName, columnMoveLeftButtonId, columnMoveRightButtonClassName, columnMoveRightButtonId, columnOpenFromClipboardButtonClassName, columnOpenFromClipboardButtonId, COLUMN_WIDTH_OPTIONS_TEXT, extractColumnIdxFromId } from '../shared/column';
+import { chooseColumnColor, ColumnConfig, columnDeleteButtonClassName, columnDeleteButtonId, columnDuplicateButtonClassName, columnDuplicateButtonId, columnElementId, columnIframeClassName, columnIframeId, columnMoveLeftButtonClassName, columnMoveLeftButtonId, columnMoveRightButtonClassName, columnMoveRightButtonId, columnOpenFromClipboardButtonClassName, columnOpenFromClipboardButtonId, COLUMN_WIDTH_OPTIONS_TEXT, extractColumnIdxFromId, saveColumns } from '../shared/column';
 import ReactDOM from 'react-dom';
 import { Column } from './Column';
 
@@ -117,7 +117,7 @@ export const ColumnHeader: React.FC<{
 
   const onClickMoveLeftButton = () => {
     // Save column
-    // saveColumns(props.columnList);
+    saveColumns(props.columnList);
     // Calculate new column index
     let colElIdx = extractColumnIdxFromId(props.columnElement.getElementsByTagName('div')[0].id);
     let newColElIdx = colElIdx - 1;
@@ -131,7 +131,7 @@ export const ColumnHeader: React.FC<{
     // Update element id
     updateElement();
     // Save column
-    // saveColumns(props.columnList);
+    saveColumns(props.columnList);
     // Rerender deck
     props.rerender(Math.random());
   };
@@ -165,7 +165,7 @@ export const ColumnHeader: React.FC<{
 
   const onClickMoveRightButton = () => {
     // Save column
-    // saveColumns(props.columnList);
+    saveColumns(props.columnList);
     // Calculate new column index
     let colElIdx = extractColumnIdxFromId(props.columnElement.getElementsByTagName('div')[0].id);
     let newColElIdx = colElIdx + 1;
@@ -179,7 +179,7 @@ export const ColumnHeader: React.FC<{
     // Update element id
     updateElement();
     // Save column
-    // saveColumns(props.columnList);
+    saveColumns(props.columnList);
     // Rerender deck
     props.rerender(Math.random());
   }
@@ -206,7 +206,7 @@ export const ColumnHeader: React.FC<{
 
   const onClickDuplicateButton = () => {
     // Save column
-    // saveColumns(props.columnList);
+    saveColumns(props.columnList);
     // Clone column config
     let newColumnConfig = cloneDeep(props.columnConfig);
     // Insert column after original column
@@ -223,7 +223,7 @@ export const ColumnHeader: React.FC<{
     let pClient = document.getElementsByClassName('p-client')[0] as HTMLElement;
     pClient.style.width = '100%';
     // Save current column state
-    // saveColumns(props.columnList);
+    saveColumns(props.columnList);
     // Update other elements
     updateElement();
     // Rerender deck
@@ -234,7 +234,7 @@ export const ColumnHeader: React.FC<{
     // Remove
     let colElIdx = extractColumnIdxFromId(props.columnElement.getElementsByTagName('div')[0].id);
     props.columnList.splice(colElIdx, 1);;
-    // saveColumns(props.columnList);
+    saveColumns(props.columnList);
     props.columnElement.remove();
     // Update other elements
     updateElement();

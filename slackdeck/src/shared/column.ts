@@ -46,3 +46,26 @@ export const columnElementId = (_: TemplateStringsArray, columnIndex: number) =>
 export const extractColumnIdxFromId = (colElId: string) => parseInt(colElId.split('-').slice(-1)[0]);
 
 export const chooseColumnColor = (columnIndex: number) => (columnIndex % 2 == 0) ? '#1565c0' : '#7b1fa2';
+
+export const saveColumns = (
+  columnList: ColumnConfig[]
+) => {
+  for (var i = 0; i < columnList.length; i++) {
+    columnList[i].name = document.getElementsByClassName('column')[i].getElementsByClassName('column-header')[0].getElementsByTagName('input')[0].value;
+    var _iframe = document.getElementsByClassName('col-iframe')[i] as HTMLIFrameElement;
+    if (_iframe.contentWindow.location.href !== "about:blank") {
+      columnList[i].url = _iframe.contentWindow.location.href;
+    }
+  }
+  console.log("---");
+  console.log(columnList);
+  console.log("---");
+  // chrome.storage.sync.set({ 'columnList': columnList });
+  updateSavedTime();
+}
+
+export const updateSavedTime = () => {
+  const pad0 = (num: number) => ('00' + num).slice(-2);
+  const savedTimeTemplate = (_: TemplateStringsArray, currentDate: Date) => `${pad0(currentDate.getHours())}:${pad0(currentDate.getMinutes())}:${pad0(currentDate.getSeconds())}`;
+  document.getElementById('saved-time').innerText = savedTimeTemplate`${new Date()}`;
+}

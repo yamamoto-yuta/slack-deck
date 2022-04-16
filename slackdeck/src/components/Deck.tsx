@@ -11,7 +11,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import { ConfigModal } from './ConfigModal';
 import { VERSION } from '../shared/general';
 import { AddColumnModal } from './AddColumnModal';
-import { ColumnConfig, columnElementId } from '../shared/column';
+import { ColumnConfig, columnElementId, saveColumns } from '../shared/column';
 
 const AddSpeedDial: React.FC<{
   columnList: ColumnConfig[],
@@ -113,6 +113,11 @@ export const Deck: React.FC<{
   const [mainColumnResponsiveChecked, setMainColumnResponsiveChecked] = React.useState<boolean>(false);
   const [collapseDeckchecked, setCollapseDeckChecked] = React.useState<boolean>(false);
 
+  const onClickSaveButton = () => {
+    saveColumns(props.columnList);
+    rerender(Math.random());
+  }
+
   return (
     <div id="deck">
       <div className="deck-buttons-element">
@@ -121,13 +126,13 @@ export const Deck: React.FC<{
           transform: "translateZ(0px)"
         }}>
           <AddSpeedDial columnList={props.columnList} rerender={rerender} />
-          <Fab size="medium" sx={{ my: 1 }}>
+          <Fab size="medium" sx={{ my: 1 }} onClick={onClickSaveButton}>
             <SaveIcon />
           </Fab>
           <Typography variant="caption" component="div" sx={{ color: "white" }}>
             Saved:
           </Typography>
-          <Typography variant="body2" component="div" sx={{ color: "white" }} gutterBottom>
+          <Typography id="saved-time" variant="body2" component="div" sx={{ color: "white" }} gutterBottom>
             00:00:00
           </Typography>
         </Box>

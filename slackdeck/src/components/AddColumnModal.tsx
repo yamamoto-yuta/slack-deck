@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { SelectChangeEvent, Modal, Box, Typography, Divider, FormControl, Select, MenuItem, TextField, Button, InputLabel } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import { ColumnConfig, COLUMN_WIDTH_OPTIONS_TEXT, COLUMN_WIDTH_OPTIONS_VALUE, DEFAULT_COLUMN_CONFIG } from '../shared/column';
+import { ColumnConfig, COLUMN_WIDTH_OPTIONS_TEXT, COLUMN_WIDTH_OPTIONS_VALUE, DEFAULT_COLUMN_CONFIG, saveColumns } from '../shared/column';
 import "../style/addColumnModal.scss";
 import { Column } from './Column';
 
@@ -63,6 +63,9 @@ export const AddColumnModal: React.FC<{
 
     // Push to columnList
     props.columnList.push(newColumnConfig);
+
+    // Save current column state
+    saveColumns(props.columnList);
 
     // Rerender deck
     props.rerender(Math.random());
