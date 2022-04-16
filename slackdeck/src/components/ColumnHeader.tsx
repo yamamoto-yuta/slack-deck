@@ -88,11 +88,36 @@ const ColumnWidthMenu: React.FC<{
 export const ColumnHeader: React.FC<{
   selectedColumnWidthOptionIndex: number,
   setSelectedColumnWidthOptionIndex: React.Dispatch<React.SetStateAction<number>>,
+  rerender: React.Dispatch<React.SetStateAction<number>>,
   columnList: ColumnConfig[],
   columnIndex: number,
   columnConfig: ColumnConfig,
   columnElement: HTMLDivElement,
 }> = (props) => {
+
+  const updateElementID = () => {
+    for (var i = 0; i < props.columnList.length; i++) {
+      document.getElementsByClassName('column')[i].id = columnElementId`${i}`;
+      document.getElementsByClassName(columnMoveLeftButtonClassName)[i].id = columnMoveLeftButtonId`${i}`;
+      document.getElementsByClassName(columnMoveRightButtonClassName)[i].id = columnMoveRightButtonId`${i}`;
+      // document.getElementsByClassName('col-name-input')[i].id = columnNameInputId`${i}`;
+      // document.getElementsByClassName('col-width-select')[i].id = columnWidthSelectId`${i}`;
+      document.getElementsByClassName(columnIframeClassName)[i].id = columnIframeId`${i}`;
+    }
+  };
+
+  const onClickDeleteButton = () => {
+    // Remove
+    let colElIdx = extractColumnIdxFromId(props.columnElement.getElementsByTagName('div')[0].id);
+    props.columnList.splice(colElIdx, 1);;
+    // saveColumns(props.columnList);
+    props.columnElement.remove();
+    // Update other elements
+    updateElementID();
+    // Rerender deck
+    props.rerender(Math.random());
+  };
+
   return (
     <div className="column-header">
       <Box sx={{ flexGrow: 1 }}>
@@ -154,6 +179,7 @@ export const ColumnHeader: React.FC<{
               color="inherit"
               id={columnDeleteButtonId`${props.columnIndex}`}
               className={columnDeleteButtonClassName}
+              onClick={onClickDeleteButton}
             >
               <ClearIcon />
             </IconButton>

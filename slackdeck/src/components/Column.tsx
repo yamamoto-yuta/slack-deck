@@ -26,6 +26,7 @@ export const Column: React.FC<{
       <ColumnHeader
         selectedColumnWidthOptionIndex={selectedColumnWidthOptionIndex}
         setSelectedColumnWidthOptionIndex={setSelectedColumnWidthOptionIndex}
+        rerender={props.rerender}
         columnList={props.columnList}
         columnIndex={props.columnIndex}
         columnConfig={props.columnConfig}
