@@ -98,7 +98,7 @@ export const Deck: React.FC = () => {
           setCollapseDeckChecked={setCollapseDeckChecked}
         />
         {columnNameList.map((columnName, index) => (
-          <Tooltip title={columnName} placement="right">
+          <Tooltip key={index} title={columnName} placement="right">
             <Button className="column-jump-button" variant="outlined" href="#">
               <Typography variant="caption" component="div">
                 {index}{!collapseDeckchecked ? "" : ": " + columnName}
