@@ -13,6 +13,11 @@ export const AddColumnModal: React.FC<{
   columnList: ColumnConfig[],
   rerender: React.Dispatch<React.SetStateAction<number>>
 }> = (props) => {
+
+  React.useEffect(() => {
+    setSelectedColumnWidth(DEFAULT_COLUMN_CONFIG.width);
+  }, [props.open]);
+
   const style = {
     position: 'absolute' as 'absolute',
     top: '50%',
