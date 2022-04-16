@@ -6,6 +6,7 @@ import ContentPasteGoIcon from '@mui/icons-material/ContentPasteGo';
 import SaveIcon from '@mui/icons-material/Save';
 import HelpIcon from '@mui/icons-material/Help';
 import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
+import FitScreenIcon from '@mui/icons-material/FitScreen';
 import HomeIcon from '@mui/icons-material/Home';
 import { ConfigModal } from './ConfigModal';
 import { VERSION } from '../shared/general';
@@ -82,11 +83,36 @@ const CollapseDeckSwitch: React.FC<{
   )
 };
 
+const MainColumnResponsiveSwitch: React.FC<{
+  mainColumnResponsiveChecked: boolean,
+  setMainColumnResponsiveChecked: React.Dispatch<React.SetStateAction<boolean>>,
+}> = (props) => {
+  const handleChange = () => {
+    props.setMainColumnResponsiveChecked((prev) => !prev);
+    if (!props.mainColumnResponsiveChecked) {
+      document.getElementById("main-body").style.minWidth = "100%";
+    } else {
+      document.getElementById("main-body").style.minWidth = "1000px";
+    }
+  };
+  return (
+    <FormControlLabel
+      value="top"
+      control={<Switch color="primary" checked={props.mainColumnResponsiveChecked} onChange={handleChange} />}
+      label={<FitScreenIcon />}
+      labelPlacement="top"
+      sx={{ mx: 0 }}
+    />
+  )
+};
+
 export const Deck: React.FC<{
   columnList: ColumnConfig[],
 }> = (props) => {
   const [, rerender] = React.useState<number>(Math.random());
-  const [collapseDeckchecked, setCollapseDeckChecked] = React.useState(false);
+  const [mainColumnResponsiveChecked, setMainColumnResponsiveChecked] = React.useState<boolean>(false);
+  const [collapseDeckchecked, setCollapseDeckChecked] = React.useState<boolean>(false);
+
   return (
     <div id="deck">
       <div className="deck-buttons-element">
@@ -108,6 +134,10 @@ export const Deck: React.FC<{
       </div>
 
       <div id="column-jump-button-element" className="deck-buttons-element">
+        <MainColumnResponsiveSwitch
+          mainColumnResponsiveChecked={mainColumnResponsiveChecked}
+          setMainColumnResponsiveChecked={setMainColumnResponsiveChecked}
+        />
         <CollapseDeckSwitch
           collapseDeckchecked={collapseDeckchecked}
           setCollapseDeckChecked={setCollapseDeckChecked}
