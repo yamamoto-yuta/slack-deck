@@ -7,6 +7,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import HelpIcon from '@mui/icons-material/Help';
 import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
 import { ConfigModal } from './ConfigModal';
+import { VERSION } from '../consts/general';
 
 const columnNameList = [
   "#times-yamamoto",
@@ -117,7 +118,7 @@ export const Deck: React.FC = () => {
           Version:
         </Typography>
         <Typography variant="body2" component="div" sx={{ color: "white" }} gutterBottom>
-          v1.0.0
+          v{VERSION}
         </Typography>
       </div>
     </div>
