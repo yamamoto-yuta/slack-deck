@@ -134,7 +134,57 @@ export const ColumnHeader: React.FC<{
     // saveColumns(props.columnList);
     // Rerender deck
     props.rerender(Math.random());
+  };
+
+  const moveColumnRight = (
+    colElIdx: number,
+    colEl: HTMLElement,
+    newColElIdx: number,
+    newColEl: HTMLElement
+  ) => {
+    // Switch column
+    if (newColElIdx < props.columnList.length) {
+      document.getElementById('wrapper').insertBefore(
+        newColEl.parentElement,
+        colEl.parentElement
+      );
+      newColEl.getElementsByTagName('iframe')[0].src = props.columnList[newColElIdx].url;
+    } else {
+      document.getElementById('wrapper').insertBefore(
+        colEl.parentElement,
+        document.getElementById(columnElementId`${0}`).parentElement
+      );
+      colEl.getElementsByTagName('iframe')[0].src = props.columnList[colElIdx].url;
+      newColElIdx -= props.columnList.length;
+    }
+    // Update column list
+    let tmp = props.columnList[colElIdx];
+    props.columnList[colElIdx] = props.columnList[newColElIdx];
+    props.columnList[newColElIdx] = tmp;
   }
+
+  const onClickMoveRightButton = () => {
+    // Save column
+    // saveColumns(props.columnList);
+    // Calculate new column index
+    let colElIdx = extractColumnIdxFromId(props.columnElement.getElementsByTagName('div')[0].id);
+    let newColElIdx = colElIdx + 1;
+    // Switch column
+    moveColumnRight(
+      colElIdx,
+      document.getElementById(columnElementId`${colElIdx}`),
+      newColElIdx,
+      document.getElementById(columnElementId`${newColElIdx}`)
+    );
+    // Update element id
+    updateElement();
+    // Save column
+    // saveColumns(props.columnList);
+    // Rerender deck
+    props.rerender(Math.random());
+  }
+
+
 
   const insertCopyRightSide = (copiedColEl: HTMLElement, newColumnConfig: ColumnConfig) => {
     // Push to columnList
@@ -213,6 +263,7 @@ export const ColumnHeader: React.FC<{
               color="inherit"
               id={columnMoveRightButtonId`${props.columnIndex}`}
               className={columnMoveRightButtonClassName}
+              onClick={onClickMoveRightButton}
             >
               <ChevronRightIcon />
             </IconButton>
