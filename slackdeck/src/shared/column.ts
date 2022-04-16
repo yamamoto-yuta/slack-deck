@@ -19,8 +19,9 @@ export const COLUMN_WIDTH_OPTIONS_VALUE: string[] = [
 ];
 
 export const DEFAULT_COLUMN_WIDTH_OPTION_INDEX = 1;
+export const DEFAULT_COLUMN_WIDTH_OPTION_VALUE = COLUMN_WIDTH_OPTIONS_VALUE[DEFAULT_COLUMN_WIDTH_OPTION_INDEX];
 export const DEFAULT_COLUMN_CONFIG: ColumnConfig = {
-  width: COLUMN_WIDTH_OPTIONS_VALUE[DEFAULT_COLUMN_WIDTH_OPTION_INDEX],
+  width: DEFAULT_COLUMN_WIDTH_OPTION_VALUE,
   url: "",
   name: ""
 };
@@ -57,10 +58,7 @@ export const saveColumns = (
       columnList[i].url = _iframe.contentWindow.location.href;
     }
   }
-  console.log("---");
-  console.log(columnList);
-  console.log("---");
-  // chrome.storage.sync.set({ 'columnList': columnList });
+  chrome.storage.sync.set({ 'columnList': columnList });
   updateSavedTime();
 }
 

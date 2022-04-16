@@ -11,7 +11,10 @@ import HomeIcon from '@mui/icons-material/Home';
 import { ConfigModal } from './ConfigModal';
 import { VERSION } from '../shared/general';
 import { AddColumnModal } from './AddColumnModal';
-import { ColumnConfig, columnElementId, saveColumns } from '../shared/column';
+import { ColumnConfig, columnElementId, saveColumns, updateSavedTime } from '../shared/column';
+import ReactDOM from 'react-dom';
+import { Column } from './Column';
+import { DEFAULT_GENERAL_CONFIG, GeneralConfig } from '../shared/config';
 
 const AddSpeedDial: React.FC<{
   columnList: ColumnConfig[],
@@ -110,6 +113,7 @@ export const Deck: React.FC<{
   columnList: ColumnConfig[],
 }> = (props) => {
   const [, rerender] = React.useState<number>(Math.random());
+  const [generalConfig, setGeneralConfig] = React.useState<GeneralConfig>(DEFAULT_GENERAL_CONFIG);
   const [mainColumnResponsiveChecked, setMainColumnResponsiveChecked] = React.useState<boolean>(false);
   const [collapseDeckchecked, setCollapseDeckChecked] = React.useState<boolean>(false);
 
@@ -117,6 +121,37 @@ export const Deck: React.FC<{
     saveColumns(props.columnList);
     rerender(Math.random());
   }
+
+  React.useEffect(() => {
+    // Load
+    chrome.storage.sync.get(
+      ['columnList', 'generalConfig'],
+      function (value) {
+        console.log(value.columnList);
+        if (value.columnList) {
+          for (var i = 0; i < value.columnList.length; i++) {
+            props.columnList[i] = value.columnList[i];
+          }
+          for (var i = 0; i < props.columnList.length; i++) {
+            let col = document.createElement('div');
+            ReactDOM.render(<Column
+              rerender={rerender}
+              columnList={props.columnList}
+              columnIndex={i}
+              columnConfig={props.columnList[i]}
+              columnElement={col}
+            />, col);
+            document.getElementById("wrapper").appendChild(col);
+          }
+        }
+        if (value.generalConfig) {
+          setGeneralConfig(value.generalConfig);
+        }
+        updateSavedTime();
+        rerender(Math.random());
+      }
+    );
+  }, []);
 
   return (
     <div id="deck">
@@ -133,7 +168,7 @@ export const Deck: React.FC<{
             Saved:
           </Typography>
           <Typography id="saved-time" variant="body2" component="div" sx={{ color: "white" }} gutterBottom>
-            00:00:00
+            --:--:--
           </Typography>
         </Box>
       </div>
