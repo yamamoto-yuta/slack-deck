@@ -49,6 +49,19 @@ const WorkspaceName2IdMapper: React.FC<{
   updatedGeneralConfig: GeneralConfig,
   setUpdatedGeneralConfig: React.Dispatch<React.SetStateAction<GeneralConfig>>,
 }> = (props) => {
+  const onClickDeleteButton = (index: number) => {
+    // Update validation result state
+    // let newSlackUrlValidateResult: SlackUrlValidateResult[] = validateUrl.slice();
+    // newSlackUrlValidateResult.splice(index, 1)
+    // setValidateUrl(newSlackUrlValidateResult);
+    // // Update All validation result
+    // setIsValidAllUrl(isValidAllSlackUrl(newSlackUrlValidateResult));
+    // Update general config state
+    const newSlackUrlTable: SlackUrlConverter[] = props.updatedGeneralConfig.slackUrlTable.slice();
+    newSlackUrlTable.splice(index, 1);
+    props.setUpdatedGeneralConfig({ ...props.updatedGeneralConfig, slackUrlTable: newSlackUrlTable });
+  };
+
   const onChangeWorkspaceUrl = (workspaceUrl: string, index: number) => {
     // // Validate
     // let newSlackUrlValidateResult: SlackUrlValidateResult[] = validateUrl.slice();
@@ -60,7 +73,7 @@ const WorkspaceName2IdMapper: React.FC<{
     // // Update All validation result
     // setIsValidAllUrl(isValidAllSlackUrl(newSlackUrlValidateResult));
     // Update state
-    let newSlackUrlTable: SlackUrlConverter[] = props.updatedGeneralConfig.slackUrlTable.slice();
+    const newSlackUrlTable: SlackUrlConverter[] = props.updatedGeneralConfig.slackUrlTable.slice();
     newSlackUrlTable[index].workspaceUrl = workspaceUrl;
     props.setUpdatedGeneralConfig({ ...props.updatedGeneralConfig, slackUrlTable: newSlackUrlTable });
   };
@@ -76,7 +89,7 @@ const WorkspaceName2IdMapper: React.FC<{
     // // Update All validation result
     // setIsValidAllUrl(isValidAllSlackUrl(newSlackUrlValidateResult));
     // Update state
-    let newSlackUrlTable: SlackUrlConverter[] = props.updatedGeneralConfig.slackUrlTable.slice();
+    const newSlackUrlTable: SlackUrlConverter[] = props.updatedGeneralConfig.slackUrlTable.slice();
     newSlackUrlTable[index].clientUrl = clientUrl;
     props.setUpdatedGeneralConfig({ ...props.updatedGeneralConfig, slackUrlTable: newSlackUrlTable });
   };
@@ -92,7 +105,7 @@ const WorkspaceName2IdMapper: React.FC<{
     // // Update All validation result
     // setIsValidAllUrl(isValidAllSlackUrl(newSlackUrlValidateResult));
     // Update state
-    let newSlackUrlTable: SlackUrlConverter[] = props.updatedGeneralConfig.slackUrlTable.slice();
+    const newSlackUrlTable: SlackUrlConverter[] = props.updatedGeneralConfig.slackUrlTable.slice();
     newSlackUrlTable.push({ workspaceUrl: "", clientUrl: "" });
     props.setUpdatedGeneralConfig({ ...props.updatedGeneralConfig, slackUrlTable: newSlackUrlTable });
   };
@@ -113,6 +126,7 @@ const WorkspaceName2IdMapper: React.FC<{
               color="error"
               size="small"
               style={{ height: "40px" }}
+              onClick={() => onClickDeleteButton(index)}
             >
               <RemoveIcon color="inherit" />
             </Button>
