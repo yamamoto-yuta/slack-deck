@@ -6,6 +6,7 @@ import { ColumnConfig, COLUMN_WIDTH_OPTIONS_TEXT, COLUMN_WIDTH_OPTIONS_VALUE, DE
 import "../style/common.scss";
 import { Column } from './Column';
 import { GeneralConfig } from '../shared/config';
+import { convertWorkspaceUrlToClientUrl } from '../shared/slackUrlConverter';
 
 
 export const AddColumnModal: React.FC<{
@@ -40,6 +41,17 @@ export const AddColumnModal: React.FC<{
   };
 
   const onChangeUrl = (inputUrl: string) => {
+    // Convet URL
+    for (let converter of props.generalConfig.slackUrlTable) {
+      const workspaceUrlPattern = `^${converter.workspaceUrl}archives/`;
+      const workspaceUrlRegex = new RegExp(workspaceUrlPattern);
+      if (workspaceUrlRegex.test(inputUrl)) {
+        inputUrl = convertWorkspaceUrlToClientUrl(converter.workspaceUrl, converter.clientUrl, inputUrl);
+        break;
+      }
+    }
+
+    // Update state
     setNewColumnConfig({ ...newColumnConfig, url: inputUrl });
   };
 
