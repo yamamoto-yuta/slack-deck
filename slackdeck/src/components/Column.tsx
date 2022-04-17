@@ -1,5 +1,6 @@
 import React from 'react';
 import { chooseColumnColor, ColumnConfig, columnElementId, columnIframeClassName, columnIframeId, COLUMN_WIDTH_OPTIONS_VALUE } from '../shared/column';
+import { SlackUrlConverter } from '../shared/slackUrlConverter';
 import { ColumnHeader } from './ColumnHeader';
 
 export const Column: React.FC<{
@@ -8,6 +9,7 @@ export const Column: React.FC<{
   columnIndex: number,
   columnConfig: ColumnConfig,
   columnElement: HTMLDivElement,
+  slackUrlTable: SlackUrlConverter[],
 }> = (props) => {
   const [selectedColumnWidthOptionIndex, setSelectedColumnWidthOptionIndex] = React.useState(COLUMN_WIDTH_OPTIONS_VALUE.indexOf(props.columnConfig.width));
 
@@ -32,6 +34,7 @@ export const Column: React.FC<{
         columnIndex={props.columnIndex}
         columnConfig={props.columnConfig}
         columnElement={props.columnElement}
+        slackUrlTable={props.slackUrlTable}
       />
       <iframe
         id={columnIframeId`${props.columnIndex}`}

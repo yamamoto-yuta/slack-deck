@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import { Fab, IconButton, SpeedDial, SpeedDialIcon, SpeedDialAction, Typography, Box, Button, Switch, FormControlLabel, Tooltip } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
@@ -12,25 +13,24 @@ import { ConfigModal } from './ConfigModal';
 import { VERSION } from '../shared/general';
 import { AddColumnModal } from './AddColumnModal';
 import { ColumnConfig, columnElementId, DEFAULT_COLUMN_CONFIG, saveColumns, updateSavedTime } from '../shared/column';
-import ReactDOM from 'react-dom';
 import { Column } from './Column';
 import { DEFAULT_GENERAL_CONFIG, GeneralConfig } from '../shared/config';
+import { convertWorkspaceUrlToClientUrl, slackUrlRegex } from '../shared/slackUrlConverter';
+import { InvalidUrlSnackbar } from './InvalidUrlSnackbar';
 
 const AddSpeedDial: React.FC<{
   columnList: ColumnConfig[],
   generalConfig: GeneralConfig,
   rerender: React.Dispatch<React.SetStateAction<number>>
 }> = (props) => {
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const [speedDialopen, setSpeedDialOpen] = React.useState<boolean>(false);
+  const handleSpeedDialOpen = () => setSpeedDialOpen(true);
+  const handleSpeedDialClose = () => setSpeedDialOpen(false);
 
-  const addColumnFromCurrentPage = () => {
-    // Generate new column config
-    const newColumnConfig: ColumnConfig = DEFAULT_COLUMN_CONFIG;
-    newColumnConfig.url = location.href;
-    newColumnConfig.width = props.generalConfig.defaultColumnWidth;
+  const [snackbarOpen, setSnackBarOpen] = React.useState<boolean>(false);
+  const [clipboardText, setClipboardText] = React.useState<string>("");
 
+  const addColumn = (newColumnConfig: ColumnConfig) => {
     // Add column
     let col = document.createElement('div');
     ReactDOM.render(<Column
@@ -39,6 +39,7 @@ const AddSpeedDial: React.FC<{
       columnIndex={props.columnList.length}
       columnConfig={newColumnConfig}
       columnElement={col}
+      slackUrlTable={props.generalConfig.slackUrlTable}
     />, col);
     document.getElementById('wrapper').appendChild(col);
 
@@ -56,10 +57,51 @@ const AddSpeedDial: React.FC<{
     props.rerender(Math.random());
   };
 
-  const actions = [
-    { icon: <AddIcon />, name: "Add from Modal", onclick: handleOpen },
+  const addColumnFromCurrentPage = () => {
+    // Generate new column config
+    const newColumnConfig: ColumnConfig = DEFAULT_COLUMN_CONFIG;
+    newColumnConfig.url = location.href;
+    newColumnConfig.width = props.generalConfig.defaultColumnWidth;
+
+    // Add column
+    addColumn(newColumnConfig);
+  };
+
+
+  const openFromClipboard = () => {
+    navigator.clipboard.readText().then(
+      (clipText) => {
+        setClipboardText(clipText);
+        if (slackUrlRegex.test(clipText)) {
+          let inputUrl = clipText;
+          // Convet URL
+          for (let converter of props.generalConfig.slackUrlTable) {
+            const workspaceUrlPattern = `^${converter.workspaceUrl}archives/`;
+            const workspaceUrlRegex = new RegExp(workspaceUrlPattern);
+            if (workspaceUrlRegex.test(inputUrl)) {
+              inputUrl = convertWorkspaceUrlToClientUrl(converter.workspaceUrl, converter.clientUrl, inputUrl);
+              break;
+            }
+          }
+
+          // Generate new column config
+          const newColumnConfig: ColumnConfig = DEFAULT_COLUMN_CONFIG;
+          newColumnConfig.url = inputUrl;
+          newColumnConfig.width = props.generalConfig.defaultColumnWidth;
+
+          // Add column
+          addColumn(newColumnConfig);
+        } else {
+          setSnackBarOpen(true);
+        }
+      }
+    );
+  };
+
+  const speedDialActions = [
+    { icon: <AddIcon />, name: "Add from Modal", onclick: handleSpeedDialOpen },
     { icon: <ContentCopyIcon />, name: "Add Current Page", onclick: addColumnFromCurrentPage },
-    { icon: <ContentPasteGoIcon />, name: "Add from Clipboard", onclick: () => { console.log("Add from Clipboard") } },
+    { icon: <ContentPasteGoIcon />, name: "Add from Clipboard", onclick: openFromClipboard },
   ];
 
   return (
@@ -71,7 +113,7 @@ const AddSpeedDial: React.FC<{
         sx={{ position: "absolute", zIndex: 9999 }}
         icon={<SpeedDialIcon />}
       >
-        {actions.map((action) => (
+        {speedDialActions.map((action) => (
           <SpeedDialAction
             key={action.name}
             icon={action.icon}
@@ -83,12 +125,13 @@ const AddSpeedDial: React.FC<{
         ))}
       </SpeedDial>
       <AddColumnModal
-        open={open}
-        onClose={handleClose}
+        open={speedDialopen}
+        onClose={handleSpeedDialClose}
         columnList={props.columnList}
         generalConfig={props.generalConfig}
         rerender={props.rerender}
       />
+      <InvalidUrlSnackbar open={snackbarOpen} setOpen={setSnackBarOpen} clipboardText={clipboardText} />
       <div id="add-speed-dial-spacer" />
     </div>
   )
@@ -163,7 +206,7 @@ export const Deck: React.FC<{
       ['columnList', 'generalConfig'],
       function (value) {
         console.log(value.columnList);
-        if (value.columnList) {
+        if (value.columnList && value.generalConfig) {
           for (var i = 0; i < value.columnList.length; i++) {
             props.columnList[i] = value.columnList[i];
           }
@@ -175,11 +218,10 @@ export const Deck: React.FC<{
               columnIndex={i}
               columnConfig={props.columnList[i]}
               columnElement={col}
+              slackUrlTable={value.generalConfig.slackUrlTable}
             />, col);
             document.getElementById("wrapper").appendChild(col);
           }
-        }
-        if (value.generalConfig) {
           setGeneralConfig(value.generalConfig);
         }
         updateSavedTime();

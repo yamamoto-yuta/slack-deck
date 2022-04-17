@@ -68,6 +68,7 @@ export const AddColumnModal: React.FC<{
       columnIndex={props.columnList.length}
       columnConfig={newColumnConfig}
       columnElement={col}
+      slackUrlTable={props.generalConfig.slackUrlTable}
     />, col);
     document.getElementById('wrapper').appendChild(col);
 
