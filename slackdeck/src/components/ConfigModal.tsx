@@ -1,6 +1,7 @@
 import React from 'react';
-import { SelectChangeEvent, IconButton, Modal, Box, Typography, Divider, FormControl, Select, MenuItem } from '@mui/material';
+import { SelectChangeEvent, IconButton, Modal, Box, Typography, Divider, FormControl, Select, MenuItem, Button } from '@mui/material';
 import SettingsIcon from '@mui/icons-material/Settings';
+import CheckIcon from '@mui/icons-material/Check';
 import { COLUMN_WIDTH_OPTIONS_TEXT } from '../shared/column';
 
 const DefaultColumnWidthSelect: React.FC = () => {
@@ -74,10 +75,26 @@ export const ConfigModal: React.FC = () => {
           <Typography variant="h4">
             Config
           </Typography>
+
           <Divider sx={{ my: 1 }} />
+
           <DefaultColumnWidthSelect />
+
           <Divider sx={{ my: 1 }} />
+
           <WorkspaceName2IdMapper />
+
+          <Divider sx={{ my: 1 }} />
+
+          <div className="apply-button-element">
+            <Button
+              variant="contained"
+              startIcon={<CheckIcon />}
+            // onClick={onClickApplyButton}
+            >
+              Apply
+            </Button>
+          </div>
         </Box>
       </Modal>
     </div>
