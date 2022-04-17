@@ -78,9 +78,13 @@ const WorkspaceName2IdMapper: React.FC<{
       <div>
         {props.updatedGeneralConfig.slackUrlTable.map((row, index) => (
           <div key={index} className="url-mapper-row-element">
+            <Button variant="contained" color="error" size="small" style={{ height: "40px" }}>
+              <RemoveIcon color="inherit" />
+            </Button>
             <TextField
               label="Workspace URL"
               variant="outlined"
+              size="small"
               fullWidth
               placeholder="https://[WORLSPACE_NAME].slack.com/"
               defaultValue={row.workspaceUrl}
@@ -88,12 +92,13 @@ const WorkspaceName2IdMapper: React.FC<{
             <TextField
               label="Client URL"
               variant="outlined"
+              size="small"
               fullWidth
               placeholder="https://app.slack.com/client/XXXXXXXXXXX/"
               defaultValue={row.clientUrl}
             />
-            <Button variant="contained" color="error" style={{ height: "56px" }}>
-              <RemoveIcon color="inherit" />
+            <Button variant="contained" color="primary" size="small" style={{ height: "40px" }}>
+              <CheckIcon color="inherit" />
             </Button>
           </div>
         ))}
@@ -114,7 +119,7 @@ export const ConfigModal: React.FC<{
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: 800,
+    width: 1000,
     bgcolor: 'background.paper',
     color: 'text.primary',
     boxShadow: 24,
@@ -135,6 +140,7 @@ export const ConfigModal: React.FC<{
   };
 
   React.useEffect(() => {
+    // Initialize updates
     setUpdatedGeneralConfig(cloneDeep(props.currentGeneralConfig));
 
     // let validationResult: SlackUrlValidateResult[] = [];
