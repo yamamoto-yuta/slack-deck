@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, AppBar, Toolbar, IconButton, InputBase, Button, Menu, MenuItem } from '@mui/material';
+import { Box, AppBar, Toolbar, IconButton, InputBase, Button, Menu, MenuItem, Tooltip } from '@mui/material';
 import cloneDeep from 'lodash/cloneDeep';
 import ClearIcon from '@mui/icons-material/Clear';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
@@ -287,41 +287,49 @@ export const ColumnHeader: React.FC<{
 
             {/* Column action buttons */}
 
-            <IconButton
-              color="inherit"
-              id={columnMoveLeftButtonId`${props.columnIndex}`}
-              className={columnMoveLeftButtonClassName}
-              onClick={onClickMoveLeftButton}
-            >
-              <ChevronLeftIcon />
-            </IconButton>
+            <Tooltip title="Move left" placement="bottom">
+              <IconButton
+                color="inherit"
+                id={columnMoveLeftButtonId`${props.columnIndex}`}
+                className={columnMoveLeftButtonClassName}
+                onClick={onClickMoveLeftButton}
+              >
+                <ChevronLeftIcon />
+              </IconButton>
+            </Tooltip>
 
-            <IconButton
-              color="inherit"
-              id={columnMoveRightButtonId`${props.columnIndex}`}
-              className={columnMoveRightButtonClassName}
-              onClick={onClickMoveRightButton}
-            >
-              <ChevronRightIcon />
-            </IconButton>
+            <Tooltip title="Move right" placement="bottom">
+              <IconButton
+                color="inherit"
+                id={columnMoveRightButtonId`${props.columnIndex}`}
+                className={columnMoveRightButtonClassName}
+                onClick={onClickMoveRightButton}
+              >
+                <ChevronRightIcon />
+              </IconButton>
+            </Tooltip>
 
-            <IconButton
-              color="inherit"
-              id={columnDuplicateButtonId`${props.columnIndex}`}
-              className={columnDuplicateButtonClassName}
-              onClick={onClickDuplicateButton}
-            >
-              <ContentCopyIcon />
-            </IconButton>
+            <Tooltip title="Duplicate" placement="bottom">
+              <IconButton
+                color="inherit"
+                id={columnDuplicateButtonId`${props.columnIndex}`}
+                className={columnDuplicateButtonClassName}
+                onClick={onClickDuplicateButton}
+              >
+                <ContentCopyIcon />
+              </IconButton>
+            </Tooltip>
 
-            <IconButton
-              color="inherit"
-              id={columnOpenFromClipboardButtonId`${props.columnIndex}`}
-              className={columnOpenFromClipboardButtonClassName}
-              onClick={onClickOpenFromClipboardButton}
-            >
-              <ContentPasteGoIcon />
-            </IconButton>
+            <Tooltip title="Open clipboard URL" placement="bottom">
+              <IconButton
+                color="inherit"
+                id={columnOpenFromClipboardButtonId`${props.columnIndex}`}
+                className={columnOpenFromClipboardButtonClassName}
+                onClick={onClickOpenFromClipboardButton}
+              >
+                <ContentPasteGoIcon />
+              </IconButton>
+            </Tooltip>
 
             {/* Column name input */}
 
@@ -341,14 +349,16 @@ export const ColumnHeader: React.FC<{
 
             {/* Delete buttion */}
 
-            <IconButton
-              color="inherit"
-              id={columnDeleteButtonId`${props.columnIndex}`}
-              className={columnDeleteButtonClassName}
-              onClick={onClickDeleteButton}
-            >
-              <ClearIcon />
-            </IconButton>
+            <Tooltip title="Remove" placement="bottom">
+              <IconButton
+                color="inherit"
+                id={columnDeleteButtonId`${props.columnIndex}`}
+                className={columnDeleteButtonClassName}
+                onClick={onClickDeleteButton}
+              >
+                <ClearIcon />
+              </IconButton>
+            </Tooltip>
           </Toolbar>
         </AppBar>
       </Box>
