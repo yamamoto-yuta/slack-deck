@@ -18,22 +18,21 @@ export default function Popup() {
       <List
         sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
         component="nav"
-        aria-labelledby="nested-list-subheader"
         subheader={
-          <ListSubheader component="div" id="nested-list-subheader">
+          <ListSubheader component="div">
             SlackDeck v{VERSION}
           </ListSubheader>
         }
       >
-        <ListItemButton>
+        <ListItemButton component="a" target="_blank" rel="noopener" href="https://github.com/yamamoto-yuta/slack-deck/releases">
           <ListItemIcon><HistoryIcon /></ListItemIcon>
           <ListItemText primary="Release Note" />
         </ListItemButton>
-        <ListItemButton>
+        <ListItemButton component="a" target="_blank" rel="noopener" href="https://github.com/yamamoto-yuta/slack-deck">
           <ListItemIcon><GitHubIcon /></ListItemIcon>
           <ListItemText primary="Repository" />
         </ListItemButton>
-        <ListItemButton>
+        <ListItemButton component="a" target="_blank" rel="noopener" href="https://chrome.google.com/webstore/detail/slackdeck/cocnkjpcbmoopfpmogblnjpjdfcaohod">
           <ListItemIcon><ShoppingBagIcon /></ListItemIcon>
           <ListItemText primary="Chrome Web Store" />
         </ListItemButton>
