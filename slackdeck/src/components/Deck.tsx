@@ -11,7 +11,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import { ConfigModal } from './ConfigModal';
 import { VERSION } from '../shared/general';
 import { AddColumnModal } from './AddColumnModal';
-import { ColumnConfig, columnElementId, saveColumns, updateSavedTime } from '../shared/column';
+import { ColumnConfig, columnElementId, DEFAULT_COLUMN_CONFIG, saveColumns, updateSavedTime } from '../shared/column';
 import ReactDOM from 'react-dom';
 import { Column } from './Column';
 import { DEFAULT_GENERAL_CONFIG, GeneralConfig } from '../shared/config';
@@ -24,11 +24,44 @@ const AddSpeedDial: React.FC<{
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  const addColumnFromCurrentPage = () => {
+    // Generate new column config
+    const newColumnConfig: ColumnConfig = DEFAULT_COLUMN_CONFIG;
+    newColumnConfig.url = location.href;
+    newColumnConfig.width = props.generalConfig.defaultColumnWidth;
+
+    // Add column
+    let col = document.createElement('div');
+    ReactDOM.render(<Column
+      rerender={props.rerender}
+      columnList={props.columnList}
+      columnIndex={props.columnList.length}
+      columnConfig={newColumnConfig}
+      columnElement={col}
+    />, col);
+    document.getElementById('wrapper').appendChild(col);
+
+    // Fix slack dom
+    let pClient = document.getElementsByClassName('p-client')[0] as HTMLElement;
+    pClient.style.width = '100%';
+
+    // Push to columnList
+    props.columnList.push(newColumnConfig);
+
+    // Save current column state
+    saveColumns(props.columnList);
+
+    // Rerender deck
+    props.rerender(Math.random());
+  };
+
   const actions = [
     { icon: <AddIcon />, name: "Add from Modal", onclick: handleOpen },
-    { icon: <ContentCopyIcon />, name: "Add Current Page", onclick: () => { console.log("Add Current Page") } },
+    { icon: <ContentCopyIcon />, name: "Add Current Page", onclick: addColumnFromCurrentPage },
     { icon: <ContentPasteGoIcon />, name: "Add from Clipboard", onclick: () => { console.log("Add from Clipboard") } },
   ];
+
   return (
     <div>
       <SpeedDial
