@@ -18,6 +18,7 @@ import { DEFAULT_GENERAL_CONFIG, GeneralConfig } from '../shared/config';
 
 const AddSpeedDial: React.FC<{
   columnList: ColumnConfig[],
+  generalConfig: GeneralConfig,
   rerender: React.Dispatch<React.SetStateAction<number>>
 }> = (props) => {
   const [open, setOpen] = React.useState(false);
@@ -52,6 +53,7 @@ const AddSpeedDial: React.FC<{
         open={open}
         onClose={handleClose}
         columnList={props.columnList}
+        generalConfig={props.generalConfig}
         rerender={props.rerender}
       />
       <div id="add-speed-dial-spacer" />
@@ -160,7 +162,11 @@ export const Deck: React.FC<{
           height: 180,
           transform: "translateZ(0px)"
         }}>
-          <AddSpeedDial columnList={props.columnList} rerender={rerender} />
+          <AddSpeedDial
+            columnList={props.columnList}
+            generalConfig={generalConfig}
+            rerender={rerender}
+          />
           <Fab size="medium" sx={{ my: 1 }} onClick={onClickSaveButton}>
             <SaveIcon />
           </Fab>
@@ -202,7 +208,10 @@ export const Deck: React.FC<{
         <IconButton color="primary" size="large">
           <HelpIcon fontSize="inherit" />
         </IconButton>
-        <ConfigModal />
+        <ConfigModal
+          currentGeneralConfig={generalConfig}
+          setGeneralConfig={setGeneralConfig}
+        />
         <Typography variant="caption" component="div" sx={{ color: "white" }}>
           Version:
         </Typography>

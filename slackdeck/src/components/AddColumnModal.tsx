@@ -5,17 +5,19 @@ import AddIcon from '@mui/icons-material/Add';
 import { ColumnConfig, COLUMN_WIDTH_OPTIONS_TEXT, COLUMN_WIDTH_OPTIONS_VALUE, DEFAULT_COLUMN_CONFIG, saveColumns } from '../shared/column';
 import "../style/common.scss";
 import { Column } from './Column';
+import { GeneralConfig } from '../shared/config';
 
 
 export const AddColumnModal: React.FC<{
   open: boolean,
   onClose: () => void,
   columnList: ColumnConfig[],
-  rerender: React.Dispatch<React.SetStateAction<number>>
+  generalConfig: GeneralConfig,
+  rerender: React.Dispatch<React.SetStateAction<number>>,
 }> = (props) => {
 
   React.useEffect(() => {
-    setSelectedColumnWidth(DEFAULT_COLUMN_CONFIG.width);
+    setSelectedColumnWidth(props.generalConfig.defaultColumnWidth);
   }, [props.open]);
 
   const style = {
@@ -30,7 +32,7 @@ export const AddColumnModal: React.FC<{
     p: 4,
   };
   const [newColumnConfig, setNewColumnConfig] = React.useState<ColumnConfig>(DEFAULT_COLUMN_CONFIG);
-  const [selectedColumnWidth, setSelectedColumnWidth] = React.useState<string>(DEFAULT_COLUMN_CONFIG.width);
+  const [selectedColumnWidth, setSelectedColumnWidth] = React.useState<string>(props.generalConfig.defaultColumnWidth);
 
   const handleSelectedColumnWidthChange = (event: SelectChangeEvent) => {
     setSelectedColumnWidth(event.target.value as string);

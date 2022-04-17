@@ -2,13 +2,19 @@ import React from 'react';
 import { SelectChangeEvent, IconButton, Modal, Box, Typography, Divider, FormControl, Select, MenuItem, Button } from '@mui/material';
 import SettingsIcon from '@mui/icons-material/Settings';
 import CheckIcon from '@mui/icons-material/Check';
-import { COLUMN_WIDTH_OPTIONS_TEXT } from '../shared/column';
+import { COLUMN_WIDTH_OPTIONS_TEXT, COLUMN_WIDTH_OPTIONS_VALUE } from '../shared/column';
+import { GeneralConfig } from '../shared/config';
 
-const DefaultColumnWidthSelect: React.FC = () => {
-  const [selectedColumnWidth, setSelectedColumnWidth] = React.useState<string>("");
+const DefaultColumnWidthSelect: React.FC<{
+  defaultColumnWidth: string,
+  updatedGeneralConfig: GeneralConfig,
+  setUpdatedGeneralConfig: React.Dispatch<React.SetStateAction<GeneralConfig>>,
+}> = (props) => {
+  const [selectedColumnWidth, setSelectedColumnWidth] = React.useState<string>(props.defaultColumnWidth);
 
-  const handleChange = (event: SelectChangeEvent) => {
-    setSelectedColumnWidth(event.target.value as string);
+  const handleChange = (e: SelectChangeEvent) => {
+    setSelectedColumnWidth(e.target.value as string);
+    props.setUpdatedGeneralConfig({ ...props.updatedGeneralConfig, defaultColumnWidth: e.target.value });
   };
   return (
     <div>
@@ -24,7 +30,7 @@ const DefaultColumnWidthSelect: React.FC = () => {
           onChange={handleChange}
         >
           {COLUMN_WIDTH_OPTIONS_TEXT.map((option, index) => (
-            <MenuItem key={index} value={option}>
+            <MenuItem key={index} value={COLUMN_WIDTH_OPTIONS_VALUE[index]}>
               {option}
             </MenuItem>
           ))}
@@ -41,13 +47,16 @@ const WorkspaceName2IdMapper: React.FC = () => {
         Map workspace name to workspace ID
       </Typography>
       <Typography variant="body1" gutterBottom>
-        By mapping a workspace named URL <code>https://[WORLSPACE_NAME].slack.com</code> to a workspace ID URL <code>https://app.slack.com/[WORKSPACEID]</code>, columns can be added from a workspace named URL.
+        By mapping a workspace named URL <code>https://[WORLSPACE_NAME].slack.com/</code> to a workspace ID URL <code>https://app.slack.com/[WORKSPACEID]/</code>, columns can be added from a workspace named URL.
       </Typography>
     </div>
   )
 };
 
-export const ConfigModal: React.FC = () => {
+export const ConfigModal: React.FC<{
+  currentGeneralConfig: GeneralConfig,
+  setGeneralConfig: React.Dispatch<React.SetStateAction<GeneralConfig>>,
+}> = (props) => {
   const style = {
     position: 'absolute' as 'absolute',
     top: '50%',
@@ -59,9 +68,20 @@ export const ConfigModal: React.FC = () => {
     boxShadow: 24,
     p: 4,
   };
+  const [updatedGeneralConfig, setUpdatedGeneralConfig] = React.useState<GeneralConfig>(props.currentGeneralConfig);
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  const onClickApplyButton = () => {
+    // Update
+    props.setGeneralConfig(updatedGeneralConfig);
+    // Save config
+    chrome.storage.sync.set({ 'generalConfig': updatedGeneralConfig });
+    // Close modal
+    handleClose();
+  };
+
   return (
     <div>
       <IconButton color="primary" size="large" onClick={handleOpen}>
@@ -78,7 +98,11 @@ export const ConfigModal: React.FC = () => {
 
           <Divider sx={{ my: 1 }} />
 
-          <DefaultColumnWidthSelect />
+          <DefaultColumnWidthSelect
+            defaultColumnWidth={props.currentGeneralConfig.defaultColumnWidth}
+            updatedGeneralConfig={updatedGeneralConfig}
+            setUpdatedGeneralConfig={setUpdatedGeneralConfig}
+          />
 
           <Divider sx={{ my: 1 }} />
 
@@ -90,7 +114,7 @@ export const ConfigModal: React.FC = () => {
             <Button
               variant="contained"
               startIcon={<CheckIcon />}
-            // onClick={onClickApplyButton}
+              onClick={onClickApplyButton}
             >
               Apply
             </Button>
