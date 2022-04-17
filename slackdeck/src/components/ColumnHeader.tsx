@@ -10,6 +10,7 @@ import ContentPasteGoIcon from '@mui/icons-material/ContentPasteGo';
 import { chooseColumnColor, ColumnConfig, columnDeleteButtonClassName, columnDeleteButtonId, columnDuplicateButtonClassName, columnDuplicateButtonId, columnElementId, columnIframeClassName, columnIframeId, columnMoveLeftButtonClassName, columnMoveLeftButtonId, columnMoveRightButtonClassName, columnMoveRightButtonId, columnOpenFromClipboardButtonClassName, columnOpenFromClipboardButtonId, COLUMN_WIDTH_OPTIONS_TEXT, extractColumnIdxFromId, saveColumns } from '../shared/column';
 import ReactDOM from 'react-dom';
 import { Column } from './Column';
+import { convertWorkspaceUrlToClientUrl, SlackUrlConverter, slackUrlRegex } from '../shared/slackUrlConverter';
 
 const ColumnWidthMenu: React.FC<{
   selectedColumnWidthOptionIndex: number,
@@ -74,6 +75,7 @@ export const ColumnHeader: React.FC<{
   columnIndex: number,
   columnConfig: ColumnConfig,
   columnElement: HTMLDivElement,
+  slackUrlTable: SlackUrlConverter[],
 }> = (props) => {
 
   const updateElement = () => {
@@ -217,6 +219,7 @@ export const ColumnHeader: React.FC<{
       columnIndex={props.columnList.length}
       columnConfig={newColumnConfig}
       columnElement={col}
+      slackUrlTable={props.slackUrlTable}
     />, col);
     insertCopyRightSide(col, newColumnConfig);
     // Fix slack dom
@@ -228,6 +231,33 @@ export const ColumnHeader: React.FC<{
     updateElement();
     // Rerender deck
     props.rerender(Math.random());
+  };
+
+  const onClickOpenFromClipboardButton = () => {
+    navigator.clipboard.readText().then(
+      (clipText) => {
+        if (slackUrlRegex.test(clipText)) {
+          let inputUrl = clipText;
+          // Convet URL
+          for (let converter of props.slackUrlTable) {
+            const workspaceUrlPattern = `^${converter.workspaceUrl}archives/`;
+            const workspaceUrlRegex = new RegExp(workspaceUrlPattern);
+            if (workspaceUrlRegex.test(inputUrl)) {
+              inputUrl = convertWorkspaceUrlToClientUrl(converter.workspaceUrl, converter.clientUrl, inputUrl);
+              break;
+            }
+          }
+
+          // Save column
+          saveColumns(props.columnList);
+
+          // Open clipboard URL
+          let colElIdx = extractColumnIdxFromId(props.columnElement.getElementsByTagName('div')[0].id);
+          const _iframe = document.getElementsByClassName('col-iframe')[colElIdx] as HTMLIFrameElement;
+          _iframe.contentWindow.location.href = inputUrl;
+        }
+      }
+    );
   };
 
   const onClickDeleteButton = () => {
@@ -281,6 +311,7 @@ export const ColumnHeader: React.FC<{
               color="inherit"
               id={columnOpenFromClipboardButtonId`${props.columnIndex}`}
               className={columnOpenFromClipboardButtonClassName}
+              onClick={onClickOpenFromClipboardButton}
             >
               <ContentPasteGoIcon />
             </IconButton>

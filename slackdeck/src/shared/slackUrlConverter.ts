@@ -12,6 +12,9 @@ export const WORKSPACE_BASE_URL_PATTERN = `${WORKSPACE_URL_PATTERN}$`;
 export const CLIENT_URL_PATTERN = `^https://app.slack.com/client/${CHANNEL_ID_PATTERN}/`
 export const CLIENT_BASE_URL_PATTERN = `${CLIENT_URL_PATTERN}$`;
 
+const SLACK_URL_PATTERN = `(${WORKSPACE_URL_PATTERN}|${CLIENT_URL_PATTERN})`;
+export const slackUrlRegex = new RegExp(SLACK_URL_PATTERN);
+
 export const convertWorkspaceUrlToClientUrl = (workspaceBaseUrl: string, clientBaseUrl: string, workspaceUrl: string): string => {
     // ^https://<workspaceId>.slack.com/archives/
     const workspaceUrlPattern = `^${workspaceBaseUrl}archives/`

@@ -15,7 +15,7 @@ import { ColumnConfig, columnElementId, DEFAULT_COLUMN_CONFIG, saveColumns, upda
 import ReactDOM from 'react-dom';
 import { Column } from './Column';
 import { DEFAULT_GENERAL_CONFIG, GeneralConfig } from '../shared/config';
-import { WORKSPACE_URL_PATTERN, CLIENT_URL_PATTERN, convertWorkspaceUrlToClientUrl } from '../shared/slackUrlConverter';
+import { WORKSPACE_URL_PATTERN, CLIENT_URL_PATTERN, convertWorkspaceUrlToClientUrl, slackUrlRegex } from '../shared/slackUrlConverter';
 
 const AddSpeedDial: React.FC<{
   columnList: ColumnConfig[],
@@ -35,6 +35,7 @@ const AddSpeedDial: React.FC<{
       columnIndex={props.columnList.length}
       columnConfig={newColumnConfig}
       columnElement={col}
+      slackUrlTable={props.generalConfig.slackUrlTable}
     />, col);
     document.getElementById('wrapper').appendChild(col);
 
@@ -62,14 +63,9 @@ const AddSpeedDial: React.FC<{
     addColumn(newColumnConfig);
   };
 
-  const slackUrlRegex = new RegExp(
-    `(${WORKSPACE_URL_PATTERN}|${CLIENT_URL_PATTERN})`
-  );
-
   const openFromClipboard = () => {
     navigator.clipboard.readText().then(
       (clipText) => {
-        console.log(clipText);
         if (slackUrlRegex.test(clipText)) {
           let inputUrl = clipText;
           // Convet URL
@@ -201,7 +197,7 @@ export const Deck: React.FC<{
       ['columnList', 'generalConfig'],
       function (value) {
         console.log(value.columnList);
-        if (value.columnList) {
+        if (value.columnList && value.generalConfig) {
           for (var i = 0; i < value.columnList.length; i++) {
             props.columnList[i] = value.columnList[i];
           }
@@ -213,11 +209,10 @@ export const Deck: React.FC<{
               columnIndex={i}
               columnConfig={props.columnList[i]}
               columnElement={col}
+              slackUrlTable={value.generalConfig.slackUrlTable}
             />, col);
             document.getElementById("wrapper").appendChild(col);
           }
-        }
-        if (value.generalConfig) {
           setGeneralConfig(value.generalConfig);
         }
         updateSavedTime();
