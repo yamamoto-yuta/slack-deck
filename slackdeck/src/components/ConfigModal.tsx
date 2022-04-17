@@ -8,7 +8,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import { COLUMN_WIDTH_OPTIONS_TEXT, COLUMN_WIDTH_OPTIONS_VALUE } from '../shared/column';
 import { GeneralConfig } from '../shared/config';
 import "../style/configModal.scss";
-import { SlackUrlConverter } from '../shared/slackUrlConverter';
+import { SlackUrlConverter, WORKSPACE_BASE_URL_PATTERN } from '../shared/slackUrlConverter';
 
 const DefaultColumnWidthSelect: React.FC<{
   defaultColumnWidth: string,
@@ -52,6 +52,15 @@ const WorkspaceName2IdInputRow: React.FC<{
   updatedGeneralConfig: GeneralConfig,
   setUpdatedGeneralConfig: React.Dispatch<React.SetStateAction<GeneralConfig>>,
 }> = (props) => {
+  const [clientBaseUrl, setClientBaseUrl] = React.useState("");
+  const [workspaceBaseUrl, setWorkspaceBaseUrl] = React.useState("");
+
+  const inputRefClientBaseUrl = React.useRef(null);
+  const inputRefWorkspaceBaseUrl = React.useRef(null);
+
+  const [isClientBaseUrlValid, setIsClientBaseUrlValid] = React.useState(false);
+  const [isWorkspaceBaseUrlValid, setIsWorkspaceBaseUrlValid] = React.useState(false);
+
   const onChangeWorkspaceUrl = (workspaceUrl: string, index: number) => {
     // // Validate
     // let newSlackUrlValidateResult: SlackUrlValidateResult[] = validateUrl.slice();
@@ -62,6 +71,18 @@ const WorkspaceName2IdInputRow: React.FC<{
     // setValidateUrl(newSlackUrlValidateResult);
     // // Update All validation result
     // setIsValidAllUrl(isValidAllSlackUrl(newSlackUrlValidateResult));
+
+    // Validate
+    setWorkspaceBaseUrl(workspaceUrl);
+    if (inputRefWorkspaceBaseUrl.current) {
+      const ref = inputRefWorkspaceBaseUrl.current;
+      if (ref.validity.valid) {
+        setIsWorkspaceBaseUrlValid(true);
+      } else {
+        setIsWorkspaceBaseUrlValid(false);
+      }
+    }
+
     // Update state
     const newSlackUrlTable: SlackUrlConverter[] = props.updatedGeneralConfig.slackUrlTable.slice();
     newSlackUrlTable[index].workspaceUrl = workspaceUrl;
@@ -97,6 +118,10 @@ const WorkspaceName2IdInputRow: React.FC<{
     props.setUpdatedGeneralConfig({ ...props.updatedGeneralConfig, slackUrlTable: newSlackUrlTable });
   };
 
+  React.useEffect(() => {
+    onChangeWorkspaceUrl(props.workspaceUrl, props.index);
+  }, []);
+
   return (
     <div key={props.index} className="url-mapper-row-element">
       <TextField
@@ -107,6 +132,11 @@ const WorkspaceName2IdInputRow: React.FC<{
         placeholder="https://[WORLSPACE_NAME].slack.com/"
         defaultValue={props.workspaceUrl}
         onChange={(e) => onChangeWorkspaceUrl(e.target.value, props.index)}
+        required
+        inputProps={{ pattern: WORKSPACE_BASE_URL_PATTERN }}
+        inputRef={inputRefWorkspaceBaseUrl}
+        helperText={inputRefWorkspaceBaseUrl?.current?.validationMessage}
+        error={!isWorkspaceBaseUrlValid}
       />
       <TextField
         label="Client URL"
