@@ -7,6 +7,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import { COLUMN_WIDTH_OPTIONS_TEXT, COLUMN_WIDTH_OPTIONS_VALUE } from '../shared/column';
 import { GeneralConfig } from '../shared/config';
 import "../style/configModal.scss";
+import { SlackUrlConverter } from '../shared/slackUrlConverter';
 
 const DefaultColumnWidthSelect: React.FC<{
   defaultColumnWidth: string,
@@ -43,7 +44,28 @@ const DefaultColumnWidthSelect: React.FC<{
   )
 };
 
-const WorkspaceName2IdMapper: React.FC = () => {
+const WorkspaceName2IdMapper: React.FC<{
+  updatedGeneralConfig: GeneralConfig,
+  setUpdatedGeneralConfig: React.Dispatch<React.SetStateAction<GeneralConfig>>,
+}> = (props) => {
+  const [, tableRerender] = React.useState<number>(Math.random());
+  const onClickAddButton = () => {
+    // Update state
+    let newSlackUrlTable: SlackUrlConverter[] = props.updatedGeneralConfig.slackUrlTable.slice();
+    newSlackUrlTable.push({ workspaceUrl: "", clientUrl: "" });
+    props.setUpdatedGeneralConfig({ ...props.updatedGeneralConfig, slackUrlTable: newSlackUrlTable });
+    tableRerender(Math.random());
+    // // Validate
+    // let newSlackUrlValidateResult: SlackUrlValidateResult[] = validateUrl.slice();
+    // newSlackUrlValidateResult.push({
+    //   workspaceUrl: VALIDATION_FAILED,
+    //   clientUrl: VALIDATION_FAILED,
+    // });
+    // setValidateUrl(newSlackUrlValidateResult);
+    // // Update All validation result
+    // setIsValidAllUrl(isValidAllSlackUrl(newSlackUrlValidateResult));
+  };
+
   return (
     <div>
       <Typography variant="h5" gutterBottom>
@@ -53,15 +75,29 @@ const WorkspaceName2IdMapper: React.FC = () => {
         By mapping a workspace named URL <code>https://[WORLSPACE_NAME].slack.com/</code> to a workspace ID URL <code>https://app.slack.com/[WORKSPACE_ID]/</code>, columns can be added from a workspace named URL.
       </Typography>
       <div>
-        <div className="url-mapper-row-element">
-          <TextField id="outlined-basic" label="Outlined" variant="outlined" fullWidth />
-          <TextField id="outlined-basic" label="Outlined" variant="outlined" fullWidth />
-          <Button variant="contained" color="error" style={{ height: "56px" }}>
-            <RemoveIcon color="inherit" />
-          </Button>
-        </div>
+        {props.updatedGeneralConfig.slackUrlTable.map((row, index) => (
+          <div key={index} className="url-mapper-row-element">
+            <TextField
+              label="Workspace URL"
+              variant="outlined"
+              fullWidth
+              placeholder="https://[WORLSPACE_NAME].slack.com/"
+              defaultValue={row.workspaceUrl}
+            />
+            <TextField
+              label="Client URL"
+              variant="outlined"
+              fullWidth
+              placeholder="https://app.slack.com/client/XXXXXXXXXXX/"
+              defaultValue={row.clientUrl}
+            />
+            <Button variant="contained" color="error" style={{ height: "56px" }}>
+              <RemoveIcon color="inherit" />
+            </Button>
+          </div>
+        ))}
       </div>
-      <Button variant="contained" color="primary">
+      <Button variant="contained" color="primary" onClick={onClickAddButton}>
         <AddIcon color="inherit" />
       </Button>
     </div>
@@ -121,7 +157,10 @@ export const ConfigModal: React.FC<{
 
           <Divider sx={{ my: 1 }} />
 
-          <WorkspaceName2IdMapper />
+          <WorkspaceName2IdMapper
+            updatedGeneralConfig={updatedGeneralConfig}
+            setUpdatedGeneralConfig={setUpdatedGeneralConfig}
+          />
 
           <Divider sx={{ my: 1 }} />
 
@@ -136,6 +175,7 @@ export const ConfigModal: React.FC<{
           </div>
         </Box>
       </Modal>
+      {console.log(updatedGeneralConfig.slackUrlTable)}
     </div>
   )
 };
