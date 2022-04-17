@@ -56,10 +56,16 @@ const AddSpeedDial: React.FC<{
     props.rerender(Math.random());
   };
 
+  const openFromClipboard = () => {
+    navigator.clipboard.readText().then(
+      (clipText) => console.log(clipText)
+    );
+  };
+
   const actions = [
     { icon: <AddIcon />, name: "Add from Modal", onclick: handleOpen },
     { icon: <ContentCopyIcon />, name: "Add Current Page", onclick: addColumnFromCurrentPage },
-    { icon: <ContentPasteGoIcon />, name: "Add from Clipboard", onclick: () => { console.log("Add from Clipboard") } },
+    { icon: <ContentPasteGoIcon />, name: "Add from Clipboard", onclick: openFromClipboard },
   ];
 
   return (
