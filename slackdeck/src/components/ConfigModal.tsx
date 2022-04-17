@@ -49,13 +49,27 @@ const WorkspaceName2IdMapper: React.FC<{
   updatedGeneralConfig: GeneralConfig,
   setUpdatedGeneralConfig: React.Dispatch<React.SetStateAction<GeneralConfig>>,
 }> = (props) => {
-  const [, tableRerender] = React.useState<number>(Math.random());
+  const onChangeWorkspaceUrl = (workspaceUrl: string, index: number) => {
+    // // Validate
+    // let newSlackUrlValidateResult: SlackUrlValidateResult[] = validateUrl.slice();
+    // newSlackUrlValidateResult[index].workspaceUrl = urlValidator(
+    //   new RegExp("^https://[a-z0-9]+[a-z0-9\-]+.slack.com/$"),
+    //   workspaceUrl
+    // );
+    // setValidateUrl(newSlackUrlValidateResult);
+    // // Update All validation result
+    // setIsValidAllUrl(isValidAllSlackUrl(newSlackUrlValidateResult));
+    // Update state
+    let newSlackUrlTable: SlackUrlConverter[] = props.updatedGeneralConfig.slackUrlTable.slice();
+    newSlackUrlTable[index].workspaceUrl = workspaceUrl;
+    props.setUpdatedGeneralConfig({ ...props.updatedGeneralConfig, slackUrlTable: newSlackUrlTable });
+  };
+
   const onClickAddButton = () => {
     // Update state
     let newSlackUrlTable: SlackUrlConverter[] = props.updatedGeneralConfig.slackUrlTable.slice();
     newSlackUrlTable.push({ workspaceUrl: "", clientUrl: "" });
     props.setUpdatedGeneralConfig({ ...props.updatedGeneralConfig, slackUrlTable: newSlackUrlTable });
-    tableRerender(Math.random());
     // // Validate
     // let newSlackUrlValidateResult: SlackUrlValidateResult[] = validateUrl.slice();
     // newSlackUrlValidateResult.push({
@@ -78,7 +92,12 @@ const WorkspaceName2IdMapper: React.FC<{
       <div>
         {props.updatedGeneralConfig.slackUrlTable.map((row, index) => (
           <div key={index} className="url-mapper-row-element">
-            <Button variant="contained" color="error" size="small" style={{ height: "40px" }}>
+            <Button
+              variant="contained"
+              color="error"
+              size="small"
+              style={{ height: "40px" }}
+            >
               <RemoveIcon color="inherit" />
             </Button>
             <TextField
@@ -88,6 +107,7 @@ const WorkspaceName2IdMapper: React.FC<{
               fullWidth
               placeholder="https://[WORLSPACE_NAME].slack.com/"
               defaultValue={row.workspaceUrl}
+              onChange={(e) => onChangeWorkspaceUrl(e.target.value, index)}
             />
             <TextField
               label="Client URL"
