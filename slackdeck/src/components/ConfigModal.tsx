@@ -65,11 +65,23 @@ const WorkspaceName2IdMapper: React.FC<{
     props.setUpdatedGeneralConfig({ ...props.updatedGeneralConfig, slackUrlTable: newSlackUrlTable });
   };
 
-  const onClickAddButton = () => {
+  const onChangeClientUrl = (clientUrl: string, index: number) => {
+    // // Validate
+    // let newSlackUrlValidateResult: SlackUrlValidateResult[] = validateUrl.slice();
+    // newSlackUrlValidateResult[index].clientUrl = urlValidator(
+    //   new RegExp("^https://app.slack.com/client/[A-Z0-9]+/$"),
+    //   clientUrl
+    // );
+    // setValidateUrl(newSlackUrlValidateResult);
+    // // Update All validation result
+    // setIsValidAllUrl(isValidAllSlackUrl(newSlackUrlValidateResult));
     // Update state
     let newSlackUrlTable: SlackUrlConverter[] = props.updatedGeneralConfig.slackUrlTable.slice();
-    newSlackUrlTable.push({ workspaceUrl: "", clientUrl: "" });
+    newSlackUrlTable[index].clientUrl = clientUrl;
     props.setUpdatedGeneralConfig({ ...props.updatedGeneralConfig, slackUrlTable: newSlackUrlTable });
+  };
+
+  const onClickAddButton = () => {
     // // Validate
     // let newSlackUrlValidateResult: SlackUrlValidateResult[] = validateUrl.slice();
     // newSlackUrlValidateResult.push({
@@ -79,6 +91,10 @@ const WorkspaceName2IdMapper: React.FC<{
     // setValidateUrl(newSlackUrlValidateResult);
     // // Update All validation result
     // setIsValidAllUrl(isValidAllSlackUrl(newSlackUrlValidateResult));
+    // Update state
+    let newSlackUrlTable: SlackUrlConverter[] = props.updatedGeneralConfig.slackUrlTable.slice();
+    newSlackUrlTable.push({ workspaceUrl: "", clientUrl: "" });
+    props.setUpdatedGeneralConfig({ ...props.updatedGeneralConfig, slackUrlTable: newSlackUrlTable });
   };
 
   return (
@@ -116,8 +132,14 @@ const WorkspaceName2IdMapper: React.FC<{
               fullWidth
               placeholder="https://app.slack.com/client/XXXXXXXXXXX/"
               defaultValue={row.clientUrl}
+              onChange={(e) => onChangeClientUrl(e.target.value, index)}
             />
-            <Button variant="contained" color="primary" size="small" style={{ height: "40px" }}>
+            <Button
+              variant="contained"
+              color="primary"
+              size="small"
+              style={{ height: "40px" }}
+            >
               <CheckIcon color="inherit" />
             </Button>
           </div>
