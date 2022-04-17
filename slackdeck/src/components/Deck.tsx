@@ -154,13 +154,15 @@ const CollapseDeckSwitch: React.FC<{
     }
   };
   return (
-    <FormControlLabel
-      value="top"
-      control={<Switch color="primary" checked={props.collapseDeckchecked} onChange={handleChange} />}
-      label={<KeyboardDoubleArrowRightIcon color="primary" />}
-      labelPlacement="top"
-      sx={{ mx: 0 }}
-    />
+    <Tooltip title="Expand deck" placement="right">
+      <FormControlLabel
+        value="top"
+        control={<Switch color="primary" checked={props.collapseDeckchecked} onChange={handleChange} />}
+        label={<KeyboardDoubleArrowRightIcon color="primary" />}
+        labelPlacement="top"
+        sx={{ mx: 0 }}
+      />
+    </Tooltip>
   )
 };
 
@@ -177,13 +179,15 @@ const MainColumnResponsiveSwitch: React.FC<{
     }
   };
   return (
-    <FormControlLabel
-      value="top"
-      control={<Switch color="primary" checked={props.mainColumnResponsiveChecked} onChange={handleChange} />}
-      label={<FitScreenIcon color="primary" />}
-      labelPlacement="top"
-      sx={{ mx: 0 }}
-    />
+    <Tooltip title="Fit main column to window" placement="right">
+      <FormControlLabel
+        value="top"
+        control={<Switch color="primary" checked={props.mainColumnResponsiveChecked} onChange={handleChange} />}
+        label={<FitScreenIcon color="primary" />}
+        labelPlacement="top"
+        sx={{ mx: 0 }}
+      />
+    </Tooltip>
   )
 };
 
@@ -242,9 +246,11 @@ export const Deck: React.FC<{
             generalConfig={generalConfig}
             rerender={rerender}
           />
-          <Fab size="medium" sx={{ my: 1 }} onClick={onClickSaveButton}>
-            <SaveIcon />
-          </Fab>
+          <Tooltip title="Save columns" placement="right">
+            <Fab size="medium" sx={{ my: 1 }} onClick={onClickSaveButton}>
+              <SaveIcon />
+            </Fab>
+          </Tooltip>
           <Typography variant="caption" component="div" sx={{ color: "white" }}>
             Saved:
           </Typography>
@@ -280,9 +286,11 @@ export const Deck: React.FC<{
       </div>
 
       <div className="deck-buttons-element">
-        <IconButton color="primary" size="large">
-          <HelpIcon fontSize="inherit" />
-        </IconButton>
+        <Tooltip title="Help" placement="right">
+          <IconButton color="primary" size="large">
+            <HelpIcon fontSize="inherit" />
+          </IconButton>
+        </Tooltip>
         <ConfigModal
           currentGeneralConfig={generalConfig}
           setGeneralConfig={setGeneralConfig}

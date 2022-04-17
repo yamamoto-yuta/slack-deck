@@ -1,6 +1,6 @@
 import React from 'react';
 import cloneDeep from 'lodash/cloneDeep';
-import { SelectChangeEvent, IconButton, Modal, Box, Typography, Divider, FormControl, Select, MenuItem, Button, TextField } from '@mui/material';
+import { SelectChangeEvent, IconButton, Modal, Box, Typography, Divider, FormControl, Select, MenuItem, Button, TextField, Tooltip } from '@mui/material';
 import SettingsIcon from '@mui/icons-material/Settings';
 import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
@@ -279,9 +279,11 @@ export const ConfigModal: React.FC<{
 
   return (
     <div>
-      <IconButton color="primary" size="large" onClick={handleOpen}>
-        <SettingsIcon fontSize="inherit" />
-      </IconButton>
+      <Tooltip title="Config" placement="right">
+        <IconButton color="primary" size="large" onClick={handleOpen}>
+          <SettingsIcon fontSize="inherit" />
+        </IconButton>
+      </Tooltip>
       <Modal
         open={open}
         onClose={handleClose}
