@@ -1,4 +1,5 @@
 import React from 'react';
+import cloneDeep from 'lodash/cloneDeep';
 import { SelectChangeEvent, IconButton, Modal, Box, Typography, Divider, FormControl, Select, MenuItem, Button, TextField } from '@mui/material';
 import SettingsIcon from '@mui/icons-material/Settings';
 import RemoveIcon from '@mui/icons-material/Remove';
@@ -132,6 +133,22 @@ export const ConfigModal: React.FC<{
     // Close modal
     handleClose();
   };
+
+  React.useEffect(() => {
+    setUpdatedGeneralConfig(cloneDeep(props.currentGeneralConfig));
+
+    // let validationResult: SlackUrlValidateResult[] = [];
+    // for (let converter of props.currentGeneralConfig.slackUrlTable) {
+    //   validationResult.push({
+    //     workspaceUrl: urlValidator(new RegExp(`${WORKSPACE_URL_PATTERN}$`), converter.workspaceUrl),
+    //     clientUrl: urlValidator(new RegExp(`${CLIENT_URL_PATTERN}$`), converter.clientUrl),
+    //   });
+    // }
+    // setValidateUrl(validationResult);
+
+    // setIsValidAllUrl(isValidAllSlackUrl(validationResult));
+
+  }, [open]);
 
   return (
     <div>
