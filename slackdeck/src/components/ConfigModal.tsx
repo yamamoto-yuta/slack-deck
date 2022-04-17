@@ -1,9 +1,12 @@
 import React from 'react';
-import { SelectChangeEvent, IconButton, Modal, Box, Typography, Divider, FormControl, Select, MenuItem, Button } from '@mui/material';
+import { SelectChangeEvent, IconButton, Modal, Box, Typography, Divider, FormControl, Select, MenuItem, Button, TextField } from '@mui/material';
 import SettingsIcon from '@mui/icons-material/Settings';
+import RemoveIcon from '@mui/icons-material/Remove';
+import AddIcon from '@mui/icons-material/Add';
 import CheckIcon from '@mui/icons-material/Check';
 import { COLUMN_WIDTH_OPTIONS_TEXT, COLUMN_WIDTH_OPTIONS_VALUE } from '../shared/column';
 import { GeneralConfig } from '../shared/config';
+import "../style/configModal.scss";
 
 const DefaultColumnWidthSelect: React.FC<{
   defaultColumnWidth: string,
@@ -47,8 +50,20 @@ const WorkspaceName2IdMapper: React.FC = () => {
         Map workspace name to workspace ID
       </Typography>
       <Typography variant="body1" gutterBottom>
-        By mapping a workspace named URL <code>https://[WORLSPACE_NAME].slack.com/</code> to a workspace ID URL <code>https://app.slack.com/[WORKSPACEID]/</code>, columns can be added from a workspace named URL.
+        By mapping a workspace named URL <code>https://[WORLSPACE_NAME].slack.com/</code> to a workspace ID URL <code>https://app.slack.com/[WORKSPACE_ID]/</code>, columns can be added from a workspace named URL.
       </Typography>
+      <div>
+        <div className="url-mapper-row-element">
+          <TextField id="outlined-basic" label="Outlined" variant="outlined" fullWidth />
+          <TextField id="outlined-basic" label="Outlined" variant="outlined" fullWidth />
+          <Button variant="contained" color="error" style={{ height: "56px" }}>
+            <RemoveIcon color="inherit" />
+          </Button>
+        </div>
+      </div>
+      <Button variant="contained" color="primary">
+        <AddIcon color="inherit" />
+      </Button>
     </div>
   )
 };
