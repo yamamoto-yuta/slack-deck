@@ -1,0 +1,33 @@
+#deck {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: space-between;
+    text-align: center;
+    padding: 10px 10px 30px 10px;
+    border-right: 1px solid #505050;
+}
+
+#deck .deck-buttons-element {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+#deck .column-jump-button {
+    padding: 0;
+    margin: 3px 0;
+    min-width: 0;
+    height: 40px;
+    white-space: nowrap;
+    overflow-x: hidden;
+    width: inherit;
+}
+
+#add-speed-dial-spacer {
+    height: 60px;
+}
+
+#column-jump-button-element {
+    height: 100%;
+}

@@ -1,226 +1,326 @@
-import React from "react";
+import React from 'react';
 import cloneDeep from 'lodash/cloneDeep';
-import { Button, Form, Modal } from "react-bootstrap";
-import { CLIENT_URL_PATTERN, GeneralConfig, SlackUrlConverter, SlackUrlValidateResult, VALIDATION_FAILED, VALIDATION_SUCCESS, WIDTH_OPTION_LIST, WORKSPACE_URL_PATTERN } from "../Contract";
-import { faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { SelectChangeEvent, IconButton, Modal, Box, Typography, Divider, FormControl, Select, MenuItem, Button, TextField } from '@mui/material';
+import SettingsIcon from '@mui/icons-material/Settings';
+import RemoveIcon from '@mui/icons-material/Remove';
+import AddIcon from '@mui/icons-material/Add';
+import CheckIcon from '@mui/icons-material/Check';
+import { COLUMN_WIDTH_OPTIONS_TEXT, COLUMN_WIDTH_OPTIONS_VALUE } from '../shared/column';
+import { GeneralConfig } from '../shared/config';
+import "../style/configModal.scss";
+import { CLIENT_BASE_URL_PATTERN, SlackUrlConverter, WORKSPACE_BASE_URL_PATTERN } from '../shared/slackUrlConverter';
 
-const workspaceUrlInputName = (_: TemplateStringsArray, index: number) => `input-workspace-url-${index}`;
-const clientUrlInputName = (_: TemplateStringsArray, index: number) => `input-client-url-${index}`;
-const extractUrlInputIndexFromName = (urlInput: string) => parseInt(urlInput.split('-').slice(-1)[0]);
-
-export const ConfigModal: React.FC<{
-  show: boolean,
-  onHide: () => void,
-  currentGeneralConfig: GeneralConfig,
-  setGeneralConfig: React.Dispatch<React.SetStateAction<GeneralConfig>>
+const DefaultColumnWidthSelect: React.FC<{
+  defaultColumnWidth: string,
+  updatedGeneralConfig: GeneralConfig,
+  setUpdatedGeneralConfig: React.Dispatch<React.SetStateAction<GeneralConfig>>,
 }> = (props) => {
-  const [updatedGeneralConfig, setUpdatedGeneralConfig] = React.useState<GeneralConfig>(props.currentGeneralConfig);
-  const [validateUrl, setValidateUrl] = React.useState<SlackUrlValidateResult[]>([]);
-  const [isValidAllUrl, setIsValidAllUrl] = React.useState<boolean>(false);
+  const [selectedColumnWidth, setSelectedColumnWidth] = React.useState<string>(props.defaultColumnWidth);
 
-  React.useEffect(() => {
-    setUpdatedGeneralConfig(cloneDeep(props.currentGeneralConfig));
+  const handleChange = (e: SelectChangeEvent) => {
+    setSelectedColumnWidth(e.target.value as string);
+    props.setUpdatedGeneralConfig({ ...props.updatedGeneralConfig, defaultColumnWidth: e.target.value });
+  };
+  return (
+    <div>
+      <Typography variant="h5" gutterBottom>
+        Default column width
+      </Typography>
+      <Typography variant="body1" gutterBottom>
+        When adding columns, the column width set here is used as the default value.
+      </Typography>
+      <FormControl fullWidth>
+        <Select
+          value={selectedColumnWidth}
+          onChange={handleChange}
+        >
+          {COLUMN_WIDTH_OPTIONS_TEXT.map((option, index) => (
+            <MenuItem key={index} value={COLUMN_WIDTH_OPTIONS_VALUE[index]}>
+              {option}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+    </div>
+  )
+};
 
-    let validationResult: SlackUrlValidateResult[] = [];
-    for (let converter of props.currentGeneralConfig.slackUrlTable) {
-      validationResult.push({
-        workspaceUrl: urlValidator(new RegExp(`${WORKSPACE_URL_PATTERN}$`), converter.workspaceUrl),
-        clientUrl: urlValidator(new RegExp(`${CLIENT_URL_PATTERN}$`), converter.clientUrl),
-      });
-    }
-    setValidateUrl(validationResult);
+const WorkspaceName2IdInputRow: React.FC<{
+  index: number,
+  workspaceUrl: string,
+  clientUrl: string,
+  updatedGeneralConfig: GeneralConfig,
+  setUpdatedGeneralConfig: React.Dispatch<React.SetStateAction<GeneralConfig>>,
+  validateAll: boolean[],
+  setValidateAll: React.Dispatch<React.SetStateAction<boolean[]>>,
+  setEnableApplyButton: React.Dispatch<React.SetStateAction<boolean>>,
+}> = (props) => {
+  const [clientBaseUrl, setClientBaseUrl] = React.useState("");
+  const [workspaceBaseUrl, setWorkspaceBaseUrl] = React.useState("");
 
-    setIsValidAllUrl(isValidAllSlackUrl(validationResult));
+  const inputRefClientBaseUrl = React.useRef(null);
+  const inputRefWorkspaceBaseUrl = React.useRef(null);
 
-  }, [props.show]);
+  const [isClientBaseUrlValid, setIsClientBaseUrlValid] = React.useState(false);
+  const [isWorkspaceBaseUrlValid, setIsWorkspaceBaseUrlValid] = React.useState(false);
 
-  const urlValidator = (regex: RegExp, url: string) => {
-    if (regex.test(url)) {
-      return VALIDATION_SUCCESS;
-    } else {
-      return VALIDATION_FAILED;
-    }
+  const updateEnableApplyButtonState = (newValidateAll: boolean[]) => {
+    const isValidAll = (v) => v === true;
+    const _enableApplyButton = newValidateAll.every(isValidAll)
+    props.setEnableApplyButton(_enableApplyButton);
   };
 
-  const isValidAllSlackUrl = (validationResult: SlackUrlValidateResult[]) => {
-    for (let result of validationResult) {
-      if (!result.workspaceUrl.isValid || !result.clientUrl.isValid) {
-        return false;
-      }
-    }
-    return true;
-  }
+  const updateValidationState = (validate: boolean, index: number) => {
+    // Update validation state
+    const newValidateAll = props.validateAll.slice();
+    newValidateAll[index] = validate;
+    props.setValidateAll(newValidateAll);
+
+    // Update enable apply button state
+    updateEnableApplyButtonState(newValidateAll);
+  };
 
   const onChangeWorkspaceUrl = (workspaceUrl: string, index: number) => {
     // Validate
-    let newSlackUrlValidateResult: SlackUrlValidateResult[] = validateUrl.slice();
-    newSlackUrlValidateResult[index].workspaceUrl = urlValidator(
-      new RegExp("^https://[a-z0-9]+[a-z0-9\-]+.slack.com/$"),
-      workspaceUrl
-    );
-    setValidateUrl(newSlackUrlValidateResult);
-    // Update All validation result
-    setIsValidAllUrl(isValidAllSlackUrl(newSlackUrlValidateResult));
+    setWorkspaceBaseUrl(workspaceUrl);
+    if (inputRefWorkspaceBaseUrl.current) {
+      const ref = inputRefWorkspaceBaseUrl.current;
+      if (ref.validity.valid) {
+        setIsWorkspaceBaseUrlValid(true);
+        updateValidationState(true && isClientBaseUrlValid, index);
+      } else {
+        setIsWorkspaceBaseUrlValid(false);
+        updateValidationState(false, index);
+      }
+    }
+
     // Update state
-    let newSlackUrlTable: SlackUrlConverter[] = updatedGeneralConfig.slackUrlTable.slice();
+    const newSlackUrlTable: SlackUrlConverter[] = props.updatedGeneralConfig.slackUrlTable.slice();
     newSlackUrlTable[index].workspaceUrl = workspaceUrl;
-    setUpdatedGeneralConfig({ ...updatedGeneralConfig, slackUrlTable: newSlackUrlTable });
+    props.setUpdatedGeneralConfig({ ...props.updatedGeneralConfig, slackUrlTable: newSlackUrlTable });
   };
 
   const onChangeClientUrl = (clientUrl: string, index: number) => {
     // Validate
-    let newSlackUrlValidateResult: SlackUrlValidateResult[] = validateUrl.slice();
-    newSlackUrlValidateResult[index].clientUrl = urlValidator(
-      new RegExp("^https://app.slack.com/client/[A-Z0-9]+/$"),
-      clientUrl
-    );
-    setValidateUrl(newSlackUrlValidateResult);
-    // Update All validation result
-    setIsValidAllUrl(isValidAllSlackUrl(newSlackUrlValidateResult));
-    // Update state
-    let newSlackUrlTable: SlackUrlConverter[] = updatedGeneralConfig.slackUrlTable.slice();
-    newSlackUrlTable[index].clientUrl = clientUrl;
-    setUpdatedGeneralConfig({ ...updatedGeneralConfig, slackUrlTable: newSlackUrlTable });
-  };
-
-  const onClickAddSlackUrlInputFormButton = () => {
-    // Update state
-    let newSlackUrlTable: SlackUrlConverter[] = updatedGeneralConfig.slackUrlTable.slice();
-    newSlackUrlTable.push({ workspaceUrl: "", clientUrl: "" });
-    setUpdatedGeneralConfig({ ...updatedGeneralConfig, slackUrlTable: newSlackUrlTable });
-    // Validate
-    let newSlackUrlValidateResult: SlackUrlValidateResult[] = validateUrl.slice();
-    newSlackUrlValidateResult.push({
-      workspaceUrl: VALIDATION_FAILED,
-      clientUrl: VALIDATION_FAILED,
-    });
-    setValidateUrl(newSlackUrlValidateResult);
-    // Update All validation result
-    setIsValidAllUrl(isValidAllSlackUrl(newSlackUrlValidateResult));
-  };
-
-  const onClickRemoveSlackUrlInputFormButton = (index: number) => {
-    // Update general config state
-    let newSlackUrlTable: SlackUrlConverter[] = updatedGeneralConfig.slackUrlTable.slice();
-    newSlackUrlTable.splice(index, 1);
-    setUpdatedGeneralConfig({ ...updatedGeneralConfig, slackUrlTable: newSlackUrlTable });
-    // Update validation result state
-    let newSlackUrlValidateResult: SlackUrlValidateResult[] = validateUrl.slice();
-    newSlackUrlValidateResult.splice(index, 1)
-    setValidateUrl(newSlackUrlValidateResult);
-    // Update All validation result
-    setIsValidAllUrl(isValidAllSlackUrl(newSlackUrlValidateResult));
-  };
-
-  const onClickSaveButton = () => {
-    props.setGeneralConfig(updatedGeneralConfig);
-    // Save config
-    chrome.storage.sync.set({ 'generalConfig': updatedGeneralConfig });
-    // Hide modal
-    props.onHide();
-    // Adapt config
-    if (updatedGeneralConfig.useDarkTheme) {
-      document.getElementById('mainBody').classList.add('text-light');
-      document.getElementById('newBody').classList.add('text-light');
-    } else {
-      document.getElementById('mainBody').classList.remove('text-light');
-      document.getElementById('newBody').classList.remove('text-light');
+    setClientBaseUrl(clientUrl);
+    if (inputRefClientBaseUrl.current) {
+      const ref = inputRefClientBaseUrl.current;
+      if (ref.validity.valid) {
+        setIsClientBaseUrlValid(true);
+        updateValidationState(true && isWorkspaceBaseUrlValid, index);
+      } else {
+        setIsClientBaseUrlValid(false);
+        updateValidationState(false, index);
+      }
     }
+
+    // Update state
+    const newSlackUrlTable: SlackUrlConverter[] = props.updatedGeneralConfig.slackUrlTable.slice();
+    newSlackUrlTable[index].clientUrl = clientUrl;
+    props.setUpdatedGeneralConfig({ ...props.updatedGeneralConfig, slackUrlTable: newSlackUrlTable });
   };
+
+  const onClickDeleteButton = (index: number) => {
+    // Update general config state
+    const newSlackUrlTable: SlackUrlConverter[] = props.updatedGeneralConfig.slackUrlTable.slice();
+    newSlackUrlTable.splice(index, 1);
+    props.setUpdatedGeneralConfig({ ...props.updatedGeneralConfig, slackUrlTable: newSlackUrlTable });
+
+    // Update validation state
+    const newValidateAll = props.validateAll.slice();
+    newValidateAll.splice(index, 1);
+    props.setValidateAll(newValidateAll);
+
+    // Update enable apply button state
+    updateEnableApplyButtonState(newValidateAll);
+  };
+
+  React.useEffect(() => {
+    onChangeWorkspaceUrl(props.workspaceUrl, props.index);
+    onChangeClientUrl(props.clientUrl, props.index);
+  }, []);
+
+  return (
+    <div key={props.index} className="url-mapper-row-element">
+      <TextField
+        label="Workspace URL"
+        variant="outlined"
+        size="small"
+        fullWidth
+        placeholder="https://[WORLSPACE_NAME].slack.com/"
+        defaultValue={props.workspaceUrl}
+        onChange={(e) => onChangeWorkspaceUrl(e.target.value, props.index)}
+        required
+        inputProps={{ pattern: WORKSPACE_BASE_URL_PATTERN }}
+        inputRef={inputRefWorkspaceBaseUrl}
+        helperText={inputRefWorkspaceBaseUrl?.current?.validationMessage}
+        error={!isWorkspaceBaseUrlValid}
+      />
+      <TextField
+        label="Client URL"
+        variant="outlined"
+        size="small"
+        fullWidth
+        placeholder="https://app.slack.com/client/XXXXXXXXXXX/"
+        defaultValue={props.clientUrl}
+        onChange={(e) => onChangeClientUrl(e.target.value, props.index)}
+        required
+        inputProps={{ pattern: CLIENT_BASE_URL_PATTERN }}
+        inputRef={inputRefClientBaseUrl}
+        helperText={inputRefClientBaseUrl?.current?.validationMessage}
+        error={!isClientBaseUrlValid}
+      />
+      <Button
+        variant="contained"
+        color="error"
+        size="small"
+        style={{ height: "40px" }}
+        onClick={() => onClickDeleteButton(props.index)}
+      >
+        <RemoveIcon color="inherit" />
+      </Button>
+    </div>
+  )
+};
+
+const WorkspaceName2IdMapper: React.FC<{
+  updatedGeneralConfig: GeneralConfig,
+  setUpdatedGeneralConfig: React.Dispatch<React.SetStateAction<GeneralConfig>>,
+  setEnableApplyButton: React.Dispatch<React.SetStateAction<boolean>>,
+}> = (props) => {
+  const [validateAll, setValidateAll] = React.useState<boolean[]>([]);
+
+  const onClickAddButton = () => {
+    // Update general config state
+    const newSlackUrlTable: SlackUrlConverter[] = props.updatedGeneralConfig.slackUrlTable.slice();
+    newSlackUrlTable.push({ workspaceUrl: "", clientUrl: "" });
+    props.setUpdatedGeneralConfig({ ...props.updatedGeneralConfig, slackUrlTable: newSlackUrlTable });
+
+    // Update validation state
+    const newValidateAll = validateAll.slice();
+    newValidateAll.push(false);
+    setValidateAll(newValidateAll);
+
+    // Update enable apply button state
+    const isValidAll = (v) => v === true;
+    const _enableApplyButton = newValidateAll.every(isValidAll)
+    props.setEnableApplyButton(_enableApplyButton);
+  };
+
+  React.useEffect(() => {
+    setValidateAll(new Array(props.updatedGeneralConfig.slackUrlTable.length).fill(true));
+    props.setEnableApplyButton(true);
+  }, []);
 
   return (
     <div>
+      <Typography variant="h5" gutterBottom>
+        Map workspace name to workspace ID
+      </Typography>
+      <Typography variant="body1" gutterBottom>
+        By mapping a workspace named URL <code>https://[WORLSPACE_NAME].slack.com/</code> to a workspace ID URL <code>https://app.slack.com/[WORKSPACE_ID]/</code>, columns can be added from a workspace named URL.
+      </Typography>
+      <div>
+        {props.updatedGeneralConfig.slackUrlTable.map((row, index) => (
+          <WorkspaceName2IdInputRow
+            key={index}
+            index={index}
+            workspaceUrl={row.workspaceUrl}
+            clientUrl={row.clientUrl}
+            updatedGeneralConfig={props.updatedGeneralConfig}
+            setUpdatedGeneralConfig={props.setUpdatedGeneralConfig}
+            validateAll={validateAll}
+            setValidateAll={setValidateAll}
+            setEnableApplyButton={props.setEnableApplyButton}
+          />
+        ))}
+      </div>
+      <Button variant="contained" color="primary" onClick={onClickAddButton}>
+        <AddIcon color="inherit" />
+      </Button>
+    </div>
+  )
+};
+
+export const ConfigModal: React.FC<{
+  currentGeneralConfig: GeneralConfig,
+  setGeneralConfig: React.Dispatch<React.SetStateAction<GeneralConfig>>,
+}> = (props) => {
+  const style = {
+    position: 'absolute' as 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 1000,
+    bgcolor: 'background.paper',
+    color: 'text.primary',
+    boxShadow: 24,
+    p: 4,
+  };
+  const [updatedGeneralConfig, setUpdatedGeneralConfig] = React.useState<GeneralConfig>(props.currentGeneralConfig);
+  const [enableApplyButton, setEnableApplyButton] = React.useState<boolean>(true);
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
+  const onClickApplyButton = () => {
+    // Update
+    props.setGeneralConfig(updatedGeneralConfig);
+    // Save config
+    chrome.storage.sync.set({ 'generalConfig': updatedGeneralConfig });
+    // Close modal
+    handleClose();
+  };
+
+  React.useEffect(() => {
+    // Initialize updates
+    setUpdatedGeneralConfig(cloneDeep(props.currentGeneralConfig));
+  }, [open]);
+
+  return (
+    <div>
+      <IconButton color="primary" size="large" onClick={handleOpen}>
+        <SettingsIcon fontSize="inherit" />
+      </IconButton>
       <Modal
-        className="text-dark"
-        size="lg"
-        show={props.show}
-        onHide={props.onHide}
-        centered
+        open={open}
+        onClose={handleClose}
       >
-        <Modal.Header closeButton>
-          <Modal.Title>Config</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <h5>Use dark theme</h5>
-          <p>Check this box if you want to use the dark theme in Slack.</p>
-          <Form>
-            <Form.Group>
-              <div className="mb-3">
-                <Form.Check
-                  type={"checkbox"}
-                  checked={updatedGeneralConfig.useDarkTheme}
-                  label={"Use dark theme"}
-                  onChange={(e) => setUpdatedGeneralConfig({ ...updatedGeneralConfig, useDarkTheme: e.target.checked })}
-                /></div>
-            </Form.Group>
-          </Form>
-          <hr />
-          <h5>Default column width</h5>
-          <p>Choose default column width.</p>
-          <Form>
-            <Form.Select
-              onChange={(e) => setUpdatedGeneralConfig({ ...updatedGeneralConfig, defaultColumnWidth: e.target.value })}
+        <Box sx={style}>
+          <Typography variant="h4">
+            Config
+          </Typography>
+
+          <Divider sx={{ my: 1 }} />
+
+          <DefaultColumnWidthSelect
+            defaultColumnWidth={props.currentGeneralConfig.defaultColumnWidth}
+            updatedGeneralConfig={updatedGeneralConfig}
+            setUpdatedGeneralConfig={setUpdatedGeneralConfig}
+          />
+
+          <Divider sx={{ my: 1 }} />
+
+          <WorkspaceName2IdMapper
+            updatedGeneralConfig={updatedGeneralConfig}
+            setUpdatedGeneralConfig={setUpdatedGeneralConfig}
+            setEnableApplyButton={setEnableApplyButton}
+          />
+
+          <Divider sx={{ my: 1 }} />
+
+          <div className="apply-button-element">
+            <Button
+              variant="contained"
+              startIcon={<CheckIcon />}
+              onClick={onClickApplyButton}
+              disabled={!enableApplyButton}
             >
-              {WIDTH_OPTION_LIST.map((option) => (
-                <option
-                  value={option.value}
-                  selected={updatedGeneralConfig.defaultColumnWidth === option.value}
-                >{option.text}</option>
-              ))}
-            </Form.Select>
-          </Form>
-          <hr />
-          <h5>Register workspace URL</h5>
-          <p>Correspond <code>https://[workspace_url].slack.com/</code> and <code>https://app.slack.com/client/*/</code>.</p>
-          <div>
-            {updatedGeneralConfig.slackUrlTable.map((converter, index) => {
-              return (
-                <div className="d-flex my-1">
-                  <Form className="flex-fill">
-                    <Form.Control
-                      type="text"
-                      name={workspaceUrlInputName`${index}`}
-                      value={converter.workspaceUrl}
-                      placeholder="https://[workspace_url].slack.com/"
-                      onChange={(e) => onChangeWorkspaceUrl(e.target.value, extractUrlInputIndexFromName(e.target.name))}
-                    />
-                    <Form.Text className="text-danger">{validateUrl[index].workspaceUrl.message}</Form.Text>
-                  </Form>
-                  <Form className="flex-fill">
-                    <Form.Control
-                      type="text"
-                      name={clientUrlInputName`${index}`}
-                      className="flex-fill"
-                      value={converter.clientUrl}
-                      placeholder="https://app.slack.com/client/XXXXXXXXXXX/"
-                      onChange={(e) => onChangeClientUrl(e.target.value, extractUrlInputIndexFromName(e.target.name))}
-                    />
-                    <Form.Text className="text-danger">{validateUrl[index].clientUrl.message}</Form.Text>
-                  </Form>
-                  <Button
-                    variant="danger"
-                    onClick={() => onClickRemoveSlackUrlInputFormButton(index)}
-                  ><FontAwesomeIcon icon={faMinus} /></Button>
-                </div>
-              )
-            })}
+              Apply
+            </Button>
           </div>
-          <Button
-            variant="primary"
-            onClick={onClickAddSlackUrlInputFormButton}
-          ><FontAwesomeIcon icon={faPlus} /></Button>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button
-            variant="primary"
-            disabled={!(isValidAllUrl)}
-            onClick={onClickSaveButton}
-          >
-            Save
-          </Button>
-        </Modal.Footer>
+        </Box>
       </Modal>
-    </div >
-  );
+    </div>
+  )
 };
