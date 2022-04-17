@@ -219,7 +219,6 @@ export const Deck: React.FC<{
           v{VERSION}
         </Typography>
       </div>
-      {console.log(props.columnList)}
     </div>
   )
 };
