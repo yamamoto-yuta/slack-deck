@@ -121,15 +121,6 @@ const WorkspaceName2IdMapper: React.FC<{
       <div>
         {props.updatedGeneralConfig.slackUrlTable.map((row, index) => (
           <div key={index} className="url-mapper-row-element">
-            <Button
-              variant="contained"
-              color="error"
-              size="small"
-              style={{ height: "40px" }}
-              onClick={() => onClickDeleteButton(index)}
-            >
-              <RemoveIcon color="inherit" />
-            </Button>
             <TextField
               label="Workspace URL"
               variant="outlined"
@@ -150,11 +141,12 @@ const WorkspaceName2IdMapper: React.FC<{
             />
             <Button
               variant="contained"
-              color="primary"
+              color="error"
               size="small"
               style={{ height: "40px" }}
+              onClick={() => onClickDeleteButton(index)}
             >
-              <CheckIcon color="inherit" />
+              <RemoveIcon color="inherit" />
             </Button>
           </div>
         ))}
