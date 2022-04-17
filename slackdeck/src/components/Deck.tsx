@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Fab, IconButton, SpeedDial, SpeedDialIcon, SpeedDialAction, Typography, Box, Button, Switch, FormControlLabel, Tooltip, Snackbar, SnackbarContent } from '@mui/material';
+import { Fab, IconButton, SpeedDial, SpeedDialIcon, SpeedDialAction, Typography, Box, Button, Switch, FormControlLabel, Tooltip } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import ContentPasteGoIcon from '@mui/icons-material/ContentPasteGo';
@@ -9,31 +9,25 @@ import HelpIcon from '@mui/icons-material/Help';
 import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
 import FitScreenIcon from '@mui/icons-material/FitScreen';
 import HomeIcon from '@mui/icons-material/Home';
-import CloseIcon from '@mui/icons-material/Close';
 import { ConfigModal } from './ConfigModal';
 import { VERSION } from '../shared/general';
 import { AddColumnModal } from './AddColumnModal';
 import { ColumnConfig, columnElementId, DEFAULT_COLUMN_CONFIG, saveColumns, updateSavedTime } from '../shared/column';
 import { Column } from './Column';
 import { DEFAULT_GENERAL_CONFIG, GeneralConfig } from '../shared/config';
-import { WORKSPACE_URL_PATTERN, CLIENT_URL_PATTERN, convertWorkspaceUrlToClientUrl, slackUrlRegex } from '../shared/slackUrlConverter';
+import { convertWorkspaceUrlToClientUrl, slackUrlRegex } from '../shared/slackUrlConverter';
+import { InvalidUrlSnackbar } from './InvalidUrlSnackbar';
 
 const AddSpeedDial: React.FC<{
   columnList: ColumnConfig[],
   generalConfig: GeneralConfig,
   rerender: React.Dispatch<React.SetStateAction<number>>
 }> = (props) => {
-  const [addColumnModalOpen, setAddColumnModalOpen] = React.useState<boolean>(false);
-  const handleAddColumnModalOpen = () => setAddColumnModalOpen(true);
-  const handleAddColumnModalClose = () => setAddColumnModalOpen(false);
+  const [speedDialopen, setSpeedDialOpen] = React.useState<boolean>(false);
+  const handleSpeedDialOpen = () => setSpeedDialOpen(true);
+  const handleSpeedDialClose = () => setSpeedDialOpen(false);
 
-  const [openFromClipboardSnackbarOpen, setOpenFromClipboardSnackbarOpen] = React.useState<boolean>(false);
-  const handleOpenFromClipboardSnackbarClose = (event: React.SyntheticEvent | Event, reason?: string) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setOpenFromClipboardSnackbarOpen(false);
-  };
+  const [snackbarOpen, setSnackBarOpen] = React.useState<boolean>(false);
   const [clipboardText, setClipboardText] = React.useState<string>("");
 
   const addColumn = (newColumnConfig: ColumnConfig) => {
@@ -73,19 +67,6 @@ const AddSpeedDial: React.FC<{
     addColumn(newColumnConfig);
   };
 
-  const openFromClipboardSnackbarAction = (
-    <React.Fragment>
-      <IconButton
-        size="small"
-        aria-label="close"
-        color="inherit"
-        onClick={handleOpenFromClipboardSnackbarClose}
-      >
-        <CloseIcon fontSize="small" />
-      </IconButton>
-    </React.Fragment>
-  );
-
 
   const openFromClipboard = () => {
     navigator.clipboard.readText().then(
@@ -111,14 +92,14 @@ const AddSpeedDial: React.FC<{
           // Add column
           addColumn(newColumnConfig);
         } else {
-          setOpenFromClipboardSnackbarOpen(true);
+          setSnackBarOpen(true);
         }
       }
     );
   };
 
   const speedDialActions = [
-    { icon: <AddIcon />, name: "Add from Modal", onclick: handleAddColumnModalOpen },
+    { icon: <AddIcon />, name: "Add from Modal", onclick: handleSpeedDialOpen },
     { icon: <ContentCopyIcon />, name: "Add Current Page", onclick: addColumnFromCurrentPage },
     { icon: <ContentPasteGoIcon />, name: "Add from Clipboard", onclick: openFromClipboard },
   ];
@@ -144,20 +125,13 @@ const AddSpeedDial: React.FC<{
         ))}
       </SpeedDial>
       <AddColumnModal
-        open={addColumnModalOpen}
-        onClose={handleAddColumnModalClose}
+        open={speedDialopen}
+        onClose={handleSpeedDialClose}
         columnList={props.columnList}
         generalConfig={props.generalConfig}
         rerender={props.rerender}
       />
-      <Snackbar
-        sx={{ minWidth: 400 }}
-        open={openFromClipboardSnackbarOpen}
-        autoHideDuration={6000}
-        onClose={handleAddColumnModalClose}
-        message={`Clipboard URL is invalid: "${clipboardText.length > 10 ? clipboardText.slice(0, 10) + '...' : clipboardText}"`}
-        action={openFromClipboardSnackbarAction}
-      />
+      <InvalidUrlSnackbar open={snackbarOpen} setOpen={setSnackBarOpen} clipboardText={clipboardText} />
       <div id="add-speed-dial-spacer" />
     </div>
   )
