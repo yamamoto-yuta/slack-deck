@@ -1,0 +1,34 @@
+name: check version
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Get manifest version
+        id: get_manifest_version
+        run: |
+          VERSION=$(cat slackdeck/dist/manifest.json | jq -r '.version')
+          echo "::set-output name=manifest_version::$VERSION"
+          echo $VERSION
+
+      - name: Get code version
+        id: get_code_version
+        run: |
+          VERSION=$(cat slackdeck/src/shared/general.ts | grep -oE "[0-9].[0-9].[0-9]")
+          echo "::set-output name=code_version::$VERSION"
+          echo $VERSION
+
+      - name: Compare version
+        run: |
+          if [[ ${{ steps.get_manifest_version.outputs.manifest_version }} == ${{ steps.get_code_version.outputs.code_version }} ]]; then
+            exit 0
+          else
+            exit 1
+          fi
