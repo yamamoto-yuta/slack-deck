@@ -45,23 +45,13 @@ const DefaultColumnWidthSelect: React.FC<{
   )
 };
 
-const WorkspaceName2IdMapper: React.FC<{
+const WorkspaceName2IdInputRow: React.FC<{
+  index: number,
+  workspaceUrl: string,
+  clientUrl: string,
   updatedGeneralConfig: GeneralConfig,
   setUpdatedGeneralConfig: React.Dispatch<React.SetStateAction<GeneralConfig>>,
 }> = (props) => {
-  const onClickDeleteButton = (index: number) => {
-    // Update validation result state
-    // let newSlackUrlValidateResult: SlackUrlValidateResult[] = validateUrl.slice();
-    // newSlackUrlValidateResult.splice(index, 1)
-    // setValidateUrl(newSlackUrlValidateResult);
-    // // Update All validation result
-    // setIsValidAllUrl(isValidAllSlackUrl(newSlackUrlValidateResult));
-    // Update general config state
-    const newSlackUrlTable: SlackUrlConverter[] = props.updatedGeneralConfig.slackUrlTable.slice();
-    newSlackUrlTable.splice(index, 1);
-    props.setUpdatedGeneralConfig({ ...props.updatedGeneralConfig, slackUrlTable: newSlackUrlTable });
-  };
-
   const onChangeWorkspaceUrl = (workspaceUrl: string, index: number) => {
     // // Validate
     // let newSlackUrlValidateResult: SlackUrlValidateResult[] = validateUrl.slice();
@@ -94,6 +84,56 @@ const WorkspaceName2IdMapper: React.FC<{
     props.setUpdatedGeneralConfig({ ...props.updatedGeneralConfig, slackUrlTable: newSlackUrlTable });
   };
 
+  const onClickDeleteButton = (index: number) => {
+    // Update validation result state
+    // let newSlackUrlValidateResult: SlackUrlValidateResult[] = validateUrl.slice();
+    // newSlackUrlValidateResult.splice(index, 1)
+    // setValidateUrl(newSlackUrlValidateResult);
+    // // Update All validation result
+    // setIsValidAllUrl(isValidAllSlackUrl(newSlackUrlValidateResult));
+    // Update general config state
+    const newSlackUrlTable: SlackUrlConverter[] = props.updatedGeneralConfig.slackUrlTable.slice();
+    newSlackUrlTable.splice(index, 1);
+    props.setUpdatedGeneralConfig({ ...props.updatedGeneralConfig, slackUrlTable: newSlackUrlTable });
+  };
+
+  return (
+    <div key={props.index} className="url-mapper-row-element">
+      <TextField
+        label="Workspace URL"
+        variant="outlined"
+        size="small"
+        fullWidth
+        placeholder="https://[WORLSPACE_NAME].slack.com/"
+        defaultValue={props.workspaceUrl}
+        onChange={(e) => onChangeWorkspaceUrl(e.target.value, props.index)}
+      />
+      <TextField
+        label="Client URL"
+        variant="outlined"
+        size="small"
+        fullWidth
+        placeholder="https://app.slack.com/client/XXXXXXXXXXX/"
+        defaultValue={props.clientUrl}
+        onChange={(e) => onChangeClientUrl(e.target.value, props.index)}
+      />
+      <Button
+        variant="contained"
+        color="error"
+        size="small"
+        style={{ height: "40px" }}
+        onClick={() => onClickDeleteButton(props.index)}
+      >
+        <RemoveIcon color="inherit" />
+      </Button>
+    </div>
+  )
+};
+
+const WorkspaceName2IdMapper: React.FC<{
+  updatedGeneralConfig: GeneralConfig,
+  setUpdatedGeneralConfig: React.Dispatch<React.SetStateAction<GeneralConfig>>,
+}> = (props) => {
   const onClickAddButton = () => {
     // // Validate
     // let newSlackUrlValidateResult: SlackUrlValidateResult[] = validateUrl.slice();
@@ -120,35 +160,14 @@ const WorkspaceName2IdMapper: React.FC<{
       </Typography>
       <div>
         {props.updatedGeneralConfig.slackUrlTable.map((row, index) => (
-          <div key={index} className="url-mapper-row-element">
-            <TextField
-              label="Workspace URL"
-              variant="outlined"
-              size="small"
-              fullWidth
-              placeholder="https://[WORLSPACE_NAME].slack.com/"
-              defaultValue={row.workspaceUrl}
-              onChange={(e) => onChangeWorkspaceUrl(e.target.value, index)}
-            />
-            <TextField
-              label="Client URL"
-              variant="outlined"
-              size="small"
-              fullWidth
-              placeholder="https://app.slack.com/client/XXXXXXXXXXX/"
-              defaultValue={row.clientUrl}
-              onChange={(e) => onChangeClientUrl(e.target.value, index)}
-            />
-            <Button
-              variant="contained"
-              color="error"
-              size="small"
-              style={{ height: "40px" }}
-              onClick={() => onClickDeleteButton(index)}
-            >
-              <RemoveIcon color="inherit" />
-            </Button>
-          </div>
+          <WorkspaceName2IdInputRow
+            key={index}
+            index={index}
+            workspaceUrl={row.workspaceUrl}
+            clientUrl={row.clientUrl}
+            updatedGeneralConfig={props.updatedGeneralConfig}
+            setUpdatedGeneralConfig={props.setUpdatedGeneralConfig}
+          />
         ))}
       </div>
       <Button variant="contained" color="primary" onClick={onClickAddButton}>
