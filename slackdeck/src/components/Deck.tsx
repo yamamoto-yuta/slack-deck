@@ -15,6 +15,7 @@ import { ColumnConfig, columnElementId, DEFAULT_COLUMN_CONFIG, saveColumns, upda
 import ReactDOM from 'react-dom';
 import { Column } from './Column';
 import { DEFAULT_GENERAL_CONFIG, GeneralConfig } from '../shared/config';
+import { WORKSPACE_URL_PATTERN, CLIENT_URL_PATTERN, convertWorkspaceUrlToClientUrl } from '../shared/slackUrlConverter';
 
 const AddSpeedDial: React.FC<{
   columnList: ColumnConfig[],
@@ -25,12 +26,7 @@ const AddSpeedDial: React.FC<{
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const addColumnFromCurrentPage = () => {
-    // Generate new column config
-    const newColumnConfig: ColumnConfig = DEFAULT_COLUMN_CONFIG;
-    newColumnConfig.url = location.href;
-    newColumnConfig.width = props.generalConfig.defaultColumnWidth;
-
+  const addColumn = (newColumnConfig: ColumnConfig) => {
     // Add column
     let col = document.createElement('div');
     ReactDOM.render(<Column
@@ -56,9 +52,45 @@ const AddSpeedDial: React.FC<{
     props.rerender(Math.random());
   };
 
+  const addColumnFromCurrentPage = () => {
+    // Generate new column config
+    const newColumnConfig: ColumnConfig = DEFAULT_COLUMN_CONFIG;
+    newColumnConfig.url = location.href;
+    newColumnConfig.width = props.generalConfig.defaultColumnWidth;
+
+    // Add column
+    addColumn(newColumnConfig);
+  };
+
+  const slackUrlRegex = new RegExp(
+    `(${WORKSPACE_URL_PATTERN}|${CLIENT_URL_PATTERN})`
+  );
+
   const openFromClipboard = () => {
     navigator.clipboard.readText().then(
-      (clipText) => console.log(clipText)
+      (clipText) => {
+        console.log(clipText);
+        if (slackUrlRegex.test(clipText)) {
+          let inputUrl = clipText;
+          // Convet URL
+          for (let converter of props.generalConfig.slackUrlTable) {
+            const workspaceUrlPattern = `^${converter.workspaceUrl}archives/`;
+            const workspaceUrlRegex = new RegExp(workspaceUrlPattern);
+            if (workspaceUrlRegex.test(inputUrl)) {
+              inputUrl = convertWorkspaceUrlToClientUrl(converter.workspaceUrl, converter.clientUrl, inputUrl);
+              break;
+            }
+          }
+
+          // Generate new column config
+          const newColumnConfig: ColumnConfig = DEFAULT_COLUMN_CONFIG;
+          newColumnConfig.url = inputUrl;
+          newColumnConfig.width = props.generalConfig.defaultColumnWidth;
+
+          // Add column
+          addColumn(newColumnConfig);
+        }
+      }
     );
   };
 

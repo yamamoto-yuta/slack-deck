@@ -7,9 +7,9 @@ const CHANNEL_ID_PATTERN = "[A-Z0-9]+";
 const WORKSPACE_MESSAGE_ID_PATTERN = "p[0-9]{16}";
 const CLIENT_MESSAGE_ID_PATTERN = "[0-9]{10}.[0-9]{6}";
 
-const WORKSPACE_URL_PATTERN = "^https://[a-z0-9]+[a-z0-9\-]+.slack.com/";
+export const WORKSPACE_URL_PATTERN = "^https://[a-z0-9]+[a-z0-9\-]+.slack.com/";
 export const WORKSPACE_BASE_URL_PATTERN = `${WORKSPACE_URL_PATTERN}$`;
-const CLIENT_URL_PATTERN = `^https://app.slack.com/client/${CHANNEL_ID_PATTERN}/`
+export const CLIENT_URL_PATTERN = `^https://app.slack.com/client/${CHANNEL_ID_PATTERN}/`
 export const CLIENT_BASE_URL_PATTERN = `${CLIENT_URL_PATTERN}$`;
 
 export const convertWorkspaceUrlToClientUrl = (workspaceBaseUrl: string, clientBaseUrl: string, workspaceUrl: string): string => {
