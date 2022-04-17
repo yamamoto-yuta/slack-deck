@@ -11,6 +11,7 @@ import { chooseColumnColor, ColumnConfig, columnDeleteButtonClassName, columnDel
 import ReactDOM from 'react-dom';
 import { Column } from './Column';
 import { convertWorkspaceUrlToClientUrl, SlackUrlConverter, slackUrlRegex } from '../shared/slackUrlConverter';
+import { InvalidUrlSnackbar } from './InvalidUrlSnackbar';
 
 const ColumnWidthMenu: React.FC<{
   selectedColumnWidthOptionIndex: number,
@@ -77,6 +78,9 @@ export const ColumnHeader: React.FC<{
   columnElement: HTMLDivElement,
   slackUrlTable: SlackUrlConverter[],
 }> = (props) => {
+
+  const [snackbarOpen, setSnackBarOpen] = React.useState<boolean>(false);
+  const [clipboardText, setClipboardText] = React.useState<string>("");
 
   const updateElement = () => {
     for (var i = 0; i < props.columnList.length; i++) {
@@ -236,6 +240,7 @@ export const ColumnHeader: React.FC<{
   const onClickOpenFromClipboardButton = () => {
     navigator.clipboard.readText().then(
       (clipText) => {
+        setClipboardText(clipText);
         if (slackUrlRegex.test(clipText)) {
           let inputUrl = clipText;
           // Convet URL
@@ -255,6 +260,8 @@ export const ColumnHeader: React.FC<{
           let colElIdx = extractColumnIdxFromId(props.columnElement.getElementsByTagName('div')[0].id);
           const _iframe = document.getElementsByClassName('col-iframe')[colElIdx] as HTMLIFrameElement;
           _iframe.contentWindow.location.href = inputUrl;
+        } else {
+          setSnackBarOpen(true);
         }
       }
     );
@@ -345,6 +352,7 @@ export const ColumnHeader: React.FC<{
           </Toolbar>
         </AppBar>
       </Box>
+      <InvalidUrlSnackbar open={snackbarOpen} setOpen={setSnackBarOpen} clipboardText={clipboardText} />
     </div >
   )
 };
