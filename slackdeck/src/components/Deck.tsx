@@ -17,6 +17,7 @@ import { Column } from './Column';
 import { DEFAULT_GENERAL_CONFIG, GeneralConfig } from '../shared/config';
 import { convertWorkspaceUrlToClientUrl, slackUrlRegex } from '../shared/slackUrlConverter';
 import { InvalidUrlSnackbar } from './InvalidUrlSnackbar';
+import { TryOutlined } from '@mui/icons-material';
 
 const AddSpeedDial: React.FC<{
   columnList: ColumnConfig[],
@@ -103,8 +104,24 @@ const AddSpeedDial: React.FC<{
       (clipText) => {
         setClipboardText(clipText);
         if (slackUrlRegex.test(clipText)) {
-          // Add column
-          addColumn(newColumnConfigForAddFromClipboard);
+          let inputUrl = clipText;
+          // Convet URL
+          let is_breaked = false;
+          for (let converter of props.generalConfig.slackUrlTable) {
+            const workspaceUrlPattern = `^${converter.workspaceUrl}archives/`;
+            const workspaceUrlRegex = new RegExp(workspaceUrlPattern);
+            if (workspaceUrlRegex.test(inputUrl)) {
+              inputUrl = convertWorkspaceUrlToClientUrl(converter.workspaceUrl, converter.clientUrl, inputUrl);
+              is_breaked = true;
+              break;
+            }
+          }
+          if (is_breaked) {
+            // Add column
+            addColumn(newColumnConfigForAddFromClipboard);
+          } else {
+            setSnackBarOpen(true);
+          }
         } else {
           setSnackBarOpen(true);
         }
