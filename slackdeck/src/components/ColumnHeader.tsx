@@ -244,22 +244,27 @@ export const ColumnHeader: React.FC<{
         if (slackUrlRegex.test(clipText)) {
           let inputUrl = clipText;
           // Convet URL
+          let is_breaked = false;
           for (let converter of props.slackUrlTable) {
             const workspaceUrlPattern = `^${converter.workspaceUrl}archives/`;
             const workspaceUrlRegex = new RegExp(workspaceUrlPattern);
             if (workspaceUrlRegex.test(inputUrl)) {
               inputUrl = convertWorkspaceUrlToClientUrl(converter.workspaceUrl, converter.clientUrl, inputUrl);
+              is_breaked = true;
               break;
             }
           }
+          if (is_breaked) {
+            // Save column
+            saveColumns(props.columnList);
 
-          // Save column
-          saveColumns(props.columnList);
-
-          // Open clipboard URL
-          let colElIdx = extractColumnIdxFromId(props.columnElement.getElementsByTagName('div')[0].id);
-          const _iframe = document.getElementsByClassName('col-iframe')[colElIdx] as HTMLIFrameElement;
-          _iframe.contentWindow.location.href = inputUrl;
+            // Open clipboard URL
+            let colElIdx = extractColumnIdxFromId(props.columnElement.getElementsByTagName('div')[0].id);
+            const _iframe = document.getElementsByClassName('col-iframe')[colElIdx] as HTMLIFrameElement;
+            _iframe.contentWindow.location.href = inputUrl;
+          } else {
+            setSnackBarOpen(true);
+          }
         } else {
           setSnackBarOpen(true);
         }
