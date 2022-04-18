@@ -30,6 +30,13 @@ const AddSpeedDial: React.FC<{
   const [snackbarOpen, setSnackBarOpen] = React.useState<boolean>(false);
   const [clipboardText, setClipboardText] = React.useState<string>("");
 
+  const [newColumnConfig, setNewColumnConfig] = React.useState<ColumnConfig>(DEFAULT_COLUMN_CONFIG);
+  const handleSpeedDialOpen = () => setNewColumnConfig({
+    ...newColumnConfig,
+    url: location.href,
+    width: props.generalConfig.defaultColumnWidth,
+  });
+
   const addColumn = (newColumnConfig: ColumnConfig) => {
     // Add column
     let col = document.createElement('div');
@@ -59,9 +66,9 @@ const AddSpeedDial: React.FC<{
 
   const addColumnFromCurrentPage = () => {
     // Generate new column config
-    const newColumnConfig: ColumnConfig = DEFAULT_COLUMN_CONFIG;
-    newColumnConfig.url = location.href;
-    newColumnConfig.width = props.generalConfig.defaultColumnWidth;
+    // const newColumnConfig: ColumnConfig = DEFAULT_COLUMN_CONFIG;
+    // newColumnConfig.url = location.href;
+    // newColumnConfig.width = props.generalConfig.defaultColumnWidth;
 
     // Add column
     addColumn(newColumnConfig);
@@ -112,6 +119,7 @@ const AddSpeedDial: React.FC<{
         direction="right"
         sx={{ position: "absolute", zIndex: 9999 }}
         icon={<SpeedDialIcon />}
+        onOpen={handleSpeedDialOpen}
       >
         {speedDialActions.map((action) => (
           <SpeedDialAction
