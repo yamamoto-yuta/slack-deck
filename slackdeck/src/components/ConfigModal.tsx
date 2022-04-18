@@ -1,6 +1,6 @@
 import React from 'react';
 import cloneDeep from 'lodash/cloneDeep';
-import { SelectChangeEvent, IconButton, Modal, Box, Typography, Divider, FormControl, Select, MenuItem, Button, TextField, Tooltip } from '@mui/material';
+import { SelectChangeEvent, IconButton, Modal, Box, Typography, Divider, FormControl, Select, MenuItem, Button, TextField, Tooltip, Alert } from '@mui/material';
 import SettingsIcon from '@mui/icons-material/Settings';
 import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
@@ -220,6 +220,9 @@ const WorkspaceName2IdMapper: React.FC<{
       <Typography variant="body1" gutterBottom>
         By mapping a workspace named URL <code>https://[WORLSPACE_NAME].slack.com/</code> to a workspace ID URL <code>https://app.slack.com/[WORKSPACE_ID]/</code>, columns can be added from a workspace named URL.
       </Typography>
+      <Alert severity="warning" sx={{ my: 2 }}>
+        You need reload to reflect the changes of this config!
+      </Alert>
       <div>
         {props.updatedGeneralConfig.slackUrlTable.map((row, index) => (
           <WorkspaceName2IdInputRow
