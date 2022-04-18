@@ -93,11 +93,6 @@ const AddSpeedDial: React.FC<{
   };
 
   const addColumnFromCurrentPage = () => {
-    // Generate new column config
-    // const newColumnConfig: ColumnConfig = DEFAULT_COLUMN_CONFIG;
-    // newColumnConfig.url = location.href;
-    // newColumnConfig.width = props.generalConfig.defaultColumnWidth;
-
     // Add column
     addColumn(newColumnConfigForAddCurrentPage);
   };
