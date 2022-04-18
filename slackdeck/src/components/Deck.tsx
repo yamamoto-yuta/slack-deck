@@ -23,9 +23,9 @@ const AddSpeedDial: React.FC<{
   generalConfig: GeneralConfig,
   rerender: React.Dispatch<React.SetStateAction<number>>
 }> = (props) => {
-  const [speedDialopen, setSpeedDialOpen] = React.useState<boolean>(false);
-  const handleSpeedDialOpen = () => setSpeedDialOpen(true);
-  const handleSpeedDialClose = () => setSpeedDialOpen(false);
+  const [modalOpen, setSpeedDialOpen] = React.useState<boolean>(false);
+  const handleModalOpen = () => setSpeedDialOpen(true);
+  const handleModalClose = () => setSpeedDialOpen(false);
 
   const [snackbarOpen, setSnackBarOpen] = React.useState<boolean>(false);
   const [clipboardText, setClipboardText] = React.useState<string>("");
@@ -99,7 +99,7 @@ const AddSpeedDial: React.FC<{
   };
 
   const speedDialActions = [
-    { icon: <AddIcon />, name: "Add from Modal", onclick: handleSpeedDialOpen },
+    { icon: <AddIcon />, name: "Add from Modal", onclick: handleModalOpen },
     { icon: <ContentCopyIcon />, name: "Add Current Page", onclick: addColumnFromCurrentPage },
     { icon: <ContentPasteGoIcon />, name: "Add from Clipboard", onclick: openFromClipboard },
   ];
@@ -125,8 +125,8 @@ const AddSpeedDial: React.FC<{
         ))}
       </SpeedDial>
       <AddColumnModal
-        open={speedDialopen}
-        onClose={handleSpeedDialClose}
+        open={modalOpen}
+        onClose={handleModalClose}
         columnList={props.columnList}
         generalConfig={props.generalConfig}
         rerender={props.rerender}
