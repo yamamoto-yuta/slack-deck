@@ -17,6 +17,7 @@ const ColumnWidthMenu: React.FC<{
   selectedColumnWidthOptionIndex: number,
   setSelectedColumnWidthOptionIndex: React.Dispatch<React.SetStateAction<number>>,
   columnConfig: ColumnConfig,
+  columnList: ColumnConfig[],
 }> = (props) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [selectedIndex, setSelectedIndex] = React.useState<number>(props.selectedColumnWidthOptionIndex);
@@ -33,6 +34,7 @@ const ColumnWidthMenu: React.FC<{
     props.setSelectedColumnWidthOptionIndex(index);
     setSelectedIndex(index);
     props.columnConfig.width = COLUMN_WIDTH_OPTIONS_VALUE[index];
+    saveColumns(props.columnList);
     setAnchorEl(null);
   };
 
@@ -353,6 +355,7 @@ export const ColumnHeader: React.FC<{
               selectedColumnWidthOptionIndex={props.selectedColumnWidthOptionIndex}
               setSelectedColumnWidthOptionIndex={props.setSelectedColumnWidthOptionIndex}
               columnConfig={props.columnConfig}
+              columnList={props.columnList}
             />
 
             {/* Delete buttion */}
