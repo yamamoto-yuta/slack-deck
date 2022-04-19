@@ -7,7 +7,7 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import ContentPasteGoIcon from '@mui/icons-material/ContentPasteGo';
-import { chooseColumnColor, ColumnConfig, columnDeleteButtonClassName, columnDeleteButtonId, columnDuplicateButtonClassName, columnDuplicateButtonId, columnElementId, columnIframeClassName, columnIframeId, columnMoveLeftButtonClassName, columnMoveLeftButtonId, columnMoveRightButtonClassName, columnMoveRightButtonId, columnOpenFromClipboardButtonClassName, columnOpenFromClipboardButtonId, COLUMN_WIDTH_OPTIONS_TEXT, extractColumnIdxFromId, saveColumns } from '../shared/column';
+import { chooseColumnColor, ColumnConfig, columnDeleteButtonClassName, columnDeleteButtonId, columnDuplicateButtonClassName, columnDuplicateButtonId, columnElementId, columnIframeClassName, columnIframeId, columnMoveLeftButtonClassName, columnMoveLeftButtonId, columnMoveRightButtonClassName, columnMoveRightButtonId, columnOpenFromClipboardButtonClassName, columnOpenFromClipboardButtonId, COLUMN_WIDTH_OPTIONS_TEXT, COLUMN_WIDTH_OPTIONS_VALUE, extractColumnIdxFromId, saveColumns } from '../shared/column';
 import ReactDOM from 'react-dom';
 import { Column } from './Column';
 import { convertWorkspaceUrlToClientUrl, SlackUrlConverter, slackUrlRegex } from '../shared/slackUrlConverter';
@@ -16,6 +16,7 @@ import { InvalidUrlSnackbar } from './InvalidUrlSnackbar';
 const ColumnWidthMenu: React.FC<{
   selectedColumnWidthOptionIndex: number,
   setSelectedColumnWidthOptionIndex: React.Dispatch<React.SetStateAction<number>>,
+  columnConfig: ColumnConfig,
 }> = (props) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [selectedIndex, setSelectedIndex] = React.useState<number>(props.selectedColumnWidthOptionIndex);
@@ -31,6 +32,7 @@ const ColumnWidthMenu: React.FC<{
   ) => {
     props.setSelectedColumnWidthOptionIndex(index);
     setSelectedIndex(index);
+    props.columnConfig.width = COLUMN_WIDTH_OPTIONS_VALUE[index];
     setAnchorEl(null);
   };
 
@@ -350,6 +352,7 @@ export const ColumnHeader: React.FC<{
             <ColumnWidthMenu
               selectedColumnWidthOptionIndex={props.selectedColumnWidthOptionIndex}
               setSelectedColumnWidthOptionIndex={props.setSelectedColumnWidthOptionIndex}
+              columnConfig={props.columnConfig}
             />
 
             {/* Delete buttion */}
