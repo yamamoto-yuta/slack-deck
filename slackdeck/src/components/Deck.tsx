@@ -316,13 +316,17 @@ export const Deck: React.FC<{
           setCollapseDeckChecked={setCollapseDeckChecked}
         />
         <Tooltip title="Home" placement="right">
-          <Button className="column-jump-button" variant="outlined" href="#main-body">
+          <Button className="column-jump-button" variant="outlined" onClick={() => {
+            document.getElementById("main-body").scrollIntoView({ behavior: "smooth", inline: "start" });
+          }}>
             <HomeIcon />
           </Button>
         </Tooltip>
         {props.columnList.map((config, index) => (
           <Tooltip key={index} title={config.name} placement="right">
-            <Button className="column-jump-button" variant="outlined" href={`#${columnElementId`${index}`}`}>
+            <Button className="column-jump-button" variant="outlined" onClick={() => {
+              document.getElementById(`${columnElementId`${index}`}`).scrollIntoView({ behavior: "smooth", inline: "center" });
+            }}>
               <Typography variant="caption" component="div">
                 {index}{!collapseDeckchecked ? "" : ": " + config.name}
               </Typography>
@@ -349,6 +353,6 @@ export const Deck: React.FC<{
         </Typography>
       </div>
       {console.log(props.columnList)}
-    </div>
+    </div >
   )
 };
