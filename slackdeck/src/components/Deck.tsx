@@ -256,7 +256,6 @@ export const Deck: React.FC<{
     chrome.storage.sync.get(
       ['columnList', 'generalConfig'],
       function (value) {
-        console.log(value.columnList);
         if (value.columnList && value.generalConfig) {
           for (var i = 0; i < value.columnList.length; i++) {
             props.columnList[i] = value.columnList[i];
@@ -349,6 +348,7 @@ export const Deck: React.FC<{
           v{VERSION}
         </Typography>
       </div>
+      {console.log(props.columnList)}
     </div>
   )
 };
