@@ -10,7 +10,7 @@
 
 ## 使い方
 
-### カラムを追加する
+### ➕ カラムを追加する
 
 ![image](https://user-images.githubusercontent.com/55144709/164177668-96e11467-654e-48d6-9d6a-2ded6874cc86.png)
 
@@ -20,7 +20,7 @@
 | ![image](https://user-images.githubusercontent.com/55144709/164177914-1194ebd7-7a76-48be-88f7-07a5d0dcdef4.png) | 今開いている Slack チャンネルをカラムとして追加する |
 | ![image](https://user-images.githubusercontent.com/55144709/164178115-9f732390-6840-45eb-a354-01ff1fa0afed.png) | クリップボードの URL をカラムとして追加する         |
 
-### カラムを操作する
+### 🖱️ カラムを操作する
 
 ![image](https://user-images.githubusercontent.com/55144709/164176304-1f12926e-d966-4b86-aad4-9d832b36713b.png)
 
@@ -34,7 +34,7 @@
 | ![image](https://user-images.githubusercontent.com/55144709/164177401-c2767e87-efaa-474c-9da5-c62d3ef83342.png) | カラムの幅を変更する                    |
 | ![image](https://user-images.githubusercontent.com/55144709/164177498-b135f78e-76b7-4c33-bce0-41877ea195bc.png) | カラムを削除する                        |
 
-### 設定
+### ⚙️ 設定
 
 ![image](https://user-images.githubusercontent.com/55144709/164178884-c037a16d-9f2e-44a3-9fff-953c107fd738.png)
 
