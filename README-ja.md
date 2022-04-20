@@ -1,4 +1,4 @@
-![image](https://user-images.githubusercontent.com/55144709/164264064-3d844d66-828e-4270-8bec-e4ae4ce7e0b9.png)
+![image](https://user-images.githubusercontent.com/55144709/164277089-eb499d5d-0559-4fa7-9bcd-69d76200daa9.png)
 
 <p align="center">
     <a href="README.md">English</a>｜
