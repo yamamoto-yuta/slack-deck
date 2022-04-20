@@ -34,7 +34,6 @@ const ColumnWidthMenu: React.FC<{
     props.setSelectedColumnWidthOptionIndex(index);
     setSelectedIndex(index);
     props.columnConfig.width = COLUMN_WIDTH_OPTIONS_VALUE[index];
-    saveColumns(props.columnList);
     setAnchorEl(null);
   };
 
