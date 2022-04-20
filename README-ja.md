@@ -1,4 +1,4 @@
-# SlackDeck
+![image](https://user-images.githubusercontent.com/55144709/164264064-3d844d66-828e-4270-8bec-e4ae4ce7e0b9.png)
 
 <p align="center">
     <a href="README.md">English</a>｜
