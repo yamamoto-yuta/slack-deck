@@ -5,7 +5,7 @@
     <a href="README-ja.md">日本語</a>
 </p>
 
-## "SlackDeck" とは？
+"SlackDeck" は Slack チャンネルを横に並べられる Chrome 拡張機能です。
 
 ![](https://user-images.githubusercontent.com/55144709/164062115-9ebbd36c-befe-44c1-8545-a69d5f131334.gif)
 
