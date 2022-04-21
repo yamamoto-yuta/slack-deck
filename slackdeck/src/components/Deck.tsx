@@ -328,7 +328,7 @@ export const Deck: React.FC<{
               document.getElementById(`${columnElementId`${index}`}`).scrollIntoView({ behavior: "smooth", inline: "center" });
             }}>
               <Typography variant="caption" component="div">
-                {index}{!collapseDeckchecked ? "" : ": " + config.name}
+                {index}{!collapseDeckchecked ? "" : `: ${config.name.length < 8 ? config.name : config.name.substring(0, 8) + "..."}`}
               </Typography>
             </Button>
           </Tooltip>
