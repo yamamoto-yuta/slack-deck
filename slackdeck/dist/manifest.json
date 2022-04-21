@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "SlackDeck",
-    "description": "Display your Slack channels in column format",
+    "description": "Arrange channels side-by-side",
     "version": "1.0.0",
     "action": {
         "default_icon": "icon16.png",
