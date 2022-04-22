@@ -336,11 +336,13 @@ export const Deck: React.FC<{
       </div>
 
       <div className="deck-buttons-element">
-        <Tooltip title="Help" placement="right">
-          <IconButton color="primary" size="large">
-            <HelpIcon fontSize="inherit" />
-          </IconButton>
-        </Tooltip>
+        <div>
+          <Tooltip title="Help" placement="right">
+            <IconButton color="primary" size="large">
+              <HelpIcon fontSize="inherit" />
+            </IconButton>
+          </Tooltip>
+        </div>
         <ConfigModal
           currentGeneralConfig={generalConfig}
           setGeneralConfig={setGeneralConfig}
