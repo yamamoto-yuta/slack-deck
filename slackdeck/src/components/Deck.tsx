@@ -338,7 +338,7 @@ export const Deck: React.FC<{
       <div className="deck-buttons-element">
         <div>
           <Tooltip title="Help" placement="right">
-            <IconButton color="primary" size="large">
+            <IconButton color="primary" size="large" href="https://github.com/yamamoto-yuta/slack-deck/blob/main/README.md" target="_blank" rel="noopener">
               <HelpIcon fontSize="inherit" />
             </IconButton>
           </Tooltip>
