@@ -249,8 +249,6 @@ export const ColumnHeader: React.FC<{
           // Judge client URL or workspace URL
           const clientUrlRegex = new RegExp(CLIENT_URL_PATTERN);
           if (clientUrlRegex.test(clipText)) {
-            // Save column
-            saveColumns(props.columnList);
             // Open clipboard URL
             let colElIdx = extractColumnIdxFromId(props.columnElement.getElementsByTagName('div')[0].id);
             const _iframe = document.getElementsByClassName('col-iframe')[colElIdx] as HTMLIFrameElement;
@@ -268,8 +266,6 @@ export const ColumnHeader: React.FC<{
               }
             }
             if (is_breaked) {
-              // Save column
-              saveColumns(props.columnList);
               // Open clipboard URL
               let colElIdx = extractColumnIdxFromId(props.columnElement.getElementsByTagName('div')[0].id);
               const _iframe = document.getElementsByClassName('col-iframe')[colElIdx] as HTMLIFrameElement;
