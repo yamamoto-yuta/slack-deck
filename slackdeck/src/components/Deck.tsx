@@ -15,7 +15,7 @@ import { AddColumnModal } from './AddColumnModal';
 import { ColumnConfig, columnElementId, DEFAULT_COLUMN_CONFIG, saveColumns, updateSavedTime } from '../shared/column';
 import { Column } from './Column';
 import { DEFAULT_GENERAL_CONFIG, GeneralConfig } from '../shared/config';
-import { convertWorkspaceUrlToClientUrl, slackUrlRegex } from '../shared/slackUrlConverter';
+import { CLIENT_URL_PATTERN, convertWorkspaceUrlToClientUrl, slackUrlRegex } from '../shared/slackUrlConverter';
 import { InvalidUrlSnackbar } from './InvalidUrlSnackbar';
 import { TryOutlined } from '@mui/icons-material';
 
@@ -105,22 +105,27 @@ const AddSpeedDial: React.FC<{
         setClipboardText(clipText);
         if (slackUrlRegex.test(clipText)) {
           let inputUrl = clipText;
-          // Convet URL
-          let is_breaked = false;
-          for (let converter of props.generalConfig.slackUrlTable) {
-            const workspaceUrlPattern = `^${converter.workspaceUrl}archives/`;
-            const workspaceUrlRegex = new RegExp(workspaceUrlPattern);
-            if (workspaceUrlRegex.test(inputUrl)) {
-              inputUrl = convertWorkspaceUrlToClientUrl(converter.workspaceUrl, converter.clientUrl, inputUrl);
-              is_breaked = true;
-              break;
-            }
-          }
-          if (is_breaked) {
-            // Add column
+          // Judge client URL or workspace URL
+          const clientUrlRegex = new RegExp(CLIENT_URL_PATTERN);
+          if (clientUrlRegex.test(inputUrl)) {
             addColumn(newColumnConfigForAddFromClipboard);
           } else {
-            setSnackBarOpen(true);
+            // Convet URL
+            let is_breaked = false;
+            for (let converter of props.generalConfig.slackUrlTable) {
+              const workspaceUrlPattern = `^${converter.workspaceUrl}archives/`;
+              const workspaceUrlRegex = new RegExp(workspaceUrlPattern);
+              if (workspaceUrlRegex.test(inputUrl)) {
+                inputUrl = convertWorkspaceUrlToClientUrl(converter.workspaceUrl, converter.clientUrl, inputUrl);
+                is_breaked = true;
+                break;
+              }
+            }
+            if (is_breaked) {
+              addColumn(newColumnConfigForAddFromClipboard);
+            } else {
+              setSnackBarOpen(true);
+            }
           }
         } else {
           setSnackBarOpen(true);
