@@ -36,7 +36,7 @@ export const InvalidUrlSnackbar: React.FC<{
       action={action}
     >
       <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
-        {`Clipboard URL is invalid: "${props.clipboardText.length > 10 ? props.clipboardText.slice(0, 10) + '...' : props.clipboardText}"`}
+        {`Clipboard URL is invalid: "${props.clipboardText.length > 40 ? props.clipboardText.slice(0, 40) + '...' : props.clipboardText}"`}
       </Alert>
     </Snackbar>
   )

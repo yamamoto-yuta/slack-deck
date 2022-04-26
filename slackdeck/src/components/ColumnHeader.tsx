@@ -10,7 +10,7 @@ import ContentPasteGoIcon from '@mui/icons-material/ContentPasteGo';
 import { chooseColumnColor, ColumnConfig, columnDeleteButtonClassName, columnDeleteButtonId, columnDuplicateButtonClassName, columnDuplicateButtonId, columnElementId, columnIframeClassName, columnIframeId, columnMoveLeftButtonClassName, columnMoveLeftButtonId, columnMoveRightButtonClassName, columnMoveRightButtonId, columnOpenFromClipboardButtonClassName, columnOpenFromClipboardButtonId, COLUMN_WIDTH_OPTIONS_TEXT, COLUMN_WIDTH_OPTIONS_VALUE, extractColumnIdxFromId, saveColumns } from '../shared/column';
 import ReactDOM from 'react-dom';
 import { Column } from './Column';
-import { convertWorkspaceUrlToClientUrl, SlackUrlConverter, slackUrlRegex } from '../shared/slackUrlConverter';
+import { CLIENT_URL_PATTERN, convertWorkspaceUrlToClientUrl, SlackUrlConverter, slackUrlRegex } from '../shared/slackUrlConverter';
 import { InvalidUrlSnackbar } from './InvalidUrlSnackbar';
 
 const ColumnWidthMenu: React.FC<{
@@ -246,27 +246,37 @@ export const ColumnHeader: React.FC<{
         setClipboardText(clipText);
         if (slackUrlRegex.test(clipText)) {
           let inputUrl = clipText;
-          // Convet URL
-          let is_breaked = false;
-          for (let converter of props.slackUrlTable) {
-            const workspaceUrlPattern = `^${converter.workspaceUrl}archives/`;
-            const workspaceUrlRegex = new RegExp(workspaceUrlPattern);
-            if (workspaceUrlRegex.test(inputUrl)) {
-              inputUrl = convertWorkspaceUrlToClientUrl(converter.workspaceUrl, converter.clientUrl, inputUrl);
-              is_breaked = true;
-              break;
-            }
-          }
-          if (is_breaked) {
+          // Judge client URL or workspace URL
+          const clientUrlRegex = new RegExp(CLIENT_URL_PATTERN);
+          if (clientUrlRegex.test(clipText)) {
             // Save column
             saveColumns(props.columnList);
-
             // Open clipboard URL
             let colElIdx = extractColumnIdxFromId(props.columnElement.getElementsByTagName('div')[0].id);
             const _iframe = document.getElementsByClassName('col-iframe')[colElIdx] as HTMLIFrameElement;
             _iframe.contentWindow.location.href = inputUrl;
           } else {
-            setSnackBarOpen(true);
+            // Convet URL
+            let is_breaked = false;
+            for (let converter of props.slackUrlTable) {
+              const workspaceUrlPattern = `^${converter.workspaceUrl}archives/`;
+              const workspaceUrlRegex = new RegExp(workspaceUrlPattern);
+              if (workspaceUrlRegex.test(inputUrl)) {
+                inputUrl = convertWorkspaceUrlToClientUrl(converter.workspaceUrl, converter.clientUrl, inputUrl);
+                is_breaked = true;
+                break;
+              }
+            }
+            if (is_breaked) {
+              // Save column
+              saveColumns(props.columnList);
+              // Open clipboard URL
+              let colElIdx = extractColumnIdxFromId(props.columnElement.getElementsByTagName('div')[0].id);
+              const _iframe = document.getElementsByClassName('col-iframe')[colElIdx] as HTMLIFrameElement;
+              _iframe.contentWindow.location.href = inputUrl;
+            } else {
+              setSnackBarOpen(true);
+            }
           }
         } else {
           setSnackBarOpen(true);
