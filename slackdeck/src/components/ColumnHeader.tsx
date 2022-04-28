@@ -46,7 +46,7 @@ const ColumnWidthMenu: React.FC<{
     <div>
       <Button
         variant="outlined"
-        color="inherit"
+        sx={{ color: grey[50], borderColor: grey[50] }}
         onClick={handleClick}
         endIcon={<KeyboardArrowDownIcon />}
       >
