@@ -12,6 +12,7 @@ import ReactDOM from 'react-dom';
 import { Column } from './Column';
 import { CLIENT_URL_PATTERN, convertWorkspaceUrlToClientUrl, SlackUrlConverter, slackUrlRegex } from '../shared/slackUrlConverter';
 import { InvalidUrlSnackbar } from './InvalidUrlSnackbar';
+import { grey } from '@mui/material/colors';
 
 const ColumnWidthMenu: React.FC<{
   selectedColumnWidthOptionIndex: number,
@@ -45,7 +46,7 @@ const ColumnWidthMenu: React.FC<{
     <div>
       <Button
         variant="outlined"
-        color="inherit"
+        sx={{ color: grey[50], borderColor: grey[50] }}
         onClick={handleClick}
         endIcon={<KeyboardArrowDownIcon />}
       >
@@ -303,7 +304,7 @@ export const ColumnHeader: React.FC<{
 
             <Tooltip title="Move left" placement="bottom">
               <IconButton
-                color="inherit"
+                sx={{ color: grey[50] }}
                 id={columnMoveLeftButtonId`${props.columnIndex}`}
                 className={columnMoveLeftButtonClassName}
                 onClick={onClickMoveLeftButton}
@@ -314,7 +315,7 @@ export const ColumnHeader: React.FC<{
 
             <Tooltip title="Move right" placement="bottom">
               <IconButton
-                color="inherit"
+                sx={{ color: grey[50] }}
                 id={columnMoveRightButtonId`${props.columnIndex}`}
                 className={columnMoveRightButtonClassName}
                 onClick={onClickMoveRightButton}
@@ -325,7 +326,7 @@ export const ColumnHeader: React.FC<{
 
             <Tooltip title="Duplicate" placement="bottom">
               <IconButton
-                color="inherit"
+                sx={{ color: grey[50] }}
                 id={columnDuplicateButtonId`${props.columnIndex}`}
                 className={columnDuplicateButtonClassName}
                 onClick={onClickDuplicateButton}
@@ -336,7 +337,7 @@ export const ColumnHeader: React.FC<{
 
             <Tooltip title="Open clipboard URL" placement="bottom">
               <IconButton
-                color="inherit"
+                sx={{ color: grey[50] }}
                 id={columnOpenFromClipboardButtonId`${props.columnIndex}`}
                 className={columnOpenFromClipboardButtonClassName}
                 onClick={onClickOpenFromClipboardButton}
@@ -367,7 +368,7 @@ export const ColumnHeader: React.FC<{
 
             <Tooltip title="Remove" placement="bottom">
               <IconButton
-                color="inherit"
+                sx={{ color: grey[50] }}
                 id={columnDeleteButtonId`${props.columnIndex}`}
                 className={columnDeleteButtonClassName}
                 onClick={onClickDeleteButton}
