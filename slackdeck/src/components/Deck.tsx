@@ -254,17 +254,8 @@ export const Deck: React.FC<{
   const [mainColumnResponsiveChecked, setMainColumnResponsiveChecked] = React.useState<boolean>(false);
   const [collapseDeckchecked, setCollapseDeckChecked] = React.useState<boolean>(false);
 
-  // hidden プロパティおよび可視性の変更イベントの名前を設定
-  const hidden = "hidden";
-  const visibilityChange = "visibilitychange";
-  const handleVisibilityChange = () => {
-    if (document[hidden]) {
-      props.stopAutoSave();
-      // console.log("hidden");
-    } else {
-      rerender(Math.random());
-      // console.log("visible");
-    }
+  const rerenderDeck = () => {
+    rerender(Math.random());
   }
 
   const onClickSaveButton = () => {
@@ -300,14 +291,8 @@ export const Deck: React.FC<{
           if (value.generalConfig.enableAutoSave) {
             props.startAutoSave();
           }
-          // ブラウザーが addEventListener または Page Visibility API をサポートしない場合に警告.
-          if (typeof document.addEventListener === "undefined" || hidden === undefined) {
-            console.log("This demo requires a browser, such as Google Chrome or Firefox, that supports the Page Visibility API.");
-          } else {
-            // console.log("Add event listener.");
-            // Page Visibility の変更を扱う
-            document.addEventListener(visibilityChange, handleVisibilityChange, false);
-          }
+          window.addEventListener('focus', rerenderDeck, false);
+          window.addEventListener('blur', props.stopAutoSave, false);
         }
         updateSavedTime();
         rerender(Math.random());
