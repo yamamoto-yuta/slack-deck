@@ -1,6 +1,6 @@
 import React from 'react';
 import cloneDeep from 'lodash/cloneDeep';
-import { SelectChangeEvent, IconButton, Modal, Box, Typography, Divider, FormControl, Select, MenuItem, Button, TextField, Tooltip, Alert } from '@mui/material';
+import { SelectChangeEvent, IconButton, Modal, Box, Typography, Divider, FormControl, Select, MenuItem, Button, TextField, Tooltip, Alert, FormGroup, FormControlLabel, Switch } from '@mui/material';
 import SettingsIcon from '@mui/icons-material/Settings';
 import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
@@ -245,6 +245,24 @@ const WorkspaceName2IdMapper: React.FC<{
   )
 };
 
+export const EnableAutoSave: React.FC<{}> = (props) => {
+  return (
+    <div>
+      <Typography variant="h5" gutterBottom>
+        Enable auto column save
+      </Typography>
+      <Typography variant="body1" gutterBottom>
+        If enabled, columns are automatically saved at a certain time.
+      </Typography>
+      <div>
+        <FormGroup>
+          <FormControlLabel control={<Switch />} label="Enable Auto column save" />
+        </FormGroup>
+      </div>
+    </div>
+  )
+};
+
 export const ConfigModal: React.FC<{
   currentGeneralConfig: GeneralConfig,
   setGeneralConfig: React.Dispatch<React.SetStateAction<GeneralConfig>>,
@@ -296,7 +314,7 @@ export const ConfigModal: React.FC<{
             Config
           </Typography>
 
-          <Divider sx={{ my: 1 }} />
+          <Divider sx={{ my: 2 }} />
 
           <DefaultColumnWidthSelect
             defaultColumnWidth={props.currentGeneralConfig.defaultColumnWidth}
@@ -304,7 +322,7 @@ export const ConfigModal: React.FC<{
             setUpdatedGeneralConfig={setUpdatedGeneralConfig}
           />
 
-          <Divider sx={{ my: 1 }} />
+          <Divider sx={{ my: 2 }} />
 
           <WorkspaceName2IdMapper
             updatedGeneralConfig={updatedGeneralConfig}
@@ -312,7 +330,11 @@ export const ConfigModal: React.FC<{
             setEnableApplyButton={setEnableApplyButton}
           />
 
-          <Divider sx={{ my: 1 }} />
+          <Divider sx={{ my: 2 }} />
+
+          <EnableAutoSave />
+
+          <Divider sx={{ my: 2 }} />
 
           <div className="apply-button-element">
             <Button

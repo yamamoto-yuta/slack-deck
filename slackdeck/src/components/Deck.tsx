@@ -287,7 +287,7 @@ export const Deck: React.FC<{
       }
     );
 
-    // Auto save
+    // Generate autosaver
     const startAutoSave = () => {
       autoSaver = setInterval(() => {
         saveColumns(props.columnList);
@@ -322,6 +322,9 @@ export const Deck: React.FC<{
       // Page Visibility の変更を扱う
       document.addEventListener(visibilityChange, handleVisibilityChange, false);
     }
+
+    // 自動保存を開始
+    startAutoSave();
   }, []);
 
   return (
