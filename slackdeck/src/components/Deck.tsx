@@ -18,10 +18,6 @@ import { DEFAULT_GENERAL_CONFIG, GeneralConfig } from '../shared/config';
 import { CLIENT_URL_PATTERN, convertWorkspaceUrlToClientUrl, slackUrlRegex } from '../shared/slackUrlConverter';
 import { InvalidUrlSnackbar } from './InvalidUrlSnackbar';
 
-// Autosave interval
-const AUTOSAVE_INTERVAL = 1000;
-let autoSaver;
-
 const AddSpeedDial: React.FC<{
   columnList: ColumnConfig[],
   generalConfig: GeneralConfig,
@@ -248,11 +244,28 @@ const MainColumnResponsiveSwitch: React.FC<{
 
 export const Deck: React.FC<{
   columnList: ColumnConfig[],
+  startAutoSave: () => void,
+  stopAutoSave: () => void,
 }> = (props) => {
   const [, rerender] = React.useState<number>(Math.random());
+
   const [generalConfig, setGeneralConfig] = React.useState<GeneralConfig>(DEFAULT_GENERAL_CONFIG);
+
   const [mainColumnResponsiveChecked, setMainColumnResponsiveChecked] = React.useState<boolean>(false);
   const [collapseDeckchecked, setCollapseDeckChecked] = React.useState<boolean>(false);
+
+  // hidden プロパティおよび可視性の変更イベントの名前を設定
+  const hidden = "hidden";
+  const visibilityChange = "visibilitychange";
+  const handleVisibilityChange = () => {
+    if (document[hidden]) {
+      props.stopAutoSave();
+      console.log("hidden");
+    } else {
+      rerender(Math.random());
+      console.log("visible");
+    }
+  }
 
   const onClickSaveButton = () => {
     saveColumns(props.columnList);
@@ -262,8 +275,7 @@ export const Deck: React.FC<{
   React.useEffect(() => {
     // Load
     chrome.storage.sync.get(
-      ['columnList', 'generalConfig'],
-      function (value) {
+      ['columnList', 'generalConfig'], (value) => {
         if (value.columnList && value.generalConfig) {
           for (var i = 0; i < value.columnList.length; i++) {
             props.columnList[i] = value.columnList[i];
@@ -280,51 +292,27 @@ export const Deck: React.FC<{
             />, col);
             document.getElementById("wrapper").appendChild(col);
           }
+          // For v1.0.0 update code
+          if (value.generalConfig.enableAutoSave === undefined) {
+            value.generalConfig.enableAutoSave = DEFAULT_GENERAL_CONFIG.enableAutoSave;
+          }
           setGeneralConfig(value.generalConfig);
+          if (value.generalConfig.enableAutoSave) {
+            props.startAutoSave();
+          }
+          // ブラウザーが addEventListener または Page Visibility API をサポートしない場合に警告.
+          if (typeof document.addEventListener === "undefined" || hidden === undefined) {
+            console.log("This demo requires a browser, such as Google Chrome or Firefox, that supports the Page Visibility API.");
+          } else {
+            console.log("Add event listener.");
+            // Page Visibility の変更を扱う
+            document.addEventListener(visibilityChange, handleVisibilityChange, false);
+          }
         }
         updateSavedTime();
         rerender(Math.random());
       }
     );
-
-    // Generate autosaver
-    const startAutoSave = () => {
-      autoSaver = setInterval(() => {
-        saveColumns(props.columnList);
-        rerender(Math.random());
-        console.log("Start autosave.");
-      }, AUTOSAVE_INTERVAL);
-    };
-    const stopAutoSave = () => {
-      clearInterval(autoSaver);
-      console.log("Stop autosave.");
-    };
-
-    // hidden プロパティおよび可視性の変更イベントの名前を設定
-    const hidden = "hidden";
-    const visibilityChange = "visibilitychange";
-
-    const handleVisibilityChange = () => {
-      if (document[hidden]) {
-        stopAutoSave();
-        console.log("hidden");
-      } else {
-        startAutoSave();
-        console.log("visible");
-      }
-    }
-
-    // ブラウザーが addEventListener または Page Visibility API をサポートしない場合に警告.
-    if (typeof document.addEventListener === "undefined" || hidden === undefined) {
-      console.log("This demo requires a browser, such as Google Chrome or Firefox, that supports the Page Visibility API.");
-    } else {
-      console.log("enable");
-      // Page Visibility の変更を扱う
-      document.addEventListener(visibilityChange, handleVisibilityChange, false);
-    }
-
-    // 自動保存を開始
-    startAutoSave();
   }, []);
 
   return (
@@ -351,6 +339,8 @@ export const Deck: React.FC<{
             --:--:--
           </Typography>
         </Box>
+        {console.log("enableAutoSave", generalConfig.enableAutoSave)}
+        {generalConfig.enableAutoSave ? props.startAutoSave() : props.stopAutoSave()}
       </div>
 
       <div id="column-jump-button-element" className="deck-buttons-element">
@@ -393,6 +383,7 @@ export const Deck: React.FC<{
         <ConfigModal
           currentGeneralConfig={generalConfig}
           setGeneralConfig={setGeneralConfig}
+          rerender={rerender}
         />
         <Typography variant="caption" component="div" sx={{ color: "white" }}>
           Version:

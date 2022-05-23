@@ -245,7 +245,16 @@ const WorkspaceName2IdMapper: React.FC<{
   )
 };
 
-export const EnableAutoSave: React.FC<{}> = (props) => {
+export const EnableAutoSave: React.FC<{
+  updatedGeneralConfig: GeneralConfig,
+  setUpdatedGeneralConfig: React.Dispatch<React.SetStateAction<GeneralConfig>>,
+}> = (props) => {
+  const [checked, setChecked] = React.useState(props.updatedGeneralConfig.enableAutoSave);
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setChecked(event.target.checked);
+    props.setUpdatedGeneralConfig({ ...props.updatedGeneralConfig, enableAutoSave: event.target.checked });
+  };
+
   return (
     <div>
       <Typography variant="h5" gutterBottom>
@@ -256,7 +265,12 @@ export const EnableAutoSave: React.FC<{}> = (props) => {
       </Typography>
       <div>
         <FormGroup>
-          <FormControlLabel control={<Switch />} label="Enable Auto column save" />
+          <FormControlLabel control={
+            <Switch
+              checked={checked}
+              onChange={handleChange}
+            />
+          } label="Enable Auto column save" />
         </FormGroup>
       </div>
     </div>
@@ -266,6 +280,7 @@ export const EnableAutoSave: React.FC<{}> = (props) => {
 export const ConfigModal: React.FC<{
   currentGeneralConfig: GeneralConfig,
   setGeneralConfig: React.Dispatch<React.SetStateAction<GeneralConfig>>,
+  rerender: React.Dispatch<React.SetStateAction<number>>,
 }> = (props) => {
   const style = {
     position: 'absolute' as 'absolute',
@@ -289,6 +304,8 @@ export const ConfigModal: React.FC<{
     props.setGeneralConfig(updatedGeneralConfig);
     // Save config
     chrome.storage.sync.set({ 'generalConfig': updatedGeneralConfig });
+    // Rerender decj
+    props.rerender(Math.random());
     // Close modal
     handleClose();
   };
@@ -332,7 +349,10 @@ export const ConfigModal: React.FC<{
 
           <Divider sx={{ my: 2 }} />
 
-          <EnableAutoSave />
+          <EnableAutoSave
+            updatedGeneralConfig={updatedGeneralConfig}
+            setUpdatedGeneralConfig={setUpdatedGeneralConfig}
+          />
 
           <Divider sx={{ my: 2 }} />
 
