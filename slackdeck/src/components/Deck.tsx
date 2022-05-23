@@ -17,7 +17,10 @@ import { Column } from './Column';
 import { DEFAULT_GENERAL_CONFIG, GeneralConfig } from '../shared/config';
 import { CLIENT_URL_PATTERN, convertWorkspaceUrlToClientUrl, slackUrlRegex } from '../shared/slackUrlConverter';
 import { InvalidUrlSnackbar } from './InvalidUrlSnackbar';
-import { TryOutlined } from '@mui/icons-material';
+
+// Autosave interval
+const AUTOSAVE_INTERVAL = 1000;
+let autoSaver;
 
 const AddSpeedDial: React.FC<{
   columnList: ColumnConfig[],
@@ -283,6 +286,42 @@ export const Deck: React.FC<{
         rerender(Math.random());
       }
     );
+
+    // Auto save
+    const startAutoSave = () => {
+      autoSaver = setInterval(() => {
+        saveColumns(props.columnList);
+        rerender(Math.random());
+        console.log("Start autosave.");
+      }, AUTOSAVE_INTERVAL);
+    };
+    const stopAutoSave = () => {
+      clearInterval(autoSaver);
+      console.log("Stop autosave.");
+    };
+
+    // hidden プロパティおよび可視性の変更イベントの名前を設定
+    const hidden = "hidden";
+    const visibilityChange = "visibilitychange";
+
+    const handleVisibilityChange = () => {
+      if (document[hidden]) {
+        stopAutoSave();
+        console.log("hidden");
+      } else {
+        startAutoSave();
+        console.log("visible");
+      }
+    }
+
+    // ブラウザーが addEventListener または Page Visibility API をサポートしない場合に警告.
+    if (typeof document.addEventListener === "undefined" || hidden === undefined) {
+      console.log("This demo requires a browser, such as Google Chrome or Firefox, that supports the Page Visibility API.");
+    } else {
+      console.log("enable");
+      // Page Visibility の変更を扱う
+      document.addEventListener(visibilityChange, handleVisibilityChange, false);
+    }
   }, []);
 
   return (
