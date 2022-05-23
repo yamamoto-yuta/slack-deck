@@ -17,13 +17,13 @@ const startAutoSave = () => {
   clearInterval(autoSaver);
   autoSaver = setInterval(() => {
     saveColumns(columnList);
-    console.log("Saved.");
+    // console.log("Saved.");
   }, AUTOSAVE_INTERVAL);
-  console.log("Start autosave.");
+  // console.log("Start autosave.");
 };
 const stopAutoSave = () => {
   clearInterval(autoSaver);
-  console.log("Stop autosave.");
+  // console.log("Stop autosave.");
 };
 
 

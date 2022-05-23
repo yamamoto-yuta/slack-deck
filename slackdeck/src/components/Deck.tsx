@@ -260,10 +260,10 @@ export const Deck: React.FC<{
   const handleVisibilityChange = () => {
     if (document[hidden]) {
       props.stopAutoSave();
-      console.log("hidden");
+      // console.log("hidden");
     } else {
       rerender(Math.random());
-      console.log("visible");
+      // console.log("visible");
     }
   }
 
@@ -304,7 +304,7 @@ export const Deck: React.FC<{
           if (typeof document.addEventListener === "undefined" || hidden === undefined) {
             console.log("This demo requires a browser, such as Google Chrome or Firefox, that supports the Page Visibility API.");
           } else {
-            console.log("Add event listener.");
+            // console.log("Add event listener.");
             // Page Visibility の変更を扱う
             document.addEventListener(visibilityChange, handleVisibilityChange, false);
           }
@@ -339,7 +339,6 @@ export const Deck: React.FC<{
             --:--:--
           </Typography>
         </Box>
-        {console.log("enableAutoSave", generalConfig.enableAutoSave)}
         {generalConfig.enableAutoSave ? props.startAutoSave() : props.stopAutoSave()}
       </div>
 
@@ -392,7 +391,7 @@ export const Deck: React.FC<{
           v{VERSION}
         </Typography>
       </div>
-      {console.log(props.columnList)}
+      {/* {console.log(props.columnList)} */}
     </div >
   )
 };
