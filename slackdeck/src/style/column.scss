@@ -1,0 +1,16 @@
+.column {
+    height: 100%;
+    display: flex;
+    flex-flow: column;
+}
+
+.column iframe {
+    height: 100%;
+    width: 100%;
+    border: none;
+}
+
+.column-header {
+    display: flex;
+    justify-content: space-between;
+}

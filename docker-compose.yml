@@ -1,14 +1,19 @@
 version: "3"
 
 services:
-  slackdeck:
+  app:
     image: node:14.15.1
     container_name: slackdeck
     environment:
       TZ: Asia/Tokyo
     working_dir: /usr/src/app
     volumes:
-      - ./:/usr/src/app
+      - type: bind
+        source: "./"
+        target: "/usr/src/app"
+      - type: bind
+        source: "/var/run/docker.sock"
+        target: "/var/run/docker.sock"
     ports:
       - "3000:3000"
     tty: true

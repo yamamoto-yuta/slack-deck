@@ -1,10 +1,12 @@
-@import "~bootstrap/scss/bootstrap";
-
 // Chrome applies an 8px margin by default (gross).
-// body {
-//   margin: 0px;
-// }
+body {
+    margin: 0px;
+}
 
-.popup-header {
-  background-color: #4a154b;
+.popupContainer {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    height: 200px;
+    width: 300px;
 }

@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { Button, Form, Modal } from 'react-bootstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-// import { } from '@fortawesome/free-solid-svg-icons'
+import { ExpandLess, ExpandMore, StarBorder } from "@mui/icons-material";
+import { List, ListSubheader, ListItemButton, ListItemIcon, ListItemText, Collapse } from "@mui/material";
+import HistoryIcon from '@mui/icons-material/History';
+import GitHubIcon from '@mui/icons-material/GitHub';
+import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
+import React, { useEffect } from "react";
 import "./Popup.scss";
-import { faCode, faHistory } from "@fortawesome/free-solid-svg-icons";
+import { VERSION } from "../shared/general";
 
 export default function Popup() {
   useEffect(() => {
@@ -12,24 +14,29 @@ export default function Popup() {
   }, []);
 
   return (
-    <div className="mw-auto">
-      <div className="popup-header d-flex text-light px-3 py-2">
-        <div className="fw-bold">
-          SlackDeck
-        </div>
-      </div>
-      <div className="px-3 py-2 text-nowrap">
-        <div className="d-flex">
-          <div className="me-1">
-            <FontAwesomeIcon icon={faHistory} />
-          </div>
-          <div>
-            <a href="https://github.com/yamamoto-yuta/slack-deck/releases" target="_blank">
-              Release Note
-            </a>
-          </div>
-        </div>
-      </div>
+    <div className="popupContainer">
+      <List
+        sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
+        component="nav"
+        subheader={
+          <ListSubheader component="div">
+            SlackDeck v{VERSION}
+          </ListSubheader>
+        }
+      >
+        <ListItemButton component="a" target="_blank" rel="noopener" href="https://github.com/yamamoto-yuta/slack-deck/releases">
+          <ListItemIcon><HistoryIcon /></ListItemIcon>
+          <ListItemText primary="Release Note" />
+        </ListItemButton>
+        <ListItemButton component="a" target="_blank" rel="noopener" href="https://github.com/yamamoto-yuta/slack-deck">
+          <ListItemIcon><GitHubIcon /></ListItemIcon>
+          <ListItemText primary="Repository" />
+        </ListItemButton>
+        <ListItemButton component="a" target="_blank" rel="noopener" href="https://chrome.google.com/webstore/detail/slackdeck/cocnkjpcbmoopfpmogblnjpjdfcaohod">
+          <ListItemIcon><ShoppingBagIcon /></ListItemIcon>
+          <ListItemText primary="Chrome Web Store" />
+        </ListItemButton>
+      </List>
     </div>
-  );
+  )
 }
