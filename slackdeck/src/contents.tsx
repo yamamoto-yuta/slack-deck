@@ -11,7 +11,7 @@ import { ColumnConfig, saveColumns } from './shared/column';
 let columnList: ColumnConfig[] = [];
 
 // Generate autosaver
-const AUTOSAVE_INTERVAL = 1000;
+const AUTOSAVE_INTERVAL = 1000 * 60;
 let autoSaver;
 const startAutoSave = () => {
   clearInterval(autoSaver);
