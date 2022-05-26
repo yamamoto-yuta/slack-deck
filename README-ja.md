@@ -121,7 +121,7 @@
             <img src="https://user-images.githubusercontent.com/55144709/170538790-6006220c-62bf-4677-9550-4b4232db1815.png">
         </td>
         <td>
-            現在インストールされているSlackDeckのバージョンa
+            現在インストールされているSlackDeckのバージョン
         </td>
     </tr>
 </table>
