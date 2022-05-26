@@ -17,7 +17,6 @@ import { Column } from './Column';
 import { DEFAULT_GENERAL_CONFIG, GeneralConfig } from '../shared/config';
 import { CLIENT_URL_PATTERN, convertWorkspaceUrlToClientUrl, slackUrlRegex } from '../shared/slackUrlConverter';
 import { InvalidUrlSnackbar } from './InvalidUrlSnackbar';
-import { TryOutlined } from '@mui/icons-material';
 
 const AddSpeedDial: React.FC<{
   columnList: ColumnConfig[],
@@ -245,11 +244,19 @@ const MainColumnResponsiveSwitch: React.FC<{
 
 export const Deck: React.FC<{
   columnList: ColumnConfig[],
+  startAutoSave: () => void,
+  stopAutoSave: () => void,
 }> = (props) => {
   const [, rerender] = React.useState<number>(Math.random());
+
   const [generalConfig, setGeneralConfig] = React.useState<GeneralConfig>(DEFAULT_GENERAL_CONFIG);
+
   const [mainColumnResponsiveChecked, setMainColumnResponsiveChecked] = React.useState<boolean>(false);
   const [collapseDeckchecked, setCollapseDeckChecked] = React.useState<boolean>(false);
+
+  const rerenderDeck = () => {
+    rerender(Math.random());
+  }
 
   const onClickSaveButton = () => {
     saveColumns(props.columnList);
@@ -259,8 +266,7 @@ export const Deck: React.FC<{
   React.useEffect(() => {
     // Load
     chrome.storage.sync.get(
-      ['columnList', 'generalConfig'],
-      function (value) {
+      ['columnList', 'generalConfig'], (value) => {
         if (value.columnList && value.generalConfig) {
           for (var i = 0; i < value.columnList.length; i++) {
             props.columnList[i] = value.columnList[i];
@@ -277,7 +283,16 @@ export const Deck: React.FC<{
             />, col);
             document.getElementById("wrapper").appendChild(col);
           }
+          // For v1.0.0 update code
+          if (value.generalConfig.enableAutoSave === undefined) {
+            value.generalConfig.enableAutoSave = DEFAULT_GENERAL_CONFIG.enableAutoSave;
+          }
           setGeneralConfig(value.generalConfig);
+          if (value.generalConfig.enableAutoSave) {
+            props.startAutoSave();
+          }
+          window.addEventListener('focus', rerenderDeck, false);
+          window.addEventListener('blur', props.stopAutoSave, false);
         }
         updateSavedTime();
         rerender(Math.random());
@@ -309,6 +324,7 @@ export const Deck: React.FC<{
             --:--:--
           </Typography>
         </Box>
+        {generalConfig.enableAutoSave ? props.startAutoSave() : props.stopAutoSave()}
       </div>
 
       <div id="column-jump-button-element" className="deck-buttons-element">
@@ -351,6 +367,7 @@ export const Deck: React.FC<{
         <ConfigModal
           currentGeneralConfig={generalConfig}
           setGeneralConfig={setGeneralConfig}
+          rerender={rerender}
         />
         <Typography variant="caption" component="div" sx={{ color: "white" }}>
           Version:
@@ -359,7 +376,7 @@ export const Deck: React.FC<{
           v{VERSION}
         </Typography>
       </div>
-      {console.log(props.columnList)}
+      {/* {console.log(props.columnList)} */}
     </div >
   )
 };
