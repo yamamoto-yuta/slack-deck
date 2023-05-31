@@ -267,7 +267,7 @@ export const Deck: React.FC<{
     // Load
     chrome.storage.sync.get(
       ['columnList', 'generalConfig'], (value) => {
-        if (value.columnList && value.generalConfig) {
+        if (value.columnList) {
           for (var i = 0; i < value.columnList.length; i++) {
             props.columnList[i] = value.columnList[i];
           }
@@ -279,17 +279,19 @@ export const Deck: React.FC<{
               columnIndex={i}
               columnConfig={props.columnList[i]}
               columnElement={col}
-              slackUrlTable={value.generalConfig.slackUrlTable}
+              slackUrlTable={value.generalConfig ? value.generalConfig.slackUrlTable : generalConfig.slackUrlTable}
             />, col);
             document.getElementById("wrapper").appendChild(col);
           }
-          // For v1.0.0 update code
-          if (value.generalConfig.enableAutoSave === undefined) {
-            value.generalConfig.enableAutoSave = DEFAULT_GENERAL_CONFIG.enableAutoSave;
-          }
-          setGeneralConfig(value.generalConfig);
-          if (value.generalConfig.enableAutoSave) {
-            props.startAutoSave();
+          if (value.generalConfig) {
+            // For v1.0.0 update code
+            if (value.generalConfig.enableAutoSave === undefined) {
+              value.generalConfig.enableAutoSave = DEFAULT_GENERAL_CONFIG.enableAutoSave;
+            }
+            setGeneralConfig(value.generalConfig);
+            if (value.generalConfig.enableAutoSave) {
+              props.startAutoSave();
+            }
           }
           window.addEventListener('focus', rerenderDeck, false);
           window.addEventListener('blur', props.stopAutoSave, false);
