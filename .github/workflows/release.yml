@@ -17,7 +17,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v3
         with:
-          node-version: "14"
+          node-version: "14.15.1"
       - name: Build
         run: |
           cd slackdeck/
