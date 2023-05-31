@@ -2,7 +2,7 @@
     "manifest_version": 3,
     "name": "SlackDeck",
     "description": "Arrange channels side-by-side",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "action": {
         "default_icon": "icon16.png",
         "default_popup": "popup.html"
